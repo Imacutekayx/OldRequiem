@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8" ?> 
+<!--Root of the useable-->
+<useable>
+  <name>gold</name>
+  <value>1</value>
+  <description>A simple coin of gold</description>
+  <!--List of effects-->
+  <effects>
+    <effect>
+      <name></name>
+      <value></value>
+    </effect>
+  </effects>
+</useable>

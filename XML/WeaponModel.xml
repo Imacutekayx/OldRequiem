@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Root of the weapon-->
+<weapon>
+  <!--Basic attributes of the weapon-->
+  <name>Flamberge</name>
+  <description>An amazingly beautiful and deadly weapon</description>
+  <value>50</value>
+  <type>twoHands</type>
+  <!--Combat attributes-->
+  <attributes>
+    <damage>4</damage>
+    <range>2</range>
+    <!--List of effects-->
+    <effects>
+      <target>Bleeding</target>
+      <value>1</value>
+    </effects>
+  </attributes>
+</weapon>

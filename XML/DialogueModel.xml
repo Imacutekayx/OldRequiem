@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--Root of the Dialogue-->
+<dialogue>
+  <!--List of parts-->
+  <parts>
+    <!--Individual part-->
+    <part>
+      <!--Informations of the npc-->
+      <npc>Butcher;Hello adventurers!</npc>
+      <!--List of characters-->
+      <characters>
+        <!--Individual character-->
+        <character>
+          <name>Lennj</name>
+          <!--List of answers-->
+          <answers>
+            <!--Individual answer-->
+            <answer>
+              <name>Kill</name>
+              <text>I will kill you!</text>
+            </answer>
+          </answers>
+        </character>
+      </characters>
+    </part>
+  </parts>
+</dialogue>

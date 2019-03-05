@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--Root of the speech-->
+<speech>
+  <!--Basic attributes-->
+  <name>Intro</name>
+  <template>Dark</template>
+  <text>You awake in a strange plain, alone. The grass around shines like silver and the sky is dark. And far away in those neverending darkness, a red sun lies.</text>
+  <!--Scene after the speech-->
+  <scene>Intro</scene>
+</speech>

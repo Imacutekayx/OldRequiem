@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Root of the scene-->
+<scene>
+  <!--Size of the scene-->
+  <size>
+    64;64
+  </size>
+  <!--Basic gamemode-->
+  <gamemode>
+    exploration
+  </gamemode>
+  <!--List of the layers-->
+  <layers>
+    <!--Background layer-->
+    <background>
+    <!--List of images on this layer-->
+      <image>
+        <name>grass</name>
+        <size>64;64</size>
+        <coordinate>0;0</coordinate>
+      </image>
+    </background>
+    <!--Layer under the characters-->
+    <adds0></adds0>
+    <!--Layer at the same level as the characters-->
+    <adds1>
+      <image>
+        <name>bigChest</name>
+        <size>2;1</size>
+        <coordinate>32;31</coordinate>
+        <face>0</face>
+      </image>
+    </adds1>
+    <!--Layer above the characters-->
+    <adds2></adds2>
+  </layers>
+  <!--List of all the cases-->
+  <cases>
+    <!--Individual case-->
+    <case>
+      <!--Coordinates of the case-->
+      <coordinate>
+        32;31
+      </coordinate>
+      <!--Is the case an obstacle to the players? (wall, tree, npc, chest)-->
+      <obstacle>
+        chest
+      </obstacle>
+      <!--State of the case (in fire)-->
+      <state></state>
+      <!--Script on this case-->
+      <script>openChest</script>
+    </case>
+  </cases>
+  <!--List of usable scripts (talk to npc, open chest, go to another scene)-->
+  <scripts>
+    <!--Individual script-->
+    <script>
+      <!--Attributes of the script-->
+      <name>openChest</name>
+      <state>true</state>
+      <size>2;1</size>
+      <coordinate>31;31</coordinate>
+      <range>0</range>
+      <!--List of parameters of the script-->
+      <parameters>
+        <!--Individual parameter-->
+        <parameter>weapon;sword</parameter>
+        <parameter>useable;gold;5</parameter>
+      </parameters>
+    </script>
+  </scripts>
+  <!--List of entities on the scene-->
+  <entities>
+    <entity>
+      <type>ennemy</type>
+      <name>goblin</name>
+      <coordinates>19;25</coordinates>
+      <face>0</face>
+    </entity>
+  </entities>
+</scene>

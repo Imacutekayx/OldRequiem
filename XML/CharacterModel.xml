@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Root of the character-->
+<character>
+  <!--Basic attributes-->
+  <name>Lennj</name>
+  <sex>male</sex>
+  <age>300</age>
+  <!--Description of the character-->
+  <description>
+    <story>
+      Lennj lost his family at his birthday when Angels arrived to kill his race
+    </story>
+    <class>Psychomancien</class>
+    <race>513</race>
+    <personality>
+      calm;sadistic;logical
+    </personality>
+    <origin>Soft-Cliff</origin>
+  </description>
+  <!--Combat attributes-->
+  <attributes>
+    <weapon></weapon>
+    <weapon></weapon>
+    <weapontype>magic;dagger</weapontype>
+    <!--List of dices-->
+    <dices>
+      <constitution>20</constitution>
+      <knowledge>70</knowledge>
+      <focus>85</focus>
+      <charisma>35</charisma>
+      <arcane>60</arcane>
+      <temper>50</temper>
+    </dices>
+    <!--List of armor-->
+    <typearmor>mage;magic</typearmor>
+    <armors>
+      <!--Helmet-->
+      <armor>
+        <name>blackScarf</name>
+        <change>true</change>
+      </armor>
+      <!--Armor-->
+      <armor>
+        <name>blackDress</name>
+        <change>true</change>
+      </armor>
+      <!--Boots-->
+      <armor>
+        <name></name>
+        <change>true</change>
+      </armor>
+      <!--Necklace-->
+      <armor>
+        <name>psychalCrystal</name>
+        <change>false</change>
+      </armor>
+      <!--LRing-->
+      <armor>
+        <name></name>
+        <change>true</change>
+      </armor>
+      <!--RRing-->
+      <armor>
+        <name></name>
+        <change>true</change>
+      </armor>
+    </armors>
+    <!--List of the powers of the character-->
+    <powers>
+      <!--Individual power-->
+      <power>
+        <name>summonWeapon</name>
+        <mp>3</mp>
+        <scope>0</scope>
+        <area>1</area>
+        <cast>2</cast>
+        <speed>3</speed>
+        <!--List of effects-->
+        <effects>
+          <!--Individual effect-->
+          <effect>
+            <target>weapon</target>
+            <value></value>
+          </effect>
+        </effects>
+        <!--List of options for this power-->
+        <options>
+          <!--Individual option-->
+          <option>
+            psychalSpear
+          </option>
+        </options>
+      </power>
+    </powers>
+  </attributes>
+  <!--List of items-->
+  <bag>
+    <item>
+      <use>useable</use>
+      <name>gold</name>
+      <nbr>100</nbr>
+    </item>
+  </bag>
+</character>

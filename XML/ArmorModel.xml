@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<armor>
+  <!--Basic attributes of an armor-->
+  <name>psychalCrystal</name>
+  <description>A crystal which gives Lennj his powers</description>
+  <value>0</value>
+  <part>necklace</part>
+  <type>magic</type>
+  <!--List of effects-->
+  <effects>
+    <effect>
+      <target>mp</target>
+      <value>5</value>
+    </effect>
+  </effects>
+</armor>

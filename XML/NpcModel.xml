@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8" ?> 
+<!--Root of the npc-->
+<npc>
+  <!--Basic attributes-->
+  <name>Butcher</name>
+  <sex>true</sex>
+  <age>41</age>
+  <job>butcher</job>
+  <temper>hotblood</temper>
+  <!--List of items-->
+  <bag>
+    <item>
+      <use>weapon</use>
+      <name>kitchenKnife</name>
+      <nbr>1</nbr>
+    </item>
+  </bag>
+</npc>

@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Root of the ennemy-->
+<ennemy>
+  <!--Basic attributes-->
+  <name>Goblin</name>
+  <description>Small and twisted, this evil creature haunts many dark places</description>
+  <!--Combat attributes-->
+  <attributes>
+    <weapon></weapon>
+    <weapon></weapon>
+    <weapontype>dagger</weapontype>
+    <!--List of dices-->
+    <dices>
+      <constitution>30</constitution>
+      <knowledge>20</knowledge>
+      <focus>25</focus>
+      <charisma>15</charisma>
+      <arcane>30</arcane>
+      <temper>40</temper>
+    </dices>
+    <!--Special scripts-->
+    <scripts>
+      <script>
+        <name>callFriends</name>
+        <time>100</time>
+      </script>
+    </scripts>
+    <!--List of armor-->
+    <typearmor>light</typearmor>
+    <armors>
+      <armor>
+        <name></name>
+        <change>false</change>
+      </armor>
+      <armor>
+        <name>goblinTunic</name>
+        <change>false</change>
+      </armor>
+      <armor>
+        <name></name>
+        <change>true</change>
+      </armor>
+      <armor>
+        <name></name>
+        <change>false</change>
+      </armor>
+      <armor>
+        <name></name>
+        <change>false</change>
+      </armor>
+      <armor>
+        <name></name>
+        <change>false</change>
+      </armor>
+    </armors>
+    <!--List of powers-->
+    <powers>
+      <!--Individual power-->
+      <power>
+        <name>Scratch</name>
+        <mp>0</mp>
+        <scope>1</scope>
+        <area>1</area>
+        <cast>0</cast>
+        <speed>2</speed>
+        <!--List of effects-->
+        <effects>
+          <!--Individual effect-->
+          <effect>
+            <target>hp</target>
+            <value>1</value>
+          </effect>
+        </effects>
+      </power>
+    </powers>
+  </attributes>
+  <!--List of items-->
+  <bag>
+    <item>
+      <use>useable</use>
+      <name>gold</name>
+      <nbr>3</nbr>
+    </item>
+  </bag>
+</ennemy>
