@@ -1,0 +1,1 @@
+﻿<?xml version="1.0" encoding="utf-8"?><npcs><npc><name>Butcher</name><sex>True</sex><age>41</age><job>butcher</job><temper>hotblood</temper><bag><item><use>useable</use><name>gold</name><nbr>30</nbr></item></bag></npc></npcs>
