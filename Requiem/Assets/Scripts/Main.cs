@@ -11,7 +11,6 @@ namespace Requiem
             //XMLToClass.Load();
             Globals.cameraManager = new CameraManager(Camera.main);
             Globals.cameraManager.LoadNewScene(Globals.scenes[0]);
-
         }
 
         //Update is called each frame
@@ -29,7 +28,7 @@ namespace Requiem
             {
                 Globals.cameraManager.ChangeAngle(2);
             }
-            else if (Input.GetKeyDown(KeyCode.DownArrow))
+            else if (Input.GetKeyDown(KeyCode.RightArrow))
             {
                 Globals.cameraManager.ChangeAngle(3);
             }

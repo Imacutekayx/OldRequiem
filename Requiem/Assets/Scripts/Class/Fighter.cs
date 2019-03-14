@@ -17,10 +17,5 @@ namespace Requiem.Class
         public Armor[] armor;
         public bool[] armorChange;
         public string armortype;
-
-        public void Attack()
-        {
-            //TODO Attack with weapon
-        }
     }
 }

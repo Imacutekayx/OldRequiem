@@ -113,15 +113,16 @@ namespace Requiem
             //SCENES
             List<LayerImage> sceBackground = new List<LayerImage>
             {
-                new LayerImage("grass", 64, 64, 0, 0)
+                new LayerImage("grass", 20, 20, 0, 0)
             };
             List<LayerImage> sceAdds1 = new List<LayerImage>
             {
-                new LayerImage("bigChest", 2, 1, 32, 31)
+                new LayerImage("bigChest", 2, 1, 14, 7)
             };
             List<Case> sceCases = new List<Case>
             {
-                new Case(32, 31, "chest", "", "openChest")
+                new Case(14, 7, "chest", "", "openChest"),
+                new Case(15, 7, "chest", "", "openChest")
             };
             List<string> sceParameters = new List<string>
             {
@@ -130,22 +131,22 @@ namespace Requiem
             };
             List<LayerScript> sceScripts = new List<LayerScript>
             {
-                new LayerScript("openChest", true, 2, 1, 31, 31, 0, sceParameters)
+                new LayerScript("openChest", true, 2, 1, 14, 7, 0, sceParameters)
             };
-            Globals.characters[0].x = 42;
-            Globals.characters[0].y = 62;
-            Globals.characters[0].face = 1;
-            Globals.ennemies[0].x = 25;
-            Globals.ennemies[0].y = 3;
-            Globals.ennemies[0].face = 0;
-            Globals.npcs[0].x = 63;
-            Globals.npcs[0].y = 30;
+            Globals.characters[0].x = 10;
+            Globals.characters[0].y = 19;
+            Globals.characters[0].face = 0;
+            Globals.ennemies[0].x = 10;
+            Globals.ennemies[0].y = 0;
+            Globals.ennemies[0].face = 2;
+            Globals.npcs[0].x = 16;
+            Globals.npcs[0].y = 12;
             Globals.npcs[0].face = 3;
             List<Entity> entities = new List<Entity>
             {
                 Globals.characters[0], Globals.ennemies[0], Globals.npcs[0]
             };
-            Globals.scenes.Add(new Scene(64, 64, "exploration", sceBackground, new List<LayerImage>(),
+            Globals.scenes.Add(new Scene("forestStart", 30, 30, "exploration", sceBackground, new List<LayerImage>(),
                 sceAdds1, new List<LayerImage>(), sceCases, sceScripts, entities));
             //Scenes();
             
@@ -538,6 +539,7 @@ namespace Requiem
                 {
                     //Root of the scene
                     writer.WriteStartElement("scene");
+                    writer.WriteElementString("name", scene.name);
                     //Size of the scene
                     writer.WriteElementString("size", scene.weight + ";" + scene.height);
                     //Basic gamemode

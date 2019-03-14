@@ -14,13 +14,11 @@ namespace Requiem
         private Scene scene;
         private Camera camera;
 
-        //TODO CHANGE
-        private const int CASE = 10, UP = 40;
-
         //Constructor
         public CameraManager(Camera _camera)
         {
             camera = _camera;
+            camera.transform.eulerAngles = new Vector3(30, 0, 0);
         }
 
         /// <summary>
@@ -30,6 +28,32 @@ namespace Requiem
         public void LoadNewScene(Scene _scene)
         {
             scene = _scene;
+            //TODO Camera basic position
+            ChangeCameraPosition();
+
+            //TODO Create scene
+            //TEST
+            GameObject gameObject = new GameObject
+            {
+                name = "TestBack"
+            };
+            gameObject.transform.eulerAngles = new Vector3(90, 0, 0);
+            gameObject.transform.position = new Vector3(0, -0.3f, 0);
+            SpriteRenderer testRender = gameObject.AddComponent<SpriteRenderer>();
+
+            //Background
+            foreach (LayerImage background in scene.background)
+            {
+                GameObject image = new GameObject
+                {
+                    name = "background:" + background.x + ";" + background.y
+                };
+                image.transform.eulerAngles = new Vector3(90, 0, 0);
+                image.transform.position = new Vector3(background.x - scene.weight / 2 + background.weight / 2, -0.2f, background.y + scene.height / 2 - background.height / 2);
+                SpriteRenderer renderer = image.AddComponent<SpriteRenderer>();
+            }
+
+            //Change skin
             ChangeSkins();
         }
 
@@ -39,15 +63,14 @@ namespace Requiem
         /// <param name="direction">Direction to change</param>
         public void ChangeAngle(byte direction) //0=Up/1=Down/2=Left/3=Right
         {
-            //TODO Fix rotation
             switch (direction)
             {
                 case 0:
                     if (!top)
                     {
                         top = true;
-                        camera.transform.Rotate(0, 0, 60);
-                        camera.transform.position = new Vector3(0, UP, 0);
+                        camera.transform.Rotate(60, 0, 0);
+                        camera.transform.position = new Vector3(0, 40, 0);
                         
                         ChangeSkins();
                     }
@@ -57,21 +80,23 @@ namespace Requiem
                     if (top)
                     {
                         top = false;
-                        camera.transform.Rotate(0, 0, -60);
+                        camera.transform.Rotate(-60, 0, 0);
                         ChangeCameraPosition();
                     }
                     break;
 
                 case 2:
                 case 3:
-                    camera.transform.Rotate(0, direction == 2 ? -90 : 90, 0);
-                    face = Convert.ToByte((face + direction == 2 ? 3 : 1)%4);
+                    camera.transform.Rotate(0, (direction == 2 ? 90 : -90), 0, Space.World);
+                    face = Convert.ToByte((face + (direction == 2 ? 3 : 1))%4);
+                    Debug.Log(face);
                     if(!top)
                     {
                         ChangeCameraPosition();
                     }
                     break;
             }
+            Debug.Log(face);
         }
 
         /// <summary>
@@ -82,19 +107,19 @@ namespace Requiem
             switch (face)
             {
                 case 0:
-                    camera.transform.position = new Vector3(0, CASE * (scene.height + 5), UP / 2);
+                    camera.transform.position = new Vector3(0, 10, -scene.height / 2 - 5);
                     break;
 
                 case 1:
-                    camera.transform.position = new Vector3(CASE * (scene.weight + 5), 0, UP / 2);
+                    camera.transform.position = new Vector3(scene.weight / 2 + 5, 10, 0);
                     break;
 
                 case 2:
-                    camera.transform.position = new Vector3(0, CASE * (scene.height + 5) * -1, UP / 2);
+                    camera.transform.position = new Vector3(0, 10, scene.height / 2 + 5);
                     break;
 
                 case 3:
-                    camera.transform.position = new Vector3(CASE * (scene.weight + 5) * -1, 0, UP / 2);
+                    camera.transform.position = new Vector3(-scene.weight / 2 - 5, 10, 0);
                     break;
             }
 
@@ -106,22 +131,7 @@ namespace Requiem
         /// </summary>
         private void ChangeSkins()
         {
-            foreach (Entity entity in scene.entities)
-            {
-                byte FinalFace = Convert.ToByte((face + entity.face) % 4);
-                try
-                {
-                    entity.skin = Resources.Load<Sprite>("entity/" + entity.type + "/" + entity.name + "_" + (top ? "top" : "face" + FinalFace) + (entity.dead ? "_dead" : "") + ".png");
-                }
-                catch(Exception e)
-                {
-                    entity.skin = Resources.Load<Sprite>("default.png");
-                }
-            }
-            
-            //TODO Change walls' skin
-
-            //TODO APPLY SKIN TO OBJECT
+            //TODO Change skin of entities and hide walls
         }
     }
 }

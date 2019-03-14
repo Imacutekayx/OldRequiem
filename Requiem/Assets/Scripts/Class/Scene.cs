@@ -8,6 +8,7 @@ namespace Requiem.Class
     public class Scene
     {
         //Variables
+        public string name;
         public int weight;
         public int height;
         public string gamemode;
@@ -22,9 +23,10 @@ namespace Requiem.Class
         public List<Entity> entities;
 
         //Constructor
-        public Scene(int _weight, int _height, string _gamemode, List<LayerImage> _background, List<LayerImage> _adds0,
+        public Scene(string _name, int _weight, int _height, string _gamemode, List<LayerImage> _background, List<LayerImage> _adds0,
             List<LayerImage> _adds1, List<LayerImage> _adds2, List<Case> _cases, List<LayerScript> _scripts, List<Entity> _entities)
         {
+            name = _name;
             weight = _weight;
             height = _height;
             gamemode = _gamemode;

@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--Root of the scene-->
 <scene>
+  <name>
+    forestStart
+  </name>
   <!--Size of the scene-->
   <size>
     64;64

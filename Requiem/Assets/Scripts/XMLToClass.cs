@@ -373,7 +373,7 @@ namespace Requiem
             Weapon[] ennWeapons = new Weapon[2];
             string weapontype;
             int[] dices = new int[6];
-            //TODO SCRIPTS
+            //TODO Add scripts
             string typearmor;
             Armor[] ennArmors = new Armor[6];
             bool[] armorChanges = new bool[6];
@@ -621,6 +621,7 @@ namespace Requiem
         private static void Scenes()
         {
             //Basic attributes
+            string name;
             int weight;
             int height;
             string gamemode;
@@ -671,6 +672,7 @@ namespace Requiem
             foreach(XmlNode scene in xmlScenes)
             {
                 //Size of the scene
+                name = scene.SelectSingleNode("name").InnerText;
                 string[] size = scene.SelectSingleNode("size").InnerText.Split(';');
                 weight = Convert.ToInt32(size[0]);
                 height = Convert.ToInt32(size[1]);
@@ -758,16 +760,7 @@ namespace Requiem
                             {
                                 if(character.name == entName)
                                 {
-                                    Character charCopy = new Character(character.name, character.sex, character.age, character.story, character.cl,
-                                        character.race, character.personality, character.origin, character.dices, character.armor, character.armorChange,
-                                        character.armortype, character.weapon, character.weapontype, character.powers, character.bag)
-                                    {
-                                        x = entX,
-                                        y = entY,
-                                        face = entFace
-                                    };
-                                    entities.Add(charCopy);
-                                    break;
+                                    entities.Add(character);
                                 }
                             }
                             break;
@@ -808,7 +801,7 @@ namespace Requiem
                             break;
                     }
                 }
-                Globals.scenes.Add(new Scene(weight, height, gamemode, lstLayers[0], lstLayers[1], lstLayers[2], lstLayers[3], cases, scripts, entities));
+                Globals.scenes.Add(new Scene(name, weight, height, gamemode, lstLayers[0], lstLayers[1], lstLayers[2], lstLayers[3], cases, scripts, entities));
             }
         }
 
