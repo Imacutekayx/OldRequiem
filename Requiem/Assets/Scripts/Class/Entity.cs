@@ -20,6 +20,5 @@ namespace Requiem.Class
 
         //Objects
         public Dictionary<Item, int> bag = new Dictionary<Item, int>();
-        public Sprite skin;
     }
 }

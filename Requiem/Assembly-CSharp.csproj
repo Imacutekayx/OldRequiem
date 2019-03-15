@@ -77,6 +77,8 @@
     <Compile Include="Assets\Scripts\ClassToXML.cs" />
     <Compile Include="Assets\Scripts\Globals.cs" />
     <Compile Include="Assets\Scripts\Main.cs" />
+    <Compile Include="Assets\Scripts\Objects\EntityObject.cs" />
+    <Compile Include="Assets\Scripts\Objects\ImageObject.cs" />
     <Compile Include="Assets\Scripts\XMLToClass.cs" />
     <None Include="Assets\Scripts\XML\CharacterModel.xml" />
     <None Include="Assets\Scripts\XML\SceneModel.xml" />
