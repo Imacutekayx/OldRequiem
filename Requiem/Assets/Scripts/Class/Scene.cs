@@ -18,7 +18,7 @@ namespace Requiem.Class
         public List<LayerImage> adds0;
         public List<LayerImage> adds1;
         public List<LayerImage> adds2;
-        public List<Case> cases;
+        public Case[,] cases;
         public List<LayerScript> scripts;
         public List<Entity> entities;
 
@@ -34,7 +34,11 @@ namespace Requiem.Class
             adds0 = _adds0;
             adds1 = _adds1;
             adds2 = _adds2;
-            cases = _cases;
+            cases = new Case[weight, height];
+            foreach(Case c in _cases)
+            {
+                cases[c.x, c.y] = c;
+            }
             scripts = _scripts;
             entities = _entities;
         }

@@ -146,6 +146,35 @@ namespace Requiem
         }
 
         /// <summary>
+        /// Method which translate the camera position
+        /// </summary>
+        /// <param name="direction">Direction of the vector</param>
+        /// <param name="speed">Speed of the camera</param>
+        public void MoveCamera(byte direction, int speed)
+        {
+            direction = Convert.ToByte((face + direction) % 4);
+
+            switch (direction)
+            {
+                case 0:
+                    camera.transform.Translate(new Vector3(speed * Time.deltaTime, 0), Space.World); // move on +X axis
+                    break;
+
+                case 2:
+                    camera.transform.Translate(new Vector3(-(speed * Time.deltaTime), 0), Space.World); // move on -X axis
+                    break;
+
+                case 1:
+                    camera.transform.Translate(new Vector3(0,0,speed * Time.deltaTime), Space.World); // move on +Z axis
+                    break;
+
+                case 3:
+                    camera.transform.Translate(new Vector3(0,0,-(speed * Time.deltaTime)), Space.World); // move on -Z axis
+                    break;
+            }
+        }
+
+        /// <summary>
         /// Method which change the position of the camera based on the direction facing
         /// </summary>
         private void ChangeCameraPosition()
