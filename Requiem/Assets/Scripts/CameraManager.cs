@@ -18,6 +18,7 @@ namespace Requiem
         //Constructor
         public CameraManager(Camera _camera)
         {
+            //TODO Grid
             camera = _camera;
             camera.transform.eulerAngles = new Vector3(30, 0, 0);
         }
@@ -28,22 +29,19 @@ namespace Requiem
         /// <param name="_scene">Scene to see</param>
         public void LoadNewScene(Scene _scene)
         {
-            //TODO THINK ABOUT MULTIPLE CASES OBJECT
+            //TODO Verify position
             scene = _scene;
-
-            //Background
-            foreach (LayerImage background in scene.background)
+            
+            GameObject back = new GameObject
             {
-                GameObject image = new GameObject
-                {
-                    name = "background:" + background.x + ";" + background.y
-                };
-                image.transform.eulerAngles = new Vector3(90, 0, 0);
-                image.transform.position = new Vector3(background.x - scene.weight / 2 + background.weight / 2, -0.2f, (background.y - scene.height / 2 + background.height / 2) * -1);
-                SpriteRenderer renderer = image.AddComponent<SpriteRenderer>();
-                renderer.sprite = Resources.Load<Sprite>("images/background/" + scene.name);
-                image.tag = "Background";
-            }
+                name = "background"
+            };
+            back.transform.eulerAngles = new Vector3(90, 0, 0);
+            back.transform.position = new Vector3(0, -0.02f, 0);
+            SpriteRenderer backRenderer = back.AddComponent<SpriteRenderer>();
+            backRenderer.sortingOrder = 0;
+            backRenderer.sprite = Resources.Load<Sprite>("images/background/" + scene.name);
+            back.tag = "Background";
 
             //Adds0
             foreach(LayerImage add0 in scene.adds0)
@@ -53,8 +51,9 @@ namespace Requiem
                     name = "add0:" + add0.name + ":" + add0.x + ";" + add0.y
                 };
                 image.transform.eulerAngles = new Vector3(90, 90 * add0.face, 0);
-                image.transform.position = new Vector3(add0.x - scene.weight / 2 + add0.weight / 2, -0.1f, (add0.y - scene.height / 2 + add0.height / 2) * -1);
+                image.transform.position = new Vector3(add0.x - scene.weight / 2 + add0.weight / 2, -0.01f, (add0.y - scene.height / 2 + add0.height / 2) * -1);
                 SpriteRenderer renderer = image.AddComponent<SpriteRenderer>();
+                renderer.sortingOrder = 1;
                 renderer.sprite = Resources.Load<Sprite>("images/adds0/" + add0.name);
                 image.tag = "Adds0";
             }
@@ -67,7 +66,8 @@ namespace Requiem
                     name = "add1:" + add1.name + ":" + add1.x + ";" + add1.y
                 };
                 image.transform.position = new Vector3(add1.x - scene.weight / 2 + add1.weight / 2, 1, (add1.y - scene.height / 2 + add1.height / 2) * -1);
-                image.AddComponent<SpriteRenderer>();
+                SpriteRenderer renderer = image.AddComponent<SpriteRenderer>();
+                renderer.sortingOrder = 2;
                 image.AddComponent<ImageObject>();
                 image.GetComponent<ImageObject>().layerImage = add1;
                 image.tag = "Adds1";
@@ -81,7 +81,8 @@ namespace Requiem
                     name = "add2:" + add2.name + ":" + add2.x + ";" + add2.y
                 };
                 image.transform.position = new Vector3(add2.x - scene.weight / 2 + add2.weight / 2, 3.5f, (add2.y - scene.height / 2 + add2.height / 2) * -1);
-                image.AddComponent<SpriteRenderer>();
+                SpriteRenderer renderer = image.AddComponent<SpriteRenderer>();
+                renderer.sortingOrder = 3;
                 image.AddComponent<ImageObject>();
                 image.GetComponent<ImageObject>().layerImage = add2;
                 image.tag = "Adds2";
@@ -96,7 +97,8 @@ namespace Requiem
                     name = entity.type + ":" + entity.name + ":" + (entity.type == "character" ? "" : entity.x + ";" + entity.y)
                 };
                 image.transform.position = new Vector3(entity.x - scene.weight / 2 + 0.5f / 2, 1, (entity.y - scene.height / 2 + 0.5f) * -1);
-                image.AddComponent<SpriteRenderer>();
+                SpriteRenderer renderer = image.AddComponent<SpriteRenderer>();
+                renderer.sortingOrder = 2;
                 image.AddComponent<EntityObject>();
                 image.GetComponent<EntityObject>().entity = entity;
                 image.tag = "Entities";
@@ -182,19 +184,19 @@ namespace Requiem
             switch (face)
             {
                 case 0:
-                    camera.transform.position = new Vector3(0, 10, -scene.height / 2 - 5);
+                    camera.transform.position = new Vector3(0, 5, -scene.height / 2 - 5);
                     break;
 
                 case 1:
-                    camera.transform.position = new Vector3(scene.weight / 2 + 5, 10, 0);
+                    camera.transform.position = new Vector3(scene.weight / 2 + 5, 5, 0);
                     break;
 
                 case 2:
-                    camera.transform.position = new Vector3(0, 10, scene.height / 2 + 5);
+                    camera.transform.position = new Vector3(0, 5, scene.height / 2 + 5);
                     break;
 
                 case 3:
-                    camera.transform.position = new Vector3(-scene.weight / 2 - 5, 10, 0);
+                    camera.transform.position = new Vector3(-scene.weight / 2 - 5, 5, 0);
                     break;
             }
 

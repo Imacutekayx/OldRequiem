@@ -14,15 +14,6 @@
   </gamemode>
   <!--List of the layers-->
   <layers>
-    <!--Background layer-->
-    <background>
-    <!--List of images on this layer-->
-      <image>
-        <name>grass</name>
-        <size>64;64</size>
-        <coordinate>0;0</coordinate>
-      </image>
-    </background>
     <!--Layer under the characters-->
     <adds0></adds0>
     <!--Layer at the same level as the characters-->

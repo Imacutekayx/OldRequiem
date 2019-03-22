@@ -182,7 +182,7 @@ namespace Requiem
             //Combat attributes
             Weapon[] charWeapons = new Weapon[2];
             string weapontype;
-            int[] dices = new int[6];
+            int[] dices = new int[7];
             string typearmor;
             Armor[] charArmors = new Armor[6];
             bool[] armorChanges = new bool[6];
@@ -255,8 +255,9 @@ namespace Requiem
                 dices[1] = Convert.ToInt32(nodeDices.SelectSingleNode("knowledge").InnerText);
                 dices[2] = Convert.ToInt32(nodeDices.SelectSingleNode("focus").InnerText);
                 dices[3] = Convert.ToInt32(nodeDices.SelectSingleNode("charisma").InnerText);
-                dices[4] = Convert.ToInt32(nodeDices.SelectSingleNode("arcane").InnerText);
-                dices[5] = Convert.ToInt32(nodeDices.SelectSingleNode("temper").InnerText);
+                dices[4] = Convert.ToInt32(nodeDices.SelectSingleNode("agility").InnerText);
+                dices[5] = Convert.ToInt32(nodeDices.SelectSingleNode("arcane").InnerText);
+                dices[6] = Convert.ToInt32(nodeDices.SelectSingleNode("temper").InnerText);
                 //List of armors
                 typearmor = nodeAttributes.SelectSingleNode("typearmor").InnerText;
                 XmlNode nodeArmors = nodeAttributes.SelectSingleNode("armors");
@@ -372,7 +373,7 @@ namespace Requiem
             //Combat attributes
             Weapon[] ennWeapons = new Weapon[2];
             string weapontype;
-            int[] dices = new int[6];
+            int[] dices = new int[7];
             //TODO Add scripts
             string typearmor;
             Armor[] ennArmors = new Armor[6];
@@ -438,8 +439,9 @@ namespace Requiem
                 dices[1] = Convert.ToInt32(nodeDices.SelectSingleNode("knowledge").InnerText);
                 dices[2] = Convert.ToInt32(nodeDices.SelectSingleNode("focus").InnerText);
                 dices[3] = Convert.ToInt32(nodeDices.SelectSingleNode("charisma").InnerText);
-                dices[4] = Convert.ToInt32(nodeDices.SelectSingleNode("arcane").InnerText);
-                dices[5] = Convert.ToInt32(nodeDices.SelectSingleNode("temper").InnerText);
+                dices[4] = Convert.ToInt32(nodeDices.SelectSingleNode("agility").InnerText);
+                dices[5] = Convert.ToInt32(nodeDices.SelectSingleNode("arcane").InnerText);
+                dices[6] = Convert.ToInt32(nodeDices.SelectSingleNode("temper").InnerText);
                 //List of armors
                 typearmor = nodeAttributes.SelectSingleNode("typearmor").InnerText;
                 XmlNode nodeArmors = nodeAttributes.SelectSingleNode("armors");
@@ -626,9 +628,9 @@ namespace Requiem
             int height;
             string gamemode;
             //Images
-            string[] layers = { "background", "adds0", "adds1", "adds2" };
+            string[] layers = { "adds0", "adds1", "adds2" };
             List<List<LayerImage>> lstLayers = new List<List<LayerImage>>();
-            for(int i = 0; i < 4; ++i)
+            for(int i = 0; i < 3; ++i)
             {
                 lstLayers.Add(new List<LayerImage>());
             }
@@ -680,7 +682,7 @@ namespace Requiem
                 gamemode = scene.SelectSingleNode("gamemode").InnerText;
                 //List of layers
                 XmlNode xmlLayers = scene.SelectSingleNode("layers");
-                for(int i = 0; i < layers.Length; ++i)
+                for (int i = 0; i < layers.Length; ++i)
                 {
                     XmlNode xmlLayer = xmlLayers.SelectSingleNode(layers[i]);
                     lstLayers[i].Clear();
@@ -801,7 +803,7 @@ namespace Requiem
                             break;
                     }
                 }
-                Globals.scenes.Add(new Scene(name, weight, height, gamemode, lstLayers[0], lstLayers[1], lstLayers[2], lstLayers[3], cases, scripts, entities));
+                Globals.scenes.Add(new Scene(name, weight, height, gamemode, lstLayers[0], lstLayers[1], lstLayers[2], cases, scripts, entities));
             }
         }
 

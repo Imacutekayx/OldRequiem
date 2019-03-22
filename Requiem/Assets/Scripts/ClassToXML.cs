@@ -53,7 +53,7 @@ namespace Requiem
             {
                 new Power("summonWeapon", 3, 0, 1, 2, 3, charEffects, charOptions)
             };
-            int[] charDices = { 35, 70, 85, 60, 25, 55 };
+            int[] charDices = { 35, 70, 85, 60, 40, 25, 55 };
             Dictionary<Item, int> charBag = new Dictionary<Item, int>
             {
                 { Globals.useables[0], 100 }
@@ -87,7 +87,7 @@ namespace Requiem
             {
                 { "callFriends", 100 }
             };
-            int[] ennDices = { 30, 20, 25, 15, 30, 40 };
+            int[] ennDices = { 30, 20, 25, 15, 40, 30, 40 };
             Dictionary<Item, int> ennBag = new Dictionary<Item, int>
             {
                 { Globals.useables[0], 3}
@@ -111,13 +111,10 @@ namespace Requiem
             //Npcs();
 
             //SCENES
-            List<LayerImage> sceBackground = new List<LayerImage>
-            {
-                new LayerImage("grass", 20, 20, 0, 0)
-            };
+            LayerImage sceBackground = new LayerImage("grass", 20, 20, 0, 0);
             List<LayerImage> sceAdds1 = new List<LayerImage>
             {
-                new LayerImage("bigChest", 2, 1, 14, 7)
+                new LayerImage("bigChest", 2, 1, 14, 7, 2)
             };
             List<Case> sceCases = new List<Case>
             {
@@ -146,7 +143,7 @@ namespace Requiem
             {
                 Globals.characters[0], Globals.ennemies[0], Globals.npcs[0]
             };
-            Globals.scenes.Add(new Scene("forestStart", 30, 30, "exploration", sceBackground, new List<LayerImage>(),
+            Globals.scenes.Add(new Scene("forestStart", 20, 20, "exploration", new List<LayerImage>(),
                 sceAdds1, new List<LayerImage>(), sceCases, sceScripts, entities));
             //Scenes();
             
@@ -321,8 +318,9 @@ namespace Requiem
                     writer.WriteElementString("knowledge", Convert.ToString(character.dices[1]));
                     writer.WriteElementString("focus", Convert.ToString(character.dices[2]));
                     writer.WriteElementString("charisma", Convert.ToString(character.dices[3]));
-                    writer.WriteElementString("arcane", Convert.ToString(character.dices[4]));
-                    writer.WriteElementString("temper", Convert.ToString(character.dices[5]));
+                    writer.WriteElementString("agility", Convert.ToString(character.dices[4]));
+                    writer.WriteElementString("arcane", Convert.ToString(character.dices[5]));
+                    writer.WriteElementString("temper", Convert.ToString(character.dices[6]));
                     writer.WriteEndElement();
                     //List of armor of the character
                     writer.WriteElementString("typearmor", character.armortype);
@@ -418,8 +416,9 @@ namespace Requiem
                     writer.WriteElementString("knowledge", Convert.ToString(ennemy.dices[1]));
                     writer.WriteElementString("focus", Convert.ToString(ennemy.dices[2]));
                     writer.WriteElementString("charisma", Convert.ToString(ennemy.dices[3]));
-                    writer.WriteElementString("arcane", Convert.ToString(ennemy.dices[4]));
-                    writer.WriteElementString("temper", Convert.ToString(ennemy.dices[5]));
+                    writer.WriteElementString("agility", Convert.ToString(ennemy.dices[4]));
+                    writer.WriteElementString("arcane", Convert.ToString(ennemy.dices[5]));
+                    writer.WriteElementString("temper", Convert.ToString(ennemy.dices[6]));
                     writer.WriteEndElement();
                     //List of special scripts
                     writer.WriteStartElement("scripts");
@@ -546,18 +545,6 @@ namespace Requiem
                     writer.WriteElementString("gamemode", scene.gamemode);
                     //List of the layers
                     writer.WriteStartElement("layers");
-                    //Background layer
-                    writer.WriteStartElement("background");
-                    foreach(LayerImage image in scene.background)
-                    {
-                        writer.WriteStartElement("image");
-                        writer.WriteElementString("name", image.name);
-                        writer.WriteElementString("size", image.weight + ";" + image.height);
-                        writer.WriteElementString("coordinate", image.x + ";" + image.y);
-                        writer.WriteElementString("face", Convert.ToString(image.face));
-                        writer.WriteEndElement();
-                    }
-                    writer.WriteEndElement();
                     //Layer under the characters
                     writer.WriteStartElement("adds0");
                     foreach (LayerImage image in scene.adds0)
