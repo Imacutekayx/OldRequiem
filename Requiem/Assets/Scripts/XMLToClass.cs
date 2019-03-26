@@ -628,9 +628,9 @@ namespace Requiem
             int height;
             string gamemode;
             //Images
-            string[] layers = { "adds0", "adds1", "adds2" };
+            string[] layers = { "adds0", "adds1", "adds2" , "walls" };
             List<List<LayerImage>> lstLayers = new List<List<LayerImage>>();
-            for(int i = 0; i < 3; ++i)
+            for(int i = 0; i < layers.Length; ++i)
             {
                 lstLayers.Add(new List<LayerImage>());
             }
@@ -803,7 +803,7 @@ namespace Requiem
                             break;
                     }
                 }
-                Globals.scenes.Add(new Scene(name, weight, height, gamemode, lstLayers[0], lstLayers[1], lstLayers[2], cases, scripts, entities));
+                Globals.scenes.Add(new Scene(name, weight, height, gamemode, lstLayers[0], lstLayers[1], lstLayers[2], lstLayers[3], cases, scripts, entities));
             }
         }
 

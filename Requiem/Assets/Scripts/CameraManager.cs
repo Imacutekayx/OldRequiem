@@ -2,6 +2,7 @@ using System;
 using UnityEngine;
 using Requiem.Class;
 using Requiem.Objects;
+using System.Collections.Generic;
 
 namespace Requiem
 {
@@ -29,6 +30,18 @@ namespace Requiem
         /// <param name="_scene">Scene to see</param>
         public void LoadNewScene(Scene _scene)
         {
+            //Variables
+            string[] faces = { "0", "1", "2", "3", "top" };
+            float[] high = { -0.01f, 1f, 3.5f };
+
+            //Objects
+            List<List<LayerImage>> layers = new List<List<LayerImage>>
+            {
+                scene.adds0,
+                scene.adds1,
+                scene.adds2
+            };
+
             //TODO Verify position
             scene = _scene;
             
@@ -43,52 +56,78 @@ namespace Requiem
             backRenderer.sprite = Resources.Load<Sprite>("images/background/" + scene.name);
             back.tag = "Background";
 
-            //Adds0
-            foreach(LayerImage add0 in scene.adds0)
+            for(int i = 0; i < layers.Count; ++i)
             {
-                GameObject image = new GameObject
+                foreach(LayerImage add in layers[i])
                 {
-                    name = "add0:" + add0.name + ":" + add0.x + ";" + add0.y
-                };
-                image.transform.eulerAngles = new Vector3(90, 90 * add0.face, 0);
-                image.transform.position = new Vector3(add0.x - scene.weight / 2 + add0.weight / 2, -0.01f, (add0.y - scene.height / 2 + add0.height / 2) * -1);
-                SpriteRenderer renderer = image.AddComponent<SpriteRenderer>();
-                renderer.sortingOrder = 1;
-                renderer.sprite = Resources.Load<Sprite>("images/adds0/" + add0.name);
-                image.tag = "Adds0";
+                    GameObject image = new GameObject
+                    {
+                        name = "add" + i + ":" + add.name + ":" + add.x + ";" + add.y
+                    };
+                    image.transform.eulerAngles = new Vector3(90, 90 * add.face, 0);
+                    image.transform.position = new Vector3(add.x - scene.weight / 2 + add.weight / 2, high[i], (add.y - scene.height / 2 + add.height / 2) * -1);
+                    SpriteRenderer renderer = image.AddComponent<SpriteRenderer>();
+                    renderer.sortingOrder = i+1;
+                    if (i == 0)
+                    {
+                        renderer.sprite = Resources.Load<Sprite>("images/adds0/" + add.name);
+                    }
+                    image.AddComponent<ImageObject>();
+                    image.GetComponent<ImageObject>().layerImage = add;
+                    image.tag = "Adds" + i;
+                }
             }
 
-            //Adds1
-            foreach (LayerImage add1 in scene.adds1)
+            //Walls
+            foreach(LayerImage wall in scene.walls)
             {
-                GameObject image = new GameObject
+                GameObject obj = new GameObject
                 {
-                    name = "add1:" + add1.name + ":" + add1.x + ";" + add1.y
+                    name = "wall:" + wall.name + ":" + wall.x + ";" + wall.y
                 };
-                image.transform.position = new Vector3(add1.x - scene.weight / 2 + add1.weight / 2, 1, (add1.y - scene.height / 2 + add1.height / 2) * -1);
-                SpriteRenderer renderer = image.AddComponent<SpriteRenderer>();
-                renderer.sortingOrder = 2;
-                image.AddComponent<ImageObject>();
-                image.GetComponent<ImageObject>().layerImage = add1;
-                image.tag = "Adds1";
+                obj.transform.position = new Vector3(wall.x - scene.weight / 2 + wall.weight / 2, 1.5f, (wall.y - scene.height / 2 + wall.height / 2) * -1);
+                obj.AddComponent<ImageObject>();
+                obj.GetComponent<ImageObject>().layerImage = wall;
+                obj.tag = "Walls";
+                
+                for(int i = 0; i < faces.Length; ++i)
+                {
+                    GameObject img = new GameObject
+                    {
+                        name = obj.name + "_" + faces[i]
+                    };
+                    img.transform.parent = obj.transform;
+                    Vector3 position = new Vector3();
+                    switch (faces[i])
+                    {
+                        case "0":
+                            position = new Vector3(0, 1.5f, -scene.height / 2);
+                            break;
+
+                        case "1":
+                            position = new Vector3(-scene.weight / 2, 1.5f, 0);
+                            break;
+
+                        case "2":
+                            position = new Vector3(0, 1.5f, scene.height / 2);
+                            break;
+
+                        case "3":
+                            position = new Vector3(scene.weight / 2, 1.5f, 0);
+                            break;
+
+                        case "top":
+                            position = new Vector3(0, 3, 0);
+                            break;
+                    }
+                    img.transform.localPosition = position;
+                    img.transform.eulerAngles = new Vector3(i == 5 ? 90 : 0, i == 5 ? 0 : i * 90, 0);
+                    img.AddComponent<SpriteRenderer>();
+                    img.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("images/walls/" + scene.name + "_" + wall.name + "_" + faces[i]);
+                    img.GetComponent<SpriteRenderer>().rendererPriority = 3;
+                }
             }
 
-            //Adds2
-            foreach (LayerImage add2 in scene.adds2)
-            {
-                GameObject image = new GameObject
-                {
-                    name = "add2:" + add2.name + ":" + add2.x + ";" + add2.y
-                };
-                image.transform.position = new Vector3(add2.x - scene.weight / 2 + add2.weight / 2, 3.5f, (add2.y - scene.height / 2 + add2.height / 2) * -1);
-                SpriteRenderer renderer = image.AddComponent<SpriteRenderer>();
-                renderer.sortingOrder = 3;
-                image.AddComponent<ImageObject>();
-                image.GetComponent<ImageObject>().layerImage = add2;
-                image.tag = "Adds2";
-            }
-
-            //TODO Walls(NewList?)
             //Entities
             foreach(Entity entity in scene.entities)
             {
@@ -208,7 +247,6 @@ namespace Requiem
         /// </summary>
         private void ChangeSkins()
         {
-            //TODO Change skins Walls
             //Adds1
             foreach (GameObject gameObject in GameObject.FindGameObjectsWithTag("Adds1"))
             {
@@ -240,6 +278,8 @@ namespace Requiem
                     gameObject.transform.eulerAngles = new Vector3(0, 90 * face, 0);
                 }
             }
+
+            //TODO Hide walls
 
             //Entities
             foreach(GameObject gameObject in GameObject.FindGameObjectsWithTag("Entities"))

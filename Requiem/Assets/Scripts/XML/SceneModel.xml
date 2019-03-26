@@ -27,6 +27,14 @@
     </adds1>
     <!--Layer above the characters-->
     <adds2></adds2>
+    <walls>
+      <image>
+        <name>eastWall</name>
+        <size>1;20</size>
+        <coordinate>19;0</coordinate>
+        <face>3</face>
+      </image>
+    </walls>
   </layers>
   <!--List of all the cases-->
   <cases>

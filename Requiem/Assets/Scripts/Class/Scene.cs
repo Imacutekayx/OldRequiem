@@ -17,13 +17,14 @@ namespace Requiem.Class
         public List<LayerImage> adds0;
         public List<LayerImage> adds1;
         public List<LayerImage> adds2;
+        public List<LayerImage> walls;
         public Case[,] cases;
         public List<LayerScript> scripts;
         public List<Entity> entities;
 
         //Constructor
         public Scene(string _name, int _weight, int _height, string _gamemode, List<LayerImage> _adds0,
-            List<LayerImage> _adds1, List<LayerImage> _adds2, List<Case> _cases, List<LayerScript> _scripts, List<Entity> _entities)
+            List<LayerImage> _adds1, List<LayerImage> _adds2, List<LayerImage> _walls, List<Case> _cases, List<LayerScript> _scripts, List<Entity> _entities)
         {
             name = _name;
             weight = _weight;
@@ -32,6 +33,7 @@ namespace Requiem.Class
             adds0 = _adds0;
             adds1 = _adds1;
             adds2 = _adds2;
+            walls = _walls;
             cases = new Case[weight, height];
             foreach(Case c in _cases)
             {

@@ -116,6 +116,10 @@ namespace Requiem
             {
                 new LayerImage("bigChest", 2, 1, 14, 7, 2)
             };
+            List<LayerImage> sceWalls = new List<LayerImage>
+            {
+                new LayerImage("eastWall", 1, 2, 19, 0)
+            };
             List<Case> sceCases = new List<Case>
             {
                 new Case(14, 7, "chest", "", "openChest"),
@@ -144,7 +148,7 @@ namespace Requiem
                 Globals.characters[0], Globals.ennemies[0], Globals.npcs[0]
             };
             Globals.scenes.Add(new Scene("forestStart", 20, 20, "exploration", new List<LayerImage>(),
-                sceAdds1, new List<LayerImage>(), sceCases, sceScripts, entities));
+                sceAdds1, new List<LayerImage>(), sceWalls, sceCases, sceScripts, entities));
             //Scenes();
             
             //DIALOGUES
@@ -529,6 +533,12 @@ namespace Requiem
         /// </summary>
         private static void Scenes()
         {
+            //Variables
+            string[] adds = { "adds0", "adds1", "adds2", "walls" };
+
+            //Objects
+            List<List<LayerImage>> lstAdds;
+
             //Create the XML
             using (XmlWriter writer = XmlWriter.Create("scenes.xml"))
             {
@@ -536,6 +546,10 @@ namespace Requiem
                 //Loop for each scene
                 foreach (Scene scene in Globals.scenes)
                 {
+                    lstAdds = new List<List<LayerImage>>
+                    {
+                        scene.adds0, scene.adds1, scene.adds2, scene.walls
+                    };
                     //Root of the scene
                     writer.WriteStartElement("scene");
                     writer.WriteElementString("name", scene.name);
@@ -545,42 +559,20 @@ namespace Requiem
                     writer.WriteElementString("gamemode", scene.gamemode);
                     //List of the layers
                     writer.WriteStartElement("layers");
-                    //Layer under the characters
-                    writer.WriteStartElement("adds0");
-                    foreach (LayerImage image in scene.adds0)
+                    for(int i = 0; i < adds.Length; ++i)
                     {
-                        writer.WriteStartElement("image");
-                        writer.WriteElementString("name", image.name);
-                        writer.WriteElementString("size", image.weight + ";" + image.height);
-                        writer.WriteElementString("coordinate", image.x + ";" + image.y);
-                        writer.WriteElementString("face", Convert.ToString(image.face));
+                        writer.WriteStartElement(adds[i]);
+                        foreach(LayerImage image in lstAdds[i])
+                        {
+                            writer.WriteStartElement("image");
+                            writer.WriteElementString("name", image.name);
+                            writer.WriteElementString("size", image.weight + ";" + image.height);
+                            writer.WriteElementString("coordinate", image.x + ";" + image.y);
+                            writer.WriteElementString("face", Convert.ToString(image.face));
+                            writer.WriteEndElement();
+                        }
                         writer.WriteEndElement();
                     }
-                    writer.WriteEndElement();
-                    //Layer at the same level as the characters
-                    writer.WriteStartElement("adds1");
-                    foreach (LayerImage image in scene.adds1)
-                    {
-                        writer.WriteStartElement("image");
-                        writer.WriteElementString("name", image.name);
-                        writer.WriteElementString("size", image.weight + ";" + image.height);
-                        writer.WriteElementString("coordinate", image.x + ";" + image.y);
-                        writer.WriteElementString("face", Convert.ToString(image.face));
-                        writer.WriteEndElement();
-                    }
-                    writer.WriteEndElement();
-                    //Layer above the characters
-                    writer.WriteStartElement("adds2");
-                    foreach (LayerImage image in scene.adds2)
-                    {
-                        writer.WriteStartElement("image");
-                        writer.WriteElementString("name", image.name);
-                        writer.WriteElementString("size", image.weight + ";" + image.height);
-                        writer.WriteElementString("coordinate", image.x + ";" + image.y);
-                        writer.WriteElementString("face", Convert.ToString(image.face));
-                        writer.WriteEndElement();
-                    }
-                    writer.WriteEndElement();
                     writer.WriteEndElement();
                     //List of all cases
                     writer.WriteStartElement("cases");
