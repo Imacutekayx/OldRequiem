@@ -9,6 +9,7 @@ TagManager:
   - Adds1
   - Adds2
   - Entities
+  - Walls
   layers:
   - Default
   - TransparentFX

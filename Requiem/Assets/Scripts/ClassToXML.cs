@@ -93,12 +93,10 @@ namespace Requiem
                 { Globals.useables[0], 3}
             };
             Armor[] ennArmor = new Armor[6];
-            ennArmor[1] = ennTunic;
             bool[] ennArmorChange = new bool[6];
-            ennArmorChange[2] = true;
             Weapon[] ennWeapon = new Weapon[2];
-            Globals.ennemies.Add(new Ennemy("Goblin", "Small and twisted, this evil creature haunts many dark places", 
-                ennDices, ennPowers, "dagger", ennBag, ennArmor, ennArmorChange, "light", ennWeapon, ennScripts));
+            Globals.ennemies.Add(new Ennemy("CavernGoblin", "Small and twisted, this evil creature haunts many dark places", 
+                ennDices, ennPowers, "", ennBag, ennArmor, ennArmorChange, "", ennWeapon, ennScripts));
             //Ennemies();
 
             //NPCS
@@ -118,7 +116,7 @@ namespace Requiem
             };
             List<LayerImage> sceWalls = new List<LayerImage>
             {
-                new LayerImage("eastWall", 1, 2, 19, 0)
+                new LayerImage("eastWall", 1, 20, 19, 0)
             };
             List<Case> sceCases = new List<Case>
             {

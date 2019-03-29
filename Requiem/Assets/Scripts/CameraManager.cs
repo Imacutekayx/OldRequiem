@@ -34,6 +34,9 @@ namespace Requiem
             string[] faces = { "0", "1", "2", "3", "top" };
             float[] high = { -0.01f, 1f, 3.5f };
 
+            //TODO Fix XAxis bug
+            scene = _scene;
+
             //Objects
             List<List<LayerImage>> layers = new List<List<LayerImage>>
             {
@@ -42,9 +45,6 @@ namespace Requiem
                 scene.adds2
             };
 
-            //TODO Verify position
-            scene = _scene;
-            
             GameObject back = new GameObject
             {
                 name = "background"
@@ -81,6 +81,7 @@ namespace Requiem
             //Walls
             foreach(LayerImage wall in scene.walls)
             {
+                Debug.Log(wall.x + ":" + wall.y + ";" + wall.weight + ":" + wall.height);
                 GameObject obj = new GameObject
                 {
                     name = "wall:" + wall.name + ":" + wall.x + ";" + wall.y
@@ -101,19 +102,19 @@ namespace Requiem
                     switch (faces[i])
                     {
                         case "0":
-                            position = new Vector3(0, 1.5f, -scene.height / 2);
+                            position = new Vector3(0, 1.5f, -wall.height / 2);
                             break;
 
                         case "1":
-                            position = new Vector3(-scene.weight / 2, 1.5f, 0);
+                            position = new Vector3(-wall.weight / 2, 1.5f, 0);
                             break;
 
                         case "2":
-                            position = new Vector3(0, 1.5f, scene.height / 2);
+                            position = new Vector3(0, 1.5f, wall.height / 2);
                             break;
 
                         case "3":
-                            position = new Vector3(scene.weight / 2, 1.5f, 0);
+                            position = new Vector3(wall.weight / 2, 1.5f, 0);
                             break;
 
                         case "top":
@@ -121,10 +122,10 @@ namespace Requiem
                             break;
                     }
                     img.transform.localPosition = position;
-                    img.transform.eulerAngles = new Vector3(i == 5 ? 90 : 0, i == 5 ? 0 : i * 90, 0);
+                    img.transform.eulerAngles = new Vector3(i == 4 ? 90 : 0, i == 4 ? 0 : i * 90, 0);
                     img.AddComponent<SpriteRenderer>();
                     img.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("images/walls/" + scene.name + "_" + wall.name + "_" + faces[i]);
-                    img.GetComponent<SpriteRenderer>().rendererPriority = 3;
+                    img.GetComponent<SpriteRenderer>().sortingOrder = 3;
                 }
             }
 
@@ -280,6 +281,7 @@ namespace Requiem
             }
 
             //TODO Hide walls
+
 
             //Entities
             foreach(GameObject gameObject in GameObject.FindGameObjectsWithTag("Entities"))
