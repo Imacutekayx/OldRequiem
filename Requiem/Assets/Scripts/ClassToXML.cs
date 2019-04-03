@@ -116,7 +116,7 @@ namespace Requiem
             };
             List<LayerImage> sceWalls = new List<LayerImage>
             {
-                new LayerImage("eastWall", 1, 20, 19, 0)
+                new LayerImage("eastWall", 1, 20, 19, 0, 3)
             };
             List<Case> sceCases = new List<Case>
             {

@@ -9,12 +9,19 @@ namespace Requiem
     public class CameraManager
     {
         //Variables
-        private byte face;
+        private byte face;  //0=S/1=W/2=N/3=E
         private bool top = false;
 
         //Objects
         private Scene scene;
         private Camera camera;
+        private List<List<GameObject>> lstWalls = new List<List<GameObject>>()
+        {
+            new List<GameObject>(),
+            new List<GameObject>(),
+            new List<GameObject>(),
+            new List<GameObject>()
+        };
 
         //Constructor
         public CameraManager(Camera _camera)
@@ -36,6 +43,10 @@ namespace Requiem
 
             //TODO Fix XAxis bug
             scene = _scene;
+            for(int i = 0; i < lstWalls.Count; ++i)
+            {
+                lstWalls[i].Clear();
+            }
 
             //Objects
             List<List<LayerImage>> layers = new List<List<LayerImage>>
@@ -81,7 +92,6 @@ namespace Requiem
             //Walls
             foreach(LayerImage wall in scene.walls)
             {
-                Debug.Log(wall.x + ":" + wall.y + ";" + wall.weight + ":" + wall.height);
                 GameObject obj = new GameObject
                 {
                     name = "wall:" + wall.name + ":" + wall.x + ";" + wall.y
@@ -127,6 +137,7 @@ namespace Requiem
                     img.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("images/walls/" + scene.name + "_" + wall.name + "_" + faces[i]);
                     img.GetComponent<SpriteRenderer>().sortingOrder = 3;
                 }
+                lstWalls[wall.face].Add(obj);
             }
 
             //Entities
@@ -144,7 +155,6 @@ namespace Requiem
                 image.tag = "Entities";
             }
             
-            //TODO Camera basic position
             ChangeCameraPosition();
         }
 
@@ -161,7 +171,7 @@ namespace Requiem
                     {
                         top = true;
                         camera.transform.Rotate(60, 0, 0);
-                        camera.transform.position = new Vector3(0, 20, 0);
+                        camera.transform.position = new Vector3(0, 15, 0);
                         ChangeSkins();
                     }
                     break;
@@ -178,7 +188,11 @@ namespace Requiem
                 case 2:
                 case 3:
                     camera.transform.Rotate(0, (direction == 2 ? 90 : -90), 0, Space.World);
-                    face = Convert.ToByte((face + (direction == 2 ? 3 : 1))%4);
+                    foreach (GameObject obj in lstWalls[face])
+                    {
+                        obj.SetActive(true);
+                    }
+                    face = Convert.ToByte((face + (direction == 2 ? 1 : 3))%4);
                     if(!top)
                     {
                         ChangeCameraPosition();
@@ -195,6 +209,10 @@ namespace Requiem
         public void MoveCamera(byte direction, int speed)
         {
             direction = Convert.ToByte((face + direction) % 4);
+            if(face == 1 || face == 3)
+            {
+                direction = Convert.ToByte((direction + 2) % 4);
+            }
 
             switch (direction)
             {
@@ -224,19 +242,19 @@ namespace Requiem
             switch (face)
             {
                 case 0:
-                    camera.transform.position = new Vector3(0, 5, -scene.height / 2 - 5);
+                    camera.transform.position = new Vector3(0, 5, -scene.height / 2 - 3);
                     break;
 
                 case 1:
-                    camera.transform.position = new Vector3(scene.weight / 2 + 5, 5, 0);
+                    camera.transform.position = new Vector3(-scene.weight / 2 - 3, 5, 0);
                     break;
 
                 case 2:
-                    camera.transform.position = new Vector3(0, 5, scene.height / 2 + 5);
+                    camera.transform.position = new Vector3(0, 5, scene.height / 2 + 3);
                     break;
 
                 case 3:
-                    camera.transform.position = new Vector3(-scene.weight / 2 - 5, 5, 0);
+                    camera.transform.position = new Vector3(scene.weight / 2 + 3, 5, 0);
                     break;
             }
 
@@ -280,8 +298,11 @@ namespace Requiem
                 }
             }
 
-            //TODO Hide walls
-
+            //Hide walls
+            foreach(GameObject obj in lstWalls[face])
+            {
+                obj.SetActive(false);
+            }
 
             //Entities
             foreach(GameObject gameObject in GameObject.FindGameObjectsWithTag("Entities"))

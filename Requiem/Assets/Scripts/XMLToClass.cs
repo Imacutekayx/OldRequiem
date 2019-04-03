@@ -374,7 +374,6 @@ namespace Requiem
             Weapon[] ennWeapons = new Weapon[2];
             string weapontype;
             int[] dices = new int[7];
-            //TODO Add scripts
             string typearmor;
             Armor[] ennArmors = new Armor[6];
             bool[] armorChanges = new bool[6];
