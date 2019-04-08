@@ -13,6 +13,15 @@ namespace Requiem
         private bool top = false;
 
         //Objects
+        private GameObject gridObjects;
+        private GameObject add0Objects;
+        private GameObject add1Objects;
+        private GameObject add2Objects;
+        private GameObject wallObjects;
+        private GameObject characterObjects;
+        private GameObject ennemyObjects;
+        private GameObject npcObjects;
+        private GameObject[,] grid;
         private Scene scene;
         private Camera camera;
         private List<List<GameObject>> lstWalls = new List<List<GameObject>>()
@@ -26,7 +35,6 @@ namespace Requiem
         //Constructor
         public CameraManager(Camera _camera)
         {
-            //TODO Grid
             camera = _camera;
             camera.transform.eulerAngles = new Vector3(30, 0, 0);
         }
@@ -56,6 +64,31 @@ namespace Requiem
                 scene.adds2
             };
 
+            //Grid
+            gridObjects = new GameObject
+            {
+                name = "Grid"
+            };
+            grid = new GameObject[scene.weight, scene.height];
+            for(int i = 0; i < scene.weight; ++i)
+            {
+                for(int j = 0; j < scene.height; ++j)
+                {
+                    GameObject obj = new GameObject
+                    {
+                        name = "Grid:" + i + ";" + j
+                    };
+                    obj.AddComponent<SpriteRenderer>();
+                    obj.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("images/grid/base.png");
+                    obj.transform.eulerAngles = new Vector3(90, 0, 0);
+                    obj.transform.position = new Vector3(i - scene.weight / 2 + 0.5f, 0, (j - scene.height / 2 + 0.5f) * -1);
+                    grid[i, j] = obj;
+                    obj.transform.parent = gridObjects.transform;
+                }
+            }
+
+            //TODO Fix sprite background & grid
+            //Background
             GameObject back = new GameObject
             {
                 name = "background"
@@ -64,10 +97,24 @@ namespace Requiem
             back.transform.position = new Vector3(0, -0.02f, 0);
             SpriteRenderer backRenderer = back.AddComponent<SpriteRenderer>();
             backRenderer.sortingOrder = 0;
-            backRenderer.sprite = Resources.Load<Sprite>("images/background/" + scene.name);
+            Debug.Log("images/background/" + scene.name + ".png");
+            backRenderer.sprite = Resources.Load<Sprite>("images/background/" + scene.name + ".png");
             back.tag = "Background";
 
-            for(int i = 0; i < layers.Count; ++i)
+            //Adds
+            add0Objects = new GameObject
+            {
+                name = "Adds0"
+            };
+            add1Objects = new GameObject
+            {
+                name = "Adds1"
+            };
+            add2Objects = new GameObject
+            {
+                name = "Adds2"
+            };
+            for (int i = 0; i < layers.Count; ++i)
             {
                 foreach(LayerImage add in layers[i])
                 {
@@ -82,6 +129,22 @@ namespace Requiem
                     if (i == 0)
                     {
                         renderer.sprite = Resources.Load<Sprite>("images/adds0/" + add.name);
+                        image.transform.parent = add0Objects.transform;
+                    }
+                    else if (i == 1)
+                    {
+                        for(int k = add.x; k < add.x + add.weight; ++k)
+                        {
+                            for(int l = add.y; l < add.y + add.height; ++l)
+                            {
+                                grid[k, l].GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("images/background/add1.png");
+                                image.transform.parent = add1Objects.transform;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        image.transform.parent = add2Objects.transform;
                     }
                     image.AddComponent<ImageObject>();
                     image.GetComponent<ImageObject>().layerImage = add;
@@ -90,6 +153,10 @@ namespace Requiem
             }
 
             //Walls
+            wallObjects = new GameObject
+            {
+                name = "Walls"
+            };
             foreach(LayerImage wall in scene.walls)
             {
                 GameObject obj = new GameObject
@@ -138,9 +205,22 @@ namespace Requiem
                     img.GetComponent<SpriteRenderer>().sortingOrder = 3;
                 }
                 lstWalls[wall.face].Add(obj);
+                obj.transform.parent = wallObjects.transform;
             }
 
             //Entities
+            characterObjects = new GameObject
+            {
+                name = "Characters"
+            };
+            ennemyObjects = new GameObject
+            {
+                name = "Ennemies"
+            };
+            npcObjects = new GameObject
+            {
+                name = "Npcs"
+            };
             foreach(Entity entity in scene.entities)
             {
                 GameObject image = new GameObject
@@ -153,6 +233,27 @@ namespace Requiem
                 image.AddComponent<EntityObject>();
                 image.GetComponent<EntityObject>().entity = entity;
                 image.tag = "Entities";
+                for (int k = entity.x; k < entity.x + entity.weight; ++k)
+                {
+                    for (int l = entity.y; l < entity.y + entity.height; ++l)
+                    {
+                        grid[k, l].GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("images/background/" + entity.type + ".png");
+                    }
+                }
+                switch (entity.type)
+                {
+                    case "character":
+                        image.transform.parent = characterObjects.transform;
+                        break;
+
+                    case "ennemy":
+                        image.transform.parent = ennemyObjects.transform;
+                        break;
+
+                    case "npc":
+                        image.transform.parent = npcObjects.transform;
+                        break;
+                }
             }
             
             ChangeCameraPosition();

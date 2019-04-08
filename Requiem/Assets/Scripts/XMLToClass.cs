@@ -179,6 +179,8 @@ namespace Requiem
             string race;
             string personality;
             string origin;
+            int weight;
+            int height;
             //Combat attributes
             Weapon[] charWeapons = new Weapon[2];
             string weapontype;
@@ -223,6 +225,8 @@ namespace Requiem
                 race = nodeDescription.SelectSingleNode("race").InnerText;
                 personality = nodeDescription.SelectSingleNode("personality").InnerText;
                 origin = nodeDescription.SelectSingleNode("origin").InnerText;
+                weight = Convert.ToInt32(nodeDescription.SelectSingleNode("weight").InnerText);
+                height = Convert.ToInt32(nodeDescription.SelectSingleNode("height").InnerText);
                 //Combat attributes
                 XmlNode nodeAttributes = character.SelectSingleNode("attributes");
                 XmlNodeList weaponNames = nodeAttributes.SelectNodes("weapon");
@@ -357,8 +361,8 @@ namespace Requiem
                             break;
                     }
                 }
-                Globals.characters.Add(new Character(name, sex, age, story, cl, race, personality, origin,
-                    dices, charArmors, armorChanges, typearmor, charWeapons, weapontype, powers, bag));
+                Globals.characters.Add(new Character(name, sex, age, story, cl, race, personality, origin, weight,
+                    height, dices, charArmors, armorChanges, typearmor, charWeapons, weapontype, powers, bag));
             }
         }
 
@@ -370,6 +374,8 @@ namespace Requiem
             //Basic attributes
             string name;
             string description;
+            int weight;
+            int height;
             //Combat attributes
             Weapon[] ennWeapons = new Weapon[2];
             string weapontype;
@@ -406,6 +412,8 @@ namespace Requiem
                 //Basic attributes
                 name = ennemy.SelectSingleNode("name").InnerText;
                 description = ennemy.SelectSingleNode("description").InnerText;
+                weight = Convert.ToInt32(ennemy.SelectSingleNode("weight").InnerText);
+                height = Convert.ToInt32(ennemy.SelectSingleNode("height").InnerText);
                 //Combat attributes
                 XmlNode nodeAttributes = ennemy.SelectSingleNode("attributes");
                 XmlNodeList weaponNames = nodeAttributes.SelectNodes("weapon");
@@ -531,7 +539,7 @@ namespace Requiem
                     }
                 }
                 //Add Scripts
-                Globals.ennemies.Add(new Ennemy(name, description, dices, powers, weapontype, bag, ennArmors, armorChanges, typearmor, ennWeapons));
+                Globals.ennemies.Add(new Ennemy(name, description, weight, height, dices, powers, weapontype, bag, ennArmors, armorChanges, typearmor, ennWeapons));
             }
         }
 
@@ -546,6 +554,8 @@ namespace Requiem
             int age;
             string job;
             string temper;
+            int weight;
+            int height;
             //Items
             Dictionary<Item, int> bag = new Dictionary<Item, int>();
             string iteUse;
@@ -566,6 +576,8 @@ namespace Requiem
                 age = Convert.ToInt32(npc.SelectSingleNode("age").InnerText);
                 job = npc.SelectSingleNode("job").InnerText;
                 temper = npc.SelectSingleNode("temper").InnerText;
+                weight = Convert.ToInt32(npc.SelectSingleNode("weight").InnerText);
+                height = Convert.ToInt32(npc.SelectSingleNode("height").InnerText);
                 //List of items
                 XmlNode nodeBag = npc.SelectSingleNode("bag");
                 XmlNodeList xmlItems = nodeBag.SelectNodes("item");
@@ -612,7 +624,7 @@ namespace Requiem
                             break;
                     }
                 }
-                Globals.npcs.Add(new Npc(name, sex, age, job, temper, bag));
+                Globals.npcs.Add(new Npc(name, sex, age, job, temper, weight, height, bag));
             }
         }
 
@@ -771,7 +783,7 @@ namespace Requiem
                             {
                                 if(ennemy.name == entName)
                                 {
-                                    Ennemy ennCopy = new Ennemy(ennemy.name, ennemy.description, ennemy.dices, ennemy.powers, ennemy.weapontype,
+                                    Ennemy ennCopy = new Ennemy(ennemy.name, ennemy.description, ennemy.weight, ennemy.height, ennemy.dices, ennemy.powers, ennemy.weapontype,
                                         ennemy.bag, ennemy.armor, ennemy.armorChange, ennemy.armortype, ennemy.weapon, ennemy.scripts)
                                     {
                                         x = entX,
@@ -789,13 +801,7 @@ namespace Requiem
                             {
                                 if(npc.name == entName)
                                 {
-                                    Npc npcCopy = new Npc(npc.name, npc.sex, npc.age, npc.job, npc.temper, npc.bag)
-                                    {
-                                        x = entX,
-                                        y = entY,
-                                        face = entFace
-                                    };
-                                    entities.Add(npcCopy);
+                                    entities.Add(npc);
                                     break;
                                 }
                             }

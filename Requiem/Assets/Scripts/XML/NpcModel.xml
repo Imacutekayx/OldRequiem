@@ -7,6 +7,8 @@
   <age>41</age>
   <job>butcher</job>
   <temper>hotblood</temper>
+  <weight>1</weight>
+  <height>1</height>
   <!--List of items-->
   <bag>
     <item>

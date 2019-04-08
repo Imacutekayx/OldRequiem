@@ -4,6 +4,8 @@
   <!--Basic attributes-->
   <name>Goblin</name>
   <description>Small and twisted, this evil creature haunts many dark places</description>
+  <weight>1</weight>
+  <height>1</height>
   <!--Combat attributes-->
   <attributes>
     <weapon></weapon>

@@ -12,13 +12,15 @@ namespace Requiem.Class
         public string temper;
 
         //Constructor
-        public Npc(string _name, bool _sex, int _age, string _job, string _temper, Dictionary<Item, int> _bag)
+        public Npc(string _name, bool _sex, int _age, string _job, string _temper, int _weight, int _height, Dictionary<Item, int> _bag)
         {
             name = _name;
             sex = _sex;
             age = _age;
             job = _job;
             temper = _temper;
+            weight = _weight;
+            height = _height;
             type = "npc";
             bag = _bag;
         }

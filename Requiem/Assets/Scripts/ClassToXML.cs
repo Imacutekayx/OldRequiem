@@ -71,7 +71,7 @@ namespace Requiem
             Weapon[] charWeapon = new Weapon[2];
             charWeapon[0] = psychWeapon;
             Globals.characters.Add(new Character("Lennj", true, 300, "Lennj lost his family at his birthday when Angels arrived to kill his race", "Psychomancien", "513", 
-                "calm;sadistic;logical", "Soft-Cliff", charDices, charArmor, charArmorChange, "mage;magic", charWeapon, "magic;dagger", charPowers, charBag));
+                "calm;sadistic;logical", "Soft-Cliff", 1, 1, charDices, charArmor, charArmorChange, "mage;magic", charWeapon, "magic;dagger", charPowers, charBag));
             //Characters();
 
             //ENNEMIES
@@ -95,8 +95,8 @@ namespace Requiem
             Armor[] ennArmor = new Armor[6];
             bool[] ennArmorChange = new bool[6];
             Weapon[] ennWeapon = new Weapon[2];
-            Globals.ennemies.Add(new Ennemy("CavernGoblin", "Small and twisted, this evil creature haunts many dark places", 
-                ennDices, ennPowers, "", ennBag, ennArmor, ennArmorChange, "", ennWeapon, ennScripts));
+            Globals.ennemies.Add(new Ennemy("CavernGoblin", "Small and twisted, this evil creature haunts many dark places",
+                1, 1, ennDices, ennPowers, "", ennBag, ennArmor, ennArmorChange, "", ennWeapon, ennScripts));
             //Ennemies();
 
             //NPCS
@@ -104,7 +104,7 @@ namespace Requiem
             {
                 {Globals.useables[0], 30}
             };
-            Npc npc = new Npc("Butcher", true, 41, "butcher", "hotblood", npcBag);
+            Npc npc = new Npc("Butcher", true, 41, "butcher", "hotblood", 1, 1, npcBag);
             Globals.npcs.Add(npc);
             //Npcs();
 
@@ -308,6 +308,8 @@ namespace Requiem
                     writer.WriteElementString("race", character.race);
                     writer.WriteElementString("personality", character.personality);
                     writer.WriteElementString("origin", character.origin);
+                    writer.WriteElementString("weight", Convert.ToString(character.weight));
+                    writer.WriteElementString("height", Convert.ToString(character.height));
                     writer.WriteEndElement();
                     //Combat attribute
                     writer.WriteStartElement("attributes");
@@ -406,7 +408,8 @@ namespace Requiem
                     //Basic attributes
                     writer.WriteElementString("name", ennemy.name);
                     writer.WriteElementString("description", ennemy.description);
-                    writer.WriteElementString("face", Convert.ToString(ennemy.face));
+                    writer.WriteElementString("weight", Convert.ToString(ennemy.weight));
+                    writer.WriteElementString("height", Convert.ToString(ennemy.height));
                     //Combat attribute
                     writer.WriteStartElement("attributes");
                     writer.WriteElementString("weapon", ennemy.weapon[0] != null ? ennemy.weapon[0].name : "");
@@ -508,6 +511,8 @@ namespace Requiem
                     writer.WriteElementString("age", Convert.ToString(npc.age));
                     writer.WriteElementString("job", npc.job);
                     writer.WriteElementString("temper", npc.temper);
+                    writer.WriteElementString("weight", Convert.ToString(npc.weight));
+                    writer.WriteElementString("height", Convert.ToString(npc.height));
                     //List of items in the bag
                     writer.WriteStartElement("bag");
                     foreach (KeyValuePair<Item, int> item in npc.bag)

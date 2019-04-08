@@ -16,6 +16,8 @@
       calm;sadistic;logical
     </personality>
     <origin>Soft-Cliff</origin>
+    <weight>1</weight>
+    <height>1</height>
   </description>
   <!--Combat attributes-->
   <attributes>
