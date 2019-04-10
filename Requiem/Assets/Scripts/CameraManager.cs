@@ -6,6 +6,9 @@ using System.Collections.Generic;
 
 namespace Requiem
 {
+    /// <summary>
+    /// Class which manage all related to the visual part of the game
+    /// </summary>
     public class CameraManager
     {
         //Variables
@@ -22,7 +25,6 @@ namespace Requiem
         private GameObject ennemyObjects;
         private GameObject npcObjects;
         private GameObject[,] grid;
-        private Scene scene;
         private Camera camera;
         private List<List<GameObject>> lstWalls = new List<List<GameObject>>()
         {
@@ -50,7 +52,7 @@ namespace Requiem
             float[] high = { -0.01f, 1f, 3.5f };
 
             //TODO Fix XAxis bug
-            scene = _scene;
+            Globals.currentScene = _scene;
             for(int i = 0; i < lstWalls.Count; ++i)
             {
                 lstWalls[i].Clear();
@@ -59,9 +61,9 @@ namespace Requiem
             //Objects
             List<List<LayerImage>> layers = new List<List<LayerImage>>
             {
-                scene.adds0,
-                scene.adds1,
-                scene.adds2
+                Globals.currentScene.adds0,
+                Globals.currentScene.adds1,
+                Globals.currentScene.adds2
             };
 
             //Grid
@@ -69,10 +71,10 @@ namespace Requiem
             {
                 name = "Grid"
             };
-            grid = new GameObject[scene.weight, scene.height];
-            for(int i = 0; i < scene.weight; ++i)
+            grid = new GameObject[Globals.currentScene.weight, Globals.currentScene.height];
+            for(int i = 0; i < Globals.currentScene.weight; ++i)
             {
-                for(int j = 0; j < scene.height; ++j)
+                for(int j = 0; j < Globals.currentScene.height; ++j)
                 {
                     GameObject obj = new GameObject
                     {
@@ -81,7 +83,7 @@ namespace Requiem
                     obj.AddComponent<SpriteRenderer>();
                     obj.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("images/grid/base.png");
                     obj.transform.eulerAngles = new Vector3(90, 0, 0);
-                    obj.transform.position = new Vector3(i - scene.weight / 2 + 0.5f, 0, (j - scene.height / 2 + 0.5f) * -1);
+                    obj.transform.position = new Vector3(i - Globals.currentScene.weight / 2 + 0.5f, 0, (j - Globals.currentScene.height / 2 + 0.5f) * -1);
                     grid[i, j] = obj;
                     obj.transform.parent = gridObjects.transform;
                 }
@@ -97,8 +99,8 @@ namespace Requiem
             back.transform.position = new Vector3(0, -0.02f, 0);
             SpriteRenderer backRenderer = back.AddComponent<SpriteRenderer>();
             backRenderer.sortingOrder = 0;
-            Debug.Log("images/background/" + scene.name + ".png");
-            backRenderer.sprite = Resources.Load<Sprite>("images/background/" + scene.name + ".png");
+            Debug.Log("images/background/" + Globals.currentScene.name + ".png");
+            backRenderer.sprite = Resources.Load<Sprite>("images/background/" + Globals.currentScene.name + ".png");
             back.tag = "Background";
 
             //Adds
@@ -123,7 +125,7 @@ namespace Requiem
                         name = "add" + i + ":" + add.name + ":" + add.x + ";" + add.y
                     };
                     image.transform.eulerAngles = new Vector3(90, 90 * add.face, 0);
-                    image.transform.position = new Vector3(add.x - scene.weight / 2 + add.weight / 2, high[i], (add.y - scene.height / 2 + add.height / 2) * -1);
+                    image.transform.position = new Vector3(add.x - Globals.currentScene.weight / 2 + add.weight / 2, high[i], (add.y - Globals.currentScene.height / 2 + add.height / 2) * -1);
                     SpriteRenderer renderer = image.AddComponent<SpriteRenderer>();
                     renderer.sortingOrder = i+1;
                     if (i == 0)
@@ -157,13 +159,13 @@ namespace Requiem
             {
                 name = "Walls"
             };
-            foreach(LayerImage wall in scene.walls)
+            foreach(LayerImage wall in Globals.currentScene.walls)
             {
                 GameObject obj = new GameObject
                 {
                     name = "wall:" + wall.name + ":" + wall.x + ";" + wall.y
                 };
-                obj.transform.position = new Vector3(wall.x - scene.weight / 2 + wall.weight / 2, 1.5f, (wall.y - scene.height / 2 + wall.height / 2) * -1);
+                obj.transform.position = new Vector3(wall.x - Globals.currentScene.weight / 2 + wall.weight / 2, 1.5f, (wall.y - Globals.currentScene.height / 2 + wall.height / 2) * -1);
                 obj.AddComponent<ImageObject>();
                 obj.GetComponent<ImageObject>().layerImage = wall;
                 obj.tag = "Walls";
@@ -201,7 +203,7 @@ namespace Requiem
                     img.transform.localPosition = position;
                     img.transform.eulerAngles = new Vector3(i == 4 ? 90 : 0, i == 4 ? 0 : i * 90, 0);
                     img.AddComponent<SpriteRenderer>();
-                    img.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("images/walls/" + scene.name + "_" + wall.name + "_" + faces[i]);
+                    img.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("images/walls/" + Globals.currentScene.name + "_" + wall.name + "_" + faces[i]);
                     img.GetComponent<SpriteRenderer>().sortingOrder = 3;
                 }
                 lstWalls[wall.face].Add(obj);
@@ -221,13 +223,13 @@ namespace Requiem
             {
                 name = "Npcs"
             };
-            foreach(Entity entity in scene.entities)
+            foreach(Entity entity in Globals.currentScene.entities)
             {
                 GameObject image = new GameObject
                 {
                     name = entity.type + ":" + entity.name + ":" + (entity.type == "character" ? "" : entity.x + ";" + entity.y)
                 };
-                image.transform.position = new Vector3(entity.x - scene.weight / 2 + 0.5f / 2, 1, (entity.y - scene.height / 2 + 0.5f) * -1);
+                image.transform.position = new Vector3(entity.x - Globals.currentScene.weight / 2 + 0.5f / 2, 1, (entity.y - Globals.currentScene.height / 2 + 0.5f) * -1);
                 SpriteRenderer renderer = image.AddComponent<SpriteRenderer>();
                 renderer.sortingOrder = 2;
                 image.AddComponent<EntityObject>();
@@ -343,19 +345,19 @@ namespace Requiem
             switch (face)
             {
                 case 0:
-                    camera.transform.position = new Vector3(0, 5, -scene.height / 2 - 3);
+                    camera.transform.position = new Vector3(0, 5, -Globals.currentScene.height / 2 - 3);
                     break;
 
                 case 1:
-                    camera.transform.position = new Vector3(-scene.weight / 2 - 3, 5, 0);
+                    camera.transform.position = new Vector3(-Globals.currentScene.weight / 2 - 3, 5, 0);
                     break;
 
                 case 2:
-                    camera.transform.position = new Vector3(0, 5, scene.height / 2 + 3);
+                    camera.transform.position = new Vector3(0, 5, Globals.currentScene.height / 2 + 3);
                     break;
 
                 case 3:
-                    camera.transform.position = new Vector3(scene.weight / 2 + 3, 5, 0);
+                    camera.transform.position = new Vector3(Globals.currentScene.weight / 2 + 3, 5, 0);
                     break;
             }
 

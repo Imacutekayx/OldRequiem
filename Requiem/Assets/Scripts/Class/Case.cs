@@ -13,7 +13,7 @@
         public string script;
 
         //Constructor
-        public Case(int _x, int _y, string _type, string _state, string _script)
+        public Case(int _x, int _y, string _type = null, string _state = null, string _script = null)
         {
             x = _x;
             y = _y;

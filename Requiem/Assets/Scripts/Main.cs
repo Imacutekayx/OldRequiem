@@ -2,6 +2,9 @@
 
 namespace Requiem
 {
+    /// <summary>
+    /// Basic class of the program
+    /// </summary>
     public class Main : MonoBehaviour
     {
         public int Boundary  = 50; // distance from edge scrolling starts
@@ -18,6 +21,7 @@ namespace Requiem
             theScreenHeight = Screen.height;
             Globals.cameraManager = new CameraManager(Camera.main);
             Globals.cameraManager.LoadNewScene(Globals.scenes[0]);
+            Globals.currentCharacter = Globals.characters[0];
         }
 
         //Update is called each frame

@@ -35,6 +35,13 @@ namespace Requiem.Class
             adds2 = _adds2;
             walls = _walls;
             cases = new Case[weight, height];
+            for(int i = 0; 0 < weight; ++i)
+            {
+                for(int j = 0; j < height; ++j)
+                {
+                    cases[i, j] = new Case(i, j);
+                }
+            }
             foreach(Case c in _cases)
             {
                 cases[c.x, c.y] = c;
