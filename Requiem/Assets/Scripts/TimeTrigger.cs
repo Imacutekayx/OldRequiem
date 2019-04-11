@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Requiem.Class;
 using UnityEngine;
-using Requiem.Class;
 
 namespace Requiem
 {
@@ -16,6 +11,7 @@ namespace Requiem
         //Update is called each frame
         private void Update()
         {
+            //Decrease the time left for an action to be executed and check if it's triggered
             foreach(Act action in Globals.timeManager.actions)
             {
                 if(--action.time == 0)

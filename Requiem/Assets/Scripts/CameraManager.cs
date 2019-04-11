@@ -1,8 +1,8 @@
-using System;
-using UnityEngine;
 using Requiem.Class;
 using Requiem.Objects;
+using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace Requiem
 {
@@ -267,6 +267,7 @@ namespace Requiem
         /// <param name="direction">Direction to change</param>
         public void ChangeAngle(byte direction) //0=Up/1=Down/2=Left/3=Right
         {
+            //Check the direction wanted and modify the camera settings
             switch (direction)
             {
                 case 0:
@@ -311,12 +312,14 @@ namespace Requiem
         /// <param name="speed">Speed of the camera</param>
         public void MoveCamera(byte direction, int speed)
         {
+            //Change the setting based on the current face
             direction = Convert.ToByte((face + direction) % 4);
             if(face == 1 || face == 3)
             {
                 direction = Convert.ToByte((direction + 2) % 4);
             }
 
+            //Translate the camera's position
             switch (direction)
             {
                 case 0:
@@ -338,10 +341,77 @@ namespace Requiem
         }
 
         /// <summary>
+        /// Method which redraw object by his type
+        /// </summary>
+        /// <param name="type">Type of the object</param>
+        /// <param name="name">Name of the object to change</param>
+        public void ChangeObject(string type, string name, string operation, bool recursive = false, GameObject send = null)
+        {
+            GameObject objectToChange = null;
+            
+            //Get object
+            if (recursive)
+            {
+                objectToChange = send;
+            }
+            else
+            {
+                GameObject[] gameObjects = GameObject.FindGameObjectsWithTag(type);
+                foreach (GameObject gameObject in gameObjects)
+                {
+                    if (gameObject.name == name)
+                    {
+                        objectToChange = gameObject;
+                        break;
+                    }
+                }
+            }
+
+            //Choose what to do with it
+            switch (operation)
+            {
+                //Redraw the gameObject
+                case "redraw":
+                    switch (type)
+                    {
+                        case "character":
+                        case "ennemy":
+                        case "npc":
+                            RedrawEntity(objectToChange);
+                            break;
+
+                        case "add1":
+                            RedrawAdd1(objectToChange);
+                            break;
+
+                        case "add2":
+                            RedrawAdd2(objectToChange);
+                            break;
+
+                        //TODO Redraw add0(destroyed by fire or pushed)
+                    }
+                    break;
+
+                //Delete the gameObject
+                case "delete":
+                    UnityEngine.Object.Destroy(objectToChange);
+                    break;
+
+                //Change the position and rotation of the gameObject
+                case "move":
+                    //TODO Change position and rotation
+                    ChangeObject(type, name, "redraw", true, objectToChange);
+                    break;
+
+            }
+        }
+
+        /// <summary>
         /// Method which change the position of the camera based on the direction facing
         /// </summary>
         private void ChangeCameraPosition()
         {
+            //Change the camera's position based on the face
             switch (face)
             {
                 case 0:
@@ -372,33 +442,13 @@ namespace Requiem
             //Adds1
             foreach (GameObject gameObject in GameObject.FindGameObjectsWithTag("Adds1"))
             {
-                LayerImage image = gameObject.GetComponent<ImageObject>().layerImage;
-                if (top)
-                {
-                    gameObject.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("images/adds1/" + image.name + "_top");
-                    gameObject.transform.eulerAngles = new Vector3(90, 90 * image.face, 0);
-                }
-                else
-                {
-                    gameObject.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("images/adds1/" + image.name + "_" + ((face + image.face) % 4));
-                    gameObject.transform.eulerAngles = new Vector3(0, 90 * face, 0);
-                }
+                RedrawAdd1(gameObject);
             }
 
             //Adds2
             foreach (GameObject gameObject in GameObject.FindGameObjectsWithTag("Adds2"))
             {
-                LayerImage image = gameObject.GetComponent<ImageObject>().layerImage;
-                if (top)
-                {
-                    gameObject.SetActive(false);
-                }
-                else
-                {
-                    gameObject.SetActive(true);
-                    gameObject.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("images/adds2/" + image.name + "_" + ((face + image.face) % 4));
-                    gameObject.transform.eulerAngles = new Vector3(0, 90 * face, 0);
-                }
+                RedrawAdd2(gameObject);
             }
 
             //Hide walls
@@ -410,29 +460,65 @@ namespace Requiem
             //Entities
             foreach(GameObject gameObject in GameObject.FindGameObjectsWithTag("Entities"))
             {
-                Entity entity = gameObject.GetComponent<EntityObject>().entity;
-                if (top)
-                {
-                    gameObject.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("skins/" + entity.type + "/" + entity.name + "_top");
-                    gameObject.transform.eulerAngles = new Vector3(90, 90 * entity.face, 0);
-                }
-                else
-                {
-                    gameObject.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("skins/" + entity.type + "/" + entity.name + "_" + ((face + entity.face) % 4));
-                    gameObject.transform.eulerAngles = new Vector3(0, 90 * face, 0);
-                }
+                RedrawEntity(gameObject);
+            }
+        }        
+
+        /// <summary>
+        /// Method which redraw the entities
+        /// </summary>
+        /// <param name="gameObject">Entity to redraw</param>
+        private void RedrawEntity(GameObject gameObject)
+        {
+            Entity entity = gameObject.GetComponent<EntityObject>().entity;
+            if (top)
+            {
+                gameObject.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("skins/" + entity.type + "/" + entity.name + "_top");
+                gameObject.transform.eulerAngles = new Vector3(90, 90 * entity.face, 0);
+            }
+            else
+            {
+                gameObject.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("skins/" + entity.type + "/" + entity.name + "_" + ((face + entity.face) % 4));
+                gameObject.transform.eulerAngles = new Vector3(0, 90 * face, 0);
             }
         }
 
         /// <summary>
-        /// Method which change a certain object by a certain state
+        /// Method which redraw the adds on level 1
         /// </summary>
-        /// <param name="gameObject">Object to change</param>
-        /// <param name="type">Type of the object</param>
-        /// <param name="state">State of the change (mov;x;y/dead)</param>
-        private void ChangeObject(GameObject gameObject, string type, string state)
+        /// <param name="gameObject">Add1 to redraw</param>
+        private void RedrawAdd1(GameObject gameObject)
         {
+            LayerImage image = gameObject.GetComponent<ImageObject>().layerImage;
+            if (top)
+            {
+                gameObject.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("images/adds1/" + image.name + "_top");
+                gameObject.transform.eulerAngles = new Vector3(90, 90 * image.face, 0);
+            }
+            else
+            {
+                gameObject.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("images/adds1/" + image.name + "_" + ((face + image.face) % 4));
+                gameObject.transform.eulerAngles = new Vector3(0, 90 * face, 0);
+            }
+        }
 
+        /// <summary>
+        /// Method which redraw the adds on levele 2
+        /// </summary>
+        /// <param name="gameObject">Add2 to redraw</param>
+        private void RedrawAdd2(GameObject gameObject)
+        {
+            LayerImage image = gameObject.GetComponent<ImageObject>().layerImage;
+            if (top)
+            {
+                gameObject.SetActive(false);
+            }
+            else
+            {
+                gameObject.SetActive(true);
+                gameObject.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("images/adds2/" + image.name + "_" + ((face + image.face) % 4));
+                gameObject.transform.eulerAngles = new Vector3(0, 90 * face, 0);
+            }
         }
     }
 }

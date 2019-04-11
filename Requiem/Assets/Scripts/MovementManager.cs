@@ -1,11 +1,7 @@
-﻿using System;
+﻿using Requiem.Class;
+using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Requiem.Class;
-using Requiem;
 
 namespace Requiem
 {
@@ -104,6 +100,50 @@ namespace Requiem
         }
 
         /// <summary>
+        /// Execute an action triggered by the time manager
+        /// </summary>
+        /// <param name="action">Action to execute</param>
+        public void Execute(Act action)
+        {
+            //Sort by the type of the action
+            switch (action.type)
+            {
+                //Move the launcher based on the direction
+                case "move":
+                    //TODO Change skin case to base before position
+                    switch (action.parameters)
+                    {
+                        case "up":
+                            action.launcher.y--;
+                            action.launcher.face = 0;
+                            break;
+
+                        case "down":
+                            action.launcher.y++;
+                            action.launcher.face = 2;
+                            break;
+
+                        case "left":
+                            action.launcher.x--;
+                            action.launcher.face = 3;
+                            break;
+
+                        case "right":
+                            action.launcher.x++;
+                            action.launcher.face = 1;
+                            break;
+                    }
+                    if(path.Count != 0)
+                    {
+                        StartMove();
+                    }
+                    //TODO Change skin case to base after position
+                    Globals.cameraManager.ChangeObject(action.launcher.type, action.launcher.name, "move");
+                    break;
+            }
+        }
+
+        /// <summary>
         /// Check accessible locations
         /// </summary>
         /// <param name="x">current x</param>
@@ -159,7 +199,7 @@ namespace Requiem
         /// <param name="y">y of current</param>
         /// <param name="targetX">x of target</param>
         /// <param name="targetY">x of target</param>
-        /// <returns></returns>
+        /// <returns>H score</returns>
         private int ComputeHScore(int x, int y, int targetX, int targetY)
         {
             return Math.Abs(targetX - x) + Math.Abs(targetY - y);

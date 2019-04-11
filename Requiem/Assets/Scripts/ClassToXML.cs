@@ -1,7 +1,7 @@
+using Requiem.Class;
 using System;
 using System.Collections.Generic;
 using System.Xml;
-using Requiem.Class;
 
 namespace Requiem
 {
@@ -15,6 +15,8 @@ namespace Requiem
         /// </summary>
         public static void Save()
         {
+            //TODO Make a better prototyping for movements
+
             //USEABLES
             Item coin = new Item("gold", 1, "A simple coin of gold", null);
             Globals.useables.Add(coin);

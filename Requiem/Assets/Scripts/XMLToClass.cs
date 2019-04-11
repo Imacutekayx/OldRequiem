@@ -1,8 +1,8 @@
-﻿using System;
+﻿using Requiem.Class;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
-using Requiem.Class;
 
 namespace Requiem
 {

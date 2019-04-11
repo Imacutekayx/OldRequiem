@@ -16,6 +16,7 @@ namespace Requiem
         void Start()
         {
             ClassToXML.Save();
+            //TODO Verify Load
             //XMLToClass.Load();
             theScreenWidth = Screen.width;
             theScreenHeight = Screen.height;

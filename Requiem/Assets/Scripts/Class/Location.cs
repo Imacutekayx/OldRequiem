@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Requiem.Class
+﻿namespace Requiem.Class
 {
     /// <summary>
     /// Class which represent a location used in the movement manager to calculate the best path

@@ -1,9 +1,6 @@
-﻿using System;
+﻿using Requiem.Class;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Requiem.Class;
 
 namespace Requiem
 {
@@ -27,7 +24,14 @@ namespace Requiem
         /// <param name="action">Action to execute </param>
         public void Execute(Act action)
         {
-            //TODO Execute actions and delete it
+            //TODO Add more actions
+            switch (action.manager)
+            {
+                case "movement":
+                    Globals.movementManager.Execute(action);
+                    break;
+            }
+            actions.Remove(action);
         }
     }
 }

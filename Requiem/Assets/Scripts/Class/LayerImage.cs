@@ -1,6 +1,4 @@
-﻿using UnityEngine;
-
-namespace Requiem.Class
+﻿namespace Requiem.Class
 {
     /// <summary>
     /// Class which represents an image added to the scene

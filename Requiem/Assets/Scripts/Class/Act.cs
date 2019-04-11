@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace Requiem.Class
+﻿namespace Requiem.Class
 {
     /// <summary>
     /// Class which represent the actions in the time manager
