@@ -20,7 +20,7 @@ namespace Requiem
             //USEABLES
             Item coin = new Item("gold", 1, "A simple coin of gold", null);
             Globals.useables.Add(coin);
-            //Useables();
+            Useables();
 
             //ARMORS
             Armor charHelmet = new Armor("blackScarf", 10, "A scarf used to cover Lennj's face", "helmet", "mage", null);
@@ -35,12 +35,12 @@ namespace Requiem
             Globals.armors.Add(charDress);
             Globals.armors.Add(charNecklace);
             Globals.armors.Add(ennTunic);
-            //Armors();
+            Armors();
 
             //WEAPONS
             Weapon psychWeapon = new Weapon("psychalSpear", 0, "A psychologic representation of a spear that Lennj can mentally control", "magic", 3, 3, null);
             Globals.weapons.Add(psychWeapon);
-            //Weapons();
+            Weapons();
 
             //CHARACTERS
             Dictionary<string, int> charEffects = new Dictionary<string, int>
@@ -74,7 +74,7 @@ namespace Requiem
             charWeapon[0] = psychWeapon;
             Globals.characters.Add(new Character("Lennj", true, 300, "Lennj lost his family at his birthday when Angels arrived to kill his race", "Psychomancien", "513", 
                 "calm;sadistic;logical", "Soft-Cliff", 1, 1, charDices, charArmor, charArmorChange, "mage;magic", charWeapon, "magic;dagger", charPowers, charBag));
-            //Characters();
+            Characters();
 
             //ENNEMIES
             Dictionary<string, int> ennEffects = new Dictionary<string, int>
@@ -99,7 +99,7 @@ namespace Requiem
             Weapon[] ennWeapon = new Weapon[2];
             Globals.ennemies.Add(new Ennemy("CavernGoblin", "Small and twisted, this evil creature haunts many dark places",
                 1, 1, ennDices, ennPowers, "", ennBag, ennArmor, ennArmorChange, "", ennWeapon, ennScripts));
-            //Ennemies();
+            Ennemies();
 
             //NPCS
             Dictionary<Item, int> npcBag = new Dictionary<Item, int>
@@ -108,7 +108,7 @@ namespace Requiem
             };
             Npc npc = new Npc("Butcher", true, 41, "butcher", "hotblood", 1, 1, npcBag);
             Globals.npcs.Add(npc);
-            //Npcs();
+            Npcs();
 
             //SCENES
             LayerImage sceBackground = new LayerImage("grass", 20, 20, 0, 0);
@@ -149,7 +149,7 @@ namespace Requiem
             };
             Globals.scenes.Add(new Scene("forestStart", 20, 20, "exploration", new List<LayerImage>(),
                 sceAdds1, new List<LayerImage>(), sceWalls, sceCases, sceScripts, entities));
-            //Scenes();
+            Scenes();
             
             //DIALOGUES
             Dictionary<string, string> diaAnswers = new Dictionary<string, string>
@@ -165,7 +165,7 @@ namespace Requiem
                 { "Butcher;Hello adventurers!", diaChars }
             };
             Globals.dialogues.Add(diaParts);
-            //Dialogues();
+            Dialogues();
         }
 
         /// <summary>

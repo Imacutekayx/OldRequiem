@@ -16,8 +16,7 @@ namespace Requiem
         void Start()
         {
             ClassToXML.Save();
-            //TODO Verify Load
-            //XMLToClass.Load();
+            XMLToClass.Load();
             theScreenWidth = Screen.width;
             theScreenHeight = Screen.height;
             Globals.cameraManager = new CameraManager(Camera.main);

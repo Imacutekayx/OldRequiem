@@ -8,8 +8,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <RootNamespace>
-    </RootNamespace>
+    <RootNamespace></RootNamespace>
     <ProjectGuid>{2E086508-6959-5B53-6C96-4B4A96646DC1}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
@@ -80,12 +79,12 @@
     <Compile Include="Assets\Scripts\ClassToXML.cs" />
     <Compile Include="Assets\Scripts\Globals.cs" />
     <Compile Include="Assets\Scripts\Main.cs" />
+    <Compile Include="Assets\Scripts\MovementManager.cs" />
     <Compile Include="Assets\Scripts\Objects\EntityObject.cs" />
     <Compile Include="Assets\Scripts\Objects\ImageObject.cs" />
     <Compile Include="Assets\Scripts\TimeManager.cs" />
     <Compile Include="Assets\Scripts\TimeTrigger.cs" />
     <Compile Include="Assets\Scripts\XMLToClass.cs" />
-    <Compile Include="Assets\Scripts\MovementManager.cs" />
     <None Include="Assets\Scripts\XML\CharacterModel.xml" />
     <None Include="Assets\Scripts\XML\SceneModel.xml" />
     <None Include="Assets\Scripts\XML\EnnemyModel.xml" />

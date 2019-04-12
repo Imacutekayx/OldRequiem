@@ -35,7 +35,7 @@ namespace Requiem.Class
             adds2 = _adds2;
             walls = _walls;
             cases = new Case[weight, height];
-            for(int i = 0; 0 < weight; ++i)
+            for(int i = 0; i < weight; ++i)
             {
                 for(int j = 0; j < height; ++j)
                 {

@@ -11,7 +11,7 @@ namespace Requiem
     public class MovementManager
     {
         //Objects
-        List<Location> path;
+        List<Location> path = new List<Location>();
 
         /// <summary>
         /// Method which calculate the better path to the target
