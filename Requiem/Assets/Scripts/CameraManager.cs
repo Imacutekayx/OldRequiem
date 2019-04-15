@@ -50,8 +50,7 @@ namespace Requiem
             //Variables
             string[] faces = { "0", "1", "2", "3", "top" };
             float[] high = { -0.01f, 1f, 3.5f };
-
-            //TODO Fix XAxis bug
+            
             Globals.currentScene = _scene;
             for(int i = 0; i < lstWalls.Count; ++i)
             {
@@ -84,7 +83,7 @@ namespace Requiem
                     obj.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("images/grid/base");
                     obj.GetComponent<SpriteRenderer>().sortingOrder = 1;
                     obj.transform.eulerAngles = new Vector3(90, 0, 0);
-                    obj.transform.position = new Vector3(i - Globals.currentScene.weight / 2 + 0.5f, 0, (j - Globals.currentScene.height / 2 + 0.5f) * -1);
+                    obj.transform.position = CalculatePosition(i, j, 1, 1, 0);
                     grid[i, j] = obj;
                     obj.transform.parent = gridObjects.transform;
                 }
@@ -123,13 +122,15 @@ namespace Requiem
                     {
                         name = "add" + i + ":" + add.name + ":" + add.x + ";" + add.y
                     };
+                    image.AddComponent<ImageObject>();
+                    image.GetComponent<ImageObject>().layerImage = add;
                     image.transform.eulerAngles = new Vector3(90, 90 * add.face, 0);
-                    image.transform.position = new Vector3(add.x - Globals.currentScene.weight / 2 + add.weight / 2, high[i], (add.y - Globals.currentScene.height / 2 + add.height / 2) * -1);
+                    image.transform.position = CalculatePosition(add.x, add.y, add.weight, add.height, high[i]);
                     SpriteRenderer renderer = image.AddComponent<SpriteRenderer>();
                     renderer.sortingOrder = i+2;
                     if (i == 0)
                     {
-                        renderer.sprite = Resources.Load<Sprite>("images/adds0/" + add.name);
+                        Redraw(image, "add0");
                         image.transform.parent = add0Objects.transform;
                     }
                     else if (i == 1)
@@ -147,8 +148,6 @@ namespace Requiem
                     {
                         image.transform.parent = add2Objects.transform;
                     }
-                    image.AddComponent<ImageObject>();
-                    image.GetComponent<ImageObject>().layerImage = add;
                     image.tag = "Adds" + i;
                 }
             }
@@ -164,7 +163,7 @@ namespace Requiem
                 {
                     name = "wall:" + wall.name + ":" + wall.x + ";" + wall.y
                 };
-                obj.transform.position = new Vector3(wall.x - Globals.currentScene.weight / 2 + wall.weight / 2, 0, (wall.y - Globals.currentScene.height / 2 + wall.height / 2) * -1);
+                obj.transform.position = CalculatePosition(wall.x, wall.y, wall.weight, wall.height, 1.5f);
                 obj.AddComponent<ImageObject>();
                 obj.GetComponent<ImageObject>().layerImage = wall;
                 obj.tag = "Walls";
@@ -177,26 +176,28 @@ namespace Requiem
                     };
                     img.transform.parent = obj.transform;
                     Vector3 position = new Vector3();
+                    float _weight = wall.weight;
+                    float _height = wall.height;
                     switch (faces[i])
                     {
                         case "0":
-                            position = new Vector3(0, 1.5f, -wall.height / 2);
+                            position = new Vector3(0, 0, -_height / 2);
                             break;
 
                         case "1":
-                            position = new Vector3(-wall.weight / 2, 1.5f, 0);
+                            position = new Vector3(-_weight / 2, 0, 0);
                             break;
 
                         case "2":
-                            position = new Vector3(0, 1.5f, wall.height / 2);
+                            position = new Vector3(0, 0, _height / 2);
                             break;
 
                         case "3":
-                            position = new Vector3(wall.weight / 2, 1.5f, 0);
+                            position = new Vector3(_weight / 2, 0, 0);
                             break;
 
                         case "top":
-                            position = new Vector3(0, 3, 0);
+                            position = new Vector3(0, 1.5f, 0);
                             break;
                     }
                     img.transform.localPosition = position;
@@ -228,7 +229,7 @@ namespace Requiem
                 {
                     name = entity.type + ":" + entity.name + ":" + (entity.type == "character" ? "" : entity.x + ";" + entity.y)
                 };
-                image.transform.position = new Vector3(entity.x - Globals.currentScene.weight / 2 + 0.5f / 2, 1, (entity.y - Globals.currentScene.height / 2 + 0.5f) * -1);
+                image.transform.position = CalculatePosition(entity.x, entity.y, entity.weight, entity.height, 1);
                 SpriteRenderer renderer = image.AddComponent<SpriteRenderer>();
                 renderer.sortingOrder = 3;
                 image.AddComponent<EntityObject>();
@@ -274,7 +275,7 @@ namespace Requiem
                     {
                         top = true;
                         camera.transform.Rotate(60, 0, 0);
-                        camera.transform.position = new Vector3(0, 15, 0);
+                        camera.transform.position = new Vector3(0, 10, 0);
                         ChangeSkins();
                     }
                     break;
@@ -322,19 +323,31 @@ namespace Requiem
             switch (direction)
             {
                 case 0:
-                    camera.transform.Translate(new Vector3(speed * Time.deltaTime, 0), Space.World); // move on +X axis
+                    if(camera.transform.position.x < Globals.currentScene.weight / 2 + 3)
+                    {
+                        camera.transform.Translate(new Vector3(speed * Time.deltaTime, 0), Space.World); // move on +X axis
+                    }
                     break;
 
                 case 2:
-                    camera.transform.Translate(new Vector3(-(speed * Time.deltaTime), 0), Space.World); // move on -X axis
+                    if(camera.transform.position.x > -Globals.currentScene.weight / 2 - 3)
+                    {
+                        camera.transform.Translate(new Vector3(-(speed * Time.deltaTime), 0), Space.World); // move on -X axis
+                    }
                     break;
 
                 case 1:
-                    camera.transform.Translate(new Vector3(0,0,speed * Time.deltaTime), Space.World); // move on +Z axis
+                    if(camera.transform.position.z < Globals.currentScene.height / 2 + 3)
+                    {
+                        camera.transform.Translate(new Vector3(0, 0, speed * Time.deltaTime), Space.World); // move on +Z axis
+                    }
                     break;
 
                 case 3:
-                    camera.transform.Translate(new Vector3(0,0,-(speed * Time.deltaTime)), Space.World); // move on -Z axis
+                    if(camera.transform.position.z > -Globals.currentScene.height / 2 - 3)
+                    {
+                        camera.transform.Translate(new Vector3(0, 0, -(speed * Time.deltaTime)), Space.World); // move on -Z axis
+                    }
                     break;
             }
         }
@@ -371,24 +384,7 @@ namespace Requiem
             {
                 //Redraw the gameObject
                 case "redraw":
-                    switch (type)
-                    {
-                        case "character":
-                        case "ennemy":
-                        case "npc":
-                            RedrawEntity(objectToChange);
-                            break;
-
-                        case "add1":
-                            RedrawAdd1(objectToChange);
-                            break;
-
-                        case "add2":
-                            RedrawAdd2(objectToChange);
-                            break;
-
-                        //TODO Redraw add0(destroyed by fire or pushed)
-                    }
+                    Redraw(objectToChange, type);
                     break;
 
                 //Delete the gameObject
@@ -398,11 +394,34 @@ namespace Requiem
 
                 //Change the position and rotation of the gameObject
                 case "move":
-                    //TODO Change position and rotation
+                    if(type == "entity")
+                    {
+                        Entity entity = objectToChange.GetComponent<EntityObject>().entity;
+                        objectToChange.transform.position = CalculatePosition(entity.x, entity.y, entity.weight, entity.height, 1);
+                    }
+                    else
+                    {
+                        LayerImage image = objectToChange.GetComponent<ImageObject>().layerImage;
+                        objectToChange.transform.position = CalculatePosition(image.x, image.y, image.weight, image.height, type == "add0" ? -0.01f : type == "add1" ? 1 : 3.5f);
+                    }
                     ChangeObject(type, name, "redraw", true, objectToChange);
                     break;
 
             }
+        }
+
+        /// <summary>
+        /// Method which calculate the position of a GameObject
+        /// </summary>
+        /// <param name="x">X coordinate (XAxis)</param>
+        /// <param name="y">Y coordinate (ZAxis)</param>
+        /// <param name="weight">Weight of the object</param>
+        /// <param name="height">Height of the object</param>
+        /// <param name="high">High of the object (YAxis)</param>
+        /// <returns></returns>
+        private Vector3 CalculatePosition(int x, int y, float weight, float height, float high)
+        {
+            return new Vector3(x - Globals.currentScene.weight / 2 + weight / 2, high, (y - Globals.currentScene.height / 2 + height / 2) * -1);
         }
 
         /// <summary>
@@ -441,13 +460,13 @@ namespace Requiem
             //Adds1
             foreach (GameObject gameObject in GameObject.FindGameObjectsWithTag("Adds1"))
             {
-                RedrawAdd1(gameObject);
+                Redraw(gameObject, "add1");
             }
 
             //Adds2
             foreach (GameObject gameObject in GameObject.FindGameObjectsWithTag("Adds2"))
             {
-                RedrawAdd2(gameObject);
+                Redraw(gameObject, "add2");
             }
 
             //Hide walls
@@ -459,64 +478,65 @@ namespace Requiem
             //Entities
             foreach(GameObject gameObject in GameObject.FindGameObjectsWithTag("Entities"))
             {
-                RedrawEntity(gameObject);
+                Redraw(gameObject, "entity");
             }
         }        
 
         /// <summary>
-        /// Method which redraw the entities
+        /// Method which redraw a GameObject
         /// </summary>
-        /// <param name="gameObject">Entity to redraw</param>
-        private void RedrawEntity(GameObject gameObject)
+        /// <param name="gameObject">GameObject to redraw</param>
+        /// <param name="type">Type of the GameObject</param>
+        private void Redraw(GameObject gameObject, string type)
         {
-            Entity entity = gameObject.GetComponent<EntityObject>().entity;
-            if (top)
+            switch (type)
             {
-                gameObject.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("skins/" + entity.type + "/" + entity.name + "_top");
-                gameObject.transform.eulerAngles = new Vector3(90, 90 * entity.face, 0);
-            }
-            else
-            {
-                gameObject.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("skins/" + entity.type + "/" + entity.name + "_" + ((face + entity.face) % 4));
-                gameObject.transform.eulerAngles = new Vector3(0, 90 * face, 0);
-            }
-        }
+                case "entity":
+                    Entity entity = gameObject.GetComponent<EntityObject>().entity;
+                    if (top)
+                    {
+                        gameObject.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("skins/" + entity.type + "/" + entity.name + "_top");
+                        gameObject.transform.eulerAngles = new Vector3(90, 90 * entity.face, 0);
+                    }
+                    else
+                    {
+                        gameObject.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("skins/" + entity.type + "/" + entity.name + "_" + ((face + entity.face) % 4));
+                        gameObject.transform.eulerAngles = new Vector3(0, 90 * face, 0);
+                    }
+                    break;
 
-        /// <summary>
-        /// Method which redraw the adds on level 1
-        /// </summary>
-        /// <param name="gameObject">Add1 to redraw</param>
-        private void RedrawAdd1(GameObject gameObject)
-        {
-            LayerImage image = gameObject.GetComponent<ImageObject>().layerImage;
-            if (top)
-            {
-                gameObject.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("images/adds1/" + image.name + "_top");
-                gameObject.transform.eulerAngles = new Vector3(90, 90 * image.face, 0);
-            }
-            else
-            {
-                gameObject.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("images/adds1/" + image.name + "_" + ((face + image.face) % 4));
-                gameObject.transform.eulerAngles = new Vector3(0, 90 * face, 0);
-            }
-        }
+                case "add0":
+                    LayerImage image0 = gameObject.GetComponent<ImageObject>().layerImage;
+                    gameObject.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("images/adds0/" + image0.name);
+                    break;
 
-        /// <summary>
-        /// Method which redraw the adds on levele 2
-        /// </summary>
-        /// <param name="gameObject">Add2 to redraw</param>
-        private void RedrawAdd2(GameObject gameObject)
-        {
-            LayerImage image = gameObject.GetComponent<ImageObject>().layerImage;
-            if (top)
-            {
-                gameObject.SetActive(false);
-            }
-            else
-            {
-                gameObject.SetActive(true);
-                gameObject.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("images/adds2/" + image.name + "_" + ((face + image.face) % 4));
-                gameObject.transform.eulerAngles = new Vector3(0, 90 * face, 0);
+                case "add1":
+                    LayerImage image1 = gameObject.GetComponent<ImageObject>().layerImage;
+                    if (top)
+                    {
+                        gameObject.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("images/adds1/" + image1.name + "_top");
+                        gameObject.transform.eulerAngles = new Vector3(90, 90 * image1.face, 0);
+                    }
+                    else
+                    {
+                        gameObject.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("images/adds1/" + image1.name + "_" + ((face + image1.face) % 4));
+                        gameObject.transform.eulerAngles = new Vector3(0, 90 * face, 0);
+                    }
+                    break;
+
+                case "add2":
+                    LayerImage image2 = gameObject.GetComponent<ImageObject>().layerImage;
+                    if (top)
+                    {
+                        gameObject.SetActive(false);
+                    }
+                    else
+                    {
+                        gameObject.SetActive(true);
+                        gameObject.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("images/adds2/" + image2.name + "_" + ((face + image2.face) % 4));
+                        gameObject.transform.eulerAngles = new Vector3(0, 90 * face, 0);
+                    }
+                    break;
             }
         }
     }
