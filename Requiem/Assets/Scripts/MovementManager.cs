@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 
 namespace Requiem
 {
@@ -10,15 +11,32 @@ namespace Requiem
     /// </summary>
     public class MovementManager
     {
+        //Variable
+        int nextCase = 0;
+
         //Objects
         List<Location> path = new List<Location>();
+
+        //TEMP/////////////////////////
+        //Location[] movingPatern = { new Location(2, 7), new Location(7, 1), new Location(2, 2), new Location(7, 8)};
+        Location[] movingPatern = { new Location(2, 7), new Location(7, 8)};
+        int currentMov = -1;
+        public void TempPatern()
+        {
+            ++currentMov;
+            if (currentMov == movingPatern.Length) { currentMov = 0; }
+            path = CalculateMove(new Location(Globals.currentCharacter.x, Globals.currentCharacter.y), movingPatern[currentMov]);
+            nextCase = path.Count - 1;
+            StartMove();
+        }
+        ///////////////////////////////
 
         /// <summary>
         /// Method which calculate the better path to the target
         /// </summary>
         /// <param name="start">Basic position</param>
         /// <param name="target">Target position</param>
-        public void CalculateMove(Location start, Location target)
+        public List<Location> CalculateMove(Location start, Location target)
         {
             Location current = null;
             List<Location> openList = new List<Location>();
@@ -80,12 +98,13 @@ namespace Requiem
                     }
                 }
             }
-
+            List<Location> newPath = new List<Location>();
             while(current != null)
             {
-                path.Add(current);
+                newPath.Add(current);
                 current = current.parent;
             }
+            return newPath;
         }
 
         /// <summary>
@@ -93,10 +112,52 @@ namespace Requiem
         /// </summary>
         public void StartMove()
         {
-            Location current = path.Last();
-            Globals.timeManager.AddAction(new Act("movement", Globals.currentCharacter.dices[0]/2, "move", Globals.currentCharacter, 
-                current.x != Globals.currentCharacter.x ? current.x > Globals.currentCharacter.x ? "up" : "down" : current.y > Globals.currentCharacter.y ? "left" : "right"));
-            path.Remove(path.Last());
+            bool success = true;
+            string direction = path[nextCase - 1].x != path[nextCase].x ? (path[nextCase - 1].x > path[nextCase].x ? "right" : "left") : (path[nextCase - 1].y > path[nextCase].y ? "down" : "up");
+            Act action = new Act("movement", Globals.currentCharacter.dices[0]/2, "move", Globals.currentCharacter, direction);
+            switch (direction)
+            {
+                case "up":
+                    if(Globals.currentScene.cases[path[nextCase].x, path[nextCase].y - 1].type == "obstacle")
+                    {
+                        action.type = "obstacle";
+                        //TODO Find the good algo for successfully passing an obstacle
+                    }
+                    break;
+
+                case "down":
+                    if (Globals.currentScene.cases[path[nextCase].x, path[nextCase].y + 1].type == "obstacle")
+                    {
+                        action.type = "obstacle";
+                    }
+                    break;
+
+                case "left":
+                    if (Globals.currentScene.cases[path[nextCase].x - 1, path[nextCase].y].type == "obstacle")
+                    {
+                        action.type = "obstacle";
+                    }
+                    break;
+
+                case "right":
+                    if (Globals.currentScene.cases[path[nextCase].x + 1, path[nextCase].y].type == "obstacle")
+                    {
+                        action.type = "obstacle";
+                    }
+                    break;
+            }
+            if (success)
+            {
+                Globals.timeManager.add.Add(action);
+                --nextCase;
+            }
+            else
+            {
+                Debug.Log("Failure");
+                path = CalculateMove(new Location(path[nextCase].x, path[nextCase].y), movingPatern[currentMov]);
+                nextCase = path.Count - 1;
+                StartMove();
+            }
         }
 
         /// <summary>
@@ -110,34 +171,40 @@ namespace Requiem
             {
                 //Move the launcher based on the direction
                 case "move":
-                    //TODO Change skin case to base before position
+                case "obstacle":
+                    int nbr = action.type == "move" ? 1 : 2;
+                    Globals.cameraManager.ChangeObject("baseGrid", action.launcher.x + ";" + action.launcher.y, "redraw");
                     switch (action.parameters)
                     {
                         case "up":
-                            action.launcher.y--;
+                            action.launcher.y = action.launcher.y - nbr;
                             action.launcher.face = 0;
                             break;
 
                         case "down":
-                            action.launcher.y++;
+                            action.launcher.y = action.launcher.y + nbr;
                             action.launcher.face = 2;
                             break;
 
                         case "left":
-                            action.launcher.x--;
+                            action.launcher.x = action.launcher.x - nbr;
                             action.launcher.face = 3;
                             break;
 
                         case "right":
-                            action.launcher.x++;
+                            action.launcher.x = action.launcher.x + nbr;
                             action.launcher.face = 1;
                             break;
                     }
-                    if(path.Count != 0)
+                    if(nextCase != 0)
                     {
                         StartMove();
                     }
-                    //TODO Change skin case to base after position
+                    else
+                    {
+                        TempPatern();
+                    }
+                    Globals.cameraManager.ChangeObject("characterGrid", action.launcher.x + ";" + action.launcher.y, "redraw");
                     Globals.cameraManager.ChangeObject(action.launcher.type, action.launcher.name, "move");
                     break;
             }
@@ -158,7 +225,17 @@ namespace Requiem
             {
                 if (Globals.currentScene.cases[x - 1, y].type != "wall")
                 {
-                    returnable.Add(new Location(x - 1, y));
+                    if (x > 1 && Globals.currentScene.cases[x - 1, y].type == "obstacle")
+                    {
+                        if (Globals.currentScene.cases[x - 1, y].high <= Globals.currentCharacter.dices[4])
+                        {
+                            returnable.Add(new Location(x - 2, y));
+                        }
+                    }
+                    else
+                    {
+                        returnable.Add(new Location(x - 1, y));
+                    }
                 }
             }
 
@@ -167,7 +244,17 @@ namespace Requiem
             {
                 if (Globals.currentScene.cases[x + 1, y].type != "wall")
                 {
-                    returnable.Add(new Location(x + 1, y));
+                    if (x < Globals.currentScene.weight - 2 && Globals.currentScene.cases[x + 1, y].type == "obstacle")
+                    {
+                        if (Globals.currentScene.cases[x + 1, y].high <= Globals.currentCharacter.dices[4])
+                        {
+                            returnable.Add(new Location(x + 2, y));
+                        }
+                    }
+                    else
+                    {
+                        returnable.Add(new Location(x + 1, y));
+                    }
                 }
             }
 
@@ -176,7 +263,17 @@ namespace Requiem
             {
                 if (Globals.currentScene.cases[x, y - 1].type != "wall")
                 {
-                    returnable.Add(new Location(x, y - 1));
+                    if (y > 1 && Globals.currentScene.cases[x, y - 1].type == "obstacle")
+                    {
+                        if (Globals.currentScene.cases[x, y - 1].high <= Globals.currentCharacter.dices[4])
+                        {
+                            returnable.Add(new Location(x, y - 2));
+                        }
+                    }
+                    else
+                    {
+                        returnable.Add(new Location(x, y - 1));
+                    }
                 }
             }
 
@@ -185,7 +282,17 @@ namespace Requiem
             {
                 if (Globals.currentScene.cases[x, y + 1].type != "wall")
                 {
-                    returnable.Add(new Location(x, y + 1));
+                    if (y > Globals.currentScene.height - 2 && Globals.currentScene.cases[x, y + 1].type == "obstacle")
+                    {
+                        if (Globals.currentScene.cases[x, y + 1].high <= Globals.currentCharacter.dices[4])
+                        {
+                            returnable.Add(new Location(x, y + 2));
+                        }
+                    }
+                    else
+                    {
+                        returnable.Add(new Location(x, y + 1));
+                    }
                 }
             }
 

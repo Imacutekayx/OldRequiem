@@ -7,6 +7,8 @@ namespace Requiem
     public class TimeManager
     {
         public List<Act> actions = new List<Act>();
+        public List<Act> add = new List<Act>();
+        public List<Act> remove = new List<Act>();
 
         /// <summary>
         /// Add an action to the queue
@@ -14,8 +16,7 @@ namespace Requiem
         /// <param name="action">Action to add</param>
         public void AddAction(Act action)
         {
-            actions.Add(action);
-            actions = actions.OrderBy(a => a.time).ToList();
+            add.Add(action);
         }
 
         /// <summary>
@@ -31,7 +32,7 @@ namespace Requiem
                     Globals.movementManager.Execute(action);
                     break;
             }
-            actions.Remove(action);
+            remove.Add(action);
         }
     }
 }

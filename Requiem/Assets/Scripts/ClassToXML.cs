@@ -15,8 +15,6 @@ namespace Requiem
         /// </summary>
         public static void Save()
         {
-            //TODO Make a better prototyping for movements
-
             //USEABLES
             Item coin = new Item("gold", 1, "A simple coin of gold", null);
             Globals.useables.Add(coin);
@@ -55,7 +53,7 @@ namespace Requiem
             {
                 new Power("summonWeapon", 3, 0, 1, 2, 3, charEffects, charOptions)
             };
-            int[] charDices = { 35, 70, 85, 60, 40, 25, 55 };
+            int[] charDices = { 35, 70, 85, 60, 47, 25, 55 };
             Dictionary<Item, int> charBag = new Dictionary<Item, int>
             {
                 { Globals.useables[0], 100 }
@@ -114,40 +112,42 @@ namespace Requiem
             LayerImage sceBackground = new LayerImage("grass", 20, 20, 0, 0);
             List<LayerImage> sceAdds1 = new List<LayerImage>
             {
-                new LayerImage("bigChest", 2, 1, 14, 7, 2)
+                new LayerImage("bigChest", 1, 2, 1, 7, 1, 50),
+                new LayerImage("bigRock", 1, 2, 3, 7, 1, 45)
             };
             List<LayerImage> sceWalls = new List<LayerImage>
             {
-                new LayerImage("eastWall", 1, 20, 19, 0, 3)
+                new LayerImage("ennemyWestWall", 1, 2, 1, 2, 1),
+                new LayerImage("ennemyEastWall", 1, 3, 3, 1, 3),
+                new LayerImage("ennemySouthWall", 3, 1, 1, 4, 0),
+                new LayerImage("npcNorthWall", 3, 1, 7, 0, 2),
+                new LayerImage("npcEastWall", 1, 2, 9, 1, 3)
             };
-            List<Case> sceCases = new List<Case>
-            {
-                new Case(14, 7, "chest", "", "openChest"),
-                new Case(15, 7, "chest", "", "openChest")
-            };
+            List<Case> sceCases = new List<Case>();
             List<string> sceParameters = new List<string>
             {
                 "weapon;sword",
                 "useable;gold;5"
             };
+            //TODO Think about scripts (Trigger = check when move action?)
             List<LayerScript> sceScripts = new List<LayerScript>
             {
-                new LayerScript("openChest", true, 2, 1, 14, 7, 0, sceParameters)
+                //new LayerScript("openChest", true, 2, 1, 14, 7, 0, sceParameters)
             };
-            Globals.characters[0].x = 10;
-            Globals.characters[0].y = 19;
+            Globals.characters[0].x = 7;
+            Globals.characters[0].y = 8;
             Globals.characters[0].face = 0;
-            Globals.ennemies[0].x = 10;
-            Globals.ennemies[0].y = 0;
-            Globals.ennemies[0].face = 2;
-            Globals.npcs[0].x = 16;
-            Globals.npcs[0].y = 12;
+            Globals.ennemies[0].x = 2;
+            Globals.ennemies[0].y = 3;
+            Globals.ennemies[0].face = 0;
+            Globals.npcs[0].x = 8;
+            Globals.npcs[0].y = 1;
             Globals.npcs[0].face = 3;
             List<Entity> entities = new List<Entity>
             {
                 Globals.characters[0], Globals.ennemies[0], Globals.npcs[0]
             };
-            Globals.scenes.Add(new Scene("forestStart", 20, 20, "exploration", new List<LayerImage>(),
+            Globals.scenes.Add(new Scene("forestStart", 10, 10, "exploration", new List<LayerImage>(),
                 sceAdds1, new List<LayerImage>(), sceWalls, sceCases, sceScripts, entities));
             Scenes();
             
@@ -572,6 +572,7 @@ namespace Requiem
                             writer.WriteStartElement("image");
                             writer.WriteElementString("name", image.name);
                             writer.WriteElementString("size", image.weight + ";" + image.height);
+                            writer.WriteElementString("high", Convert.ToString(image.high));
                             writer.WriteElementString("coordinate", image.x + ";" + image.y);
                             writer.WriteElementString("face", Convert.ToString(image.face));
                             writer.WriteEndElement();
@@ -587,7 +588,7 @@ namespace Requiem
                         writer.WriteStartElement("case");
                         //Coordinates of the case
                         writer.WriteElementString("coordinate", c.x + ";" + c.y);
-                        writer.WriteElementString("obstacle", c.type);
+                        writer.WriteElementString("type", c.type);
                         writer.WriteElementString("state", c.state);
                         writer.WriteElementString("script", c.script);
                         writer.WriteEndElement();

@@ -648,6 +648,7 @@ namespace Requiem
             string layImName;
             int layImHeight;
             int layImWeight;
+            int layImHigh;
             int layImX;
             int layImY;
             byte layImFace;
@@ -705,11 +706,12 @@ namespace Requiem
                         string[] imTemp = image.SelectSingleNode("size").InnerText.Split(';');
                         layImWeight = Convert.ToInt32(imTemp[0]);
                         layImHeight = Convert.ToInt32(imTemp[1]);
+                        layImHigh = Convert.ToInt32(image.SelectSingleNode("high").InnerText);
                         imTemp = image.SelectSingleNode("coordinate").InnerText.Split(';');
                         layImX = Convert.ToInt32(imTemp[0]);
                         layImY = Convert.ToInt32(imTemp[1]);
                         layImFace = Convert.ToByte(image.SelectSingleNode("face").InnerText);
-                        lstLayers[i].Add(new LayerImage(layImName, layImWeight, layImHeight, layImX, layImY, layImFace));
+                        lstLayers[i].Add(new LayerImage(layImName, layImWeight, layImHeight, layImX, layImY, layImFace, layImHigh));
                     }
                 }
                 //List of cases
@@ -721,10 +723,10 @@ namespace Requiem
                     string[] cCoor = c.SelectSingleNode("coordinate").InnerText.Split(';');
                     casX = Convert.ToInt32(cCoor[0]);
                     casY = Convert.ToInt32(cCoor[1]);
-                    casType = c.SelectSingleNode("obstacle").InnerText;
+                    casType = c.SelectSingleNode("type").InnerText;
                     casState = c.SelectSingleNode("state").InnerText;
                     casScript = c.SelectSingleNode("script").InnerText;
-                    cases.Add(new Case(casX, casY, casType, casState, casScript));
+                    cases.Add(new Case(casX, casY, casType, 0, casState, casScript));
                 }
                 //List of scripts
                 XmlNode xmlScripts = scene.SelectSingleNode("scripts");

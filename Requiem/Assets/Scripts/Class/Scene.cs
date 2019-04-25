@@ -46,6 +46,26 @@ namespace Requiem.Class
             {
                 cases[c.x, c.y] = c;
             }
+            foreach(LayerImage add1 in adds1)
+            {
+                for(int i = add1.x; i < add1.x + add1.weight; ++i)
+                {
+                    for (int j = add1.y; j < add1.y + add1.height; ++j)
+                    {
+                        cases[i, j] = new Case(i, j, "obstacle", add1.high);
+                    }
+                }
+            }
+            foreach(LayerImage wall in walls)
+            {
+                for (int i = wall.x; i < wall.x + wall.weight; ++i)
+                {
+                    for (int j = wall.y; j < wall.y + wall.height; ++j)
+                    {
+                        cases[i, j] = new Case(i, j, "wall", 100);
+                    }
+                }
+            }
             scripts = _scripts;
             entities = _entities;
         }

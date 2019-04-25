@@ -167,8 +167,18 @@ namespace Requiem
                 obj.AddComponent<ImageObject>();
                 obj.GetComponent<ImageObject>().layerImage = wall;
                 obj.tag = "Walls";
-                
-                for(int i = 0; i < faces.Length; ++i)
+
+                //Grids of the wall
+                for (int k = wall.x; k < wall.x + wall.weight; ++k)
+                {
+                    for (int l = wall.y; l < wall.y + wall.height; ++l)
+                    {
+                        grid[k, l].GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("images/grid/wall");
+                    }
+                }
+
+                //Sides of the wall
+                for (int i = 0; i < faces.Length; ++i)
                 {
                     GameObject img = new GameObject
                     {
@@ -204,7 +214,7 @@ namespace Requiem
                     img.transform.eulerAngles = new Vector3(i == 4 ? 90 : 0, i == 4 ? 0 : i * 90, 0);
                     img.AddComponent<SpriteRenderer>();
                     img.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("images/walls/" + Globals.currentScene.name + "_" + wall.name + "_" + faces[i]);
-                    img.GetComponent<SpriteRenderer>().sortingOrder = 4;
+                    img.GetComponent<SpriteRenderer>().sortingOrder = 3;
                 }
                 lstWalls[wall.face].Add(obj);
                 obj.transform.parent = wallObjects.transform;
@@ -276,6 +286,10 @@ namespace Requiem
                         top = true;
                         camera.transform.Rotate(60, 0, 0);
                         camera.transform.position = new Vector3(0, 10, 0);
+                        foreach (GameObject obj in lstWalls[face])
+                        {
+                            obj.SetActive(true);
+                        }
                         ChangeSkins();
                     }
                     break;
@@ -286,6 +300,10 @@ namespace Requiem
                         top = false;
                         camera.transform.Rotate(-60, 0, 0);
                         ChangeCameraPosition();
+                        foreach (GameObject obj in lstWalls[face])
+                        {
+                            obj.SetActive(false);
+                        }
                     }
                     break;
 
@@ -360,18 +378,40 @@ namespace Requiem
         public void ChangeObject(string type, string name, string operation, bool recursive = false, GameObject send = null)
         {
             GameObject objectToChange = null;
+            string tag = null;
             
             //Get object
             if (recursive)
             {
                 objectToChange = send;
             }
+            else if (type.Contains("Grid"))
+            {
+                string[] tempCoord = name.Split(';');
+                objectToChange = grid[Convert.ToInt32(tempCoord[0]), Convert.ToInt32(tempCoord[1])];
+            }
             else
             {
-                GameObject[] gameObjects = GameObject.FindGameObjectsWithTag(type);
+                switch (type)
+                {
+                    case "character":
+                    case "ennemy":
+                    case "npc":
+                        tag = "Entities";
+                        break;
+
+                    case "add0":
+                        tag = "Adds0";
+                        break;
+
+                    case "add1":
+                        tag = "Adds1";
+                        break;
+                }
+                GameObject[] gameObjects = GameObject.FindGameObjectsWithTag(tag);
                 foreach (GameObject gameObject in gameObjects)
                 {
-                    if (gameObject.name == name)
+                    if (gameObject.name.Contains(name))
                     {
                         objectToChange = gameObject;
                         break;
@@ -394,7 +434,7 @@ namespace Requiem
 
                 //Change the position and rotation of the gameObject
                 case "move":
-                    if(type == "entity")
+                    if(tag == "Entities")
                     {
                         Entity entity = objectToChange.GetComponent<EntityObject>().entity;
                         objectToChange.transform.position = CalculatePosition(entity.x, entity.y, entity.weight, entity.height, 1);
@@ -470,9 +510,12 @@ namespace Requiem
             }
 
             //Hide walls
-            foreach(GameObject obj in lstWalls[face])
+            if (!top)
             {
-                obj.SetActive(false);
+                foreach (GameObject obj in lstWalls[face])
+                {
+                    obj.SetActive(false);
+                }
             }
 
             //Entities
@@ -489,54 +532,68 @@ namespace Requiem
         /// <param name="type">Type of the GameObject</param>
         private void Redraw(GameObject gameObject, string type)
         {
-            switch (type)
+            if (type.Contains("Grid"))
             {
-                case "entity":
-                    Entity entity = gameObject.GetComponent<EntityObject>().entity;
-                    if (top)
-                    {
-                        gameObject.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("skins/" + entity.type + "/" + entity.name + "_top");
-                        gameObject.transform.eulerAngles = new Vector3(90, 90 * entity.face, 0);
-                    }
-                    else
-                    {
-                        gameObject.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("skins/" + entity.type + "/" + entity.name + "_" + ((face + entity.face) % 4));
-                        gameObject.transform.eulerAngles = new Vector3(0, 90 * face, 0);
-                    }
-                    break;
+                gameObject.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("images/grid/" + type.Substring(0, type.Length - 4));
+            }
+            else
+            {
+                switch (type)
+                {
+                    case "entity":
+                    case "character":
+                    case "ennemy":
+                    case "npc":
+                        Entity entity = gameObject.GetComponent<EntityObject>().entity;
+                        if (top)
+                        {
+                            gameObject.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("skins/" + entity.type + "/" + entity.name + "_top");
+                            gameObject.transform.eulerAngles = new Vector3(90, 90 * entity.face, 0);
+                            gameObject.transform.position = new Vector3(gameObject.transform.position.x, 0.1f, gameObject.transform.position.z);
+                        }
+                        else
+                        {
+                            gameObject.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("skins/" + entity.type + "/" + entity.name + "_" + ((face + 4 - entity.face) % 4));
+                            gameObject.transform.eulerAngles = new Vector3(0, 90 * face, 0);
+                            gameObject.transform.position = new Vector3(gameObject.transform.position.x, 1, gameObject.transform.position.z);
+                        }
+                        break;
 
-                case "add0":
-                    LayerImage image0 = gameObject.GetComponent<ImageObject>().layerImage;
-                    gameObject.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("images/adds0/" + image0.name);
-                    break;
+                    case "add0":
+                        LayerImage image0 = gameObject.GetComponent<ImageObject>().layerImage;
+                        gameObject.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("images/adds0/" + image0.name);
+                        break;
 
-                case "add1":
-                    LayerImage image1 = gameObject.GetComponent<ImageObject>().layerImage;
-                    if (top)
-                    {
-                        gameObject.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("images/adds1/" + image1.name + "_top");
-                        gameObject.transform.eulerAngles = new Vector3(90, 90 * image1.face, 0);
-                    }
-                    else
-                    {
-                        gameObject.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("images/adds1/" + image1.name + "_" + ((face + image1.face) % 4));
-                        gameObject.transform.eulerAngles = new Vector3(0, 90 * face, 0);
-                    }
-                    break;
+                    case "add1":
+                        LayerImage image1 = gameObject.GetComponent<ImageObject>().layerImage;
+                        if (top)
+                        {
+                            gameObject.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("images/adds1/" + image1.name + "_top");
+                            gameObject.transform.eulerAngles = new Vector3(90, 90 * image1.face, 0);
+                            gameObject.transform.position = new Vector3(gameObject.transform.position.x, 0.1f, gameObject.transform.position.z);
+                        }
+                        else
+                        {
+                            gameObject.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("images/adds1/" + image1.name + "_" + ((face + 4 - image1.face) % 4));
+                            gameObject.transform.eulerAngles = new Vector3(0, 90 * face, 0);
+                            gameObject.transform.position = new Vector3(gameObject.transform.position.x, 1, gameObject.transform.position.z);
+                        }
+                        break;
 
-                case "add2":
-                    LayerImage image2 = gameObject.GetComponent<ImageObject>().layerImage;
-                    if (top)
-                    {
-                        gameObject.SetActive(false);
-                    }
-                    else
-                    {
-                        gameObject.SetActive(true);
-                        gameObject.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("images/adds2/" + image2.name + "_" + ((face + image2.face) % 4));
-                        gameObject.transform.eulerAngles = new Vector3(0, 90 * face, 0);
-                    }
-                    break;
+                    case "add2":
+                        LayerImage image2 = gameObject.GetComponent<ImageObject>().layerImage;
+                        if (top)
+                        {
+                            gameObject.SetActive(false);
+                        }
+                        else
+                        {
+                            gameObject.SetActive(true);
+                            gameObject.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("images/adds2/" + image2.name + "_" + ((face + 4 - image2.face) % 4));
+                            gameObject.transform.eulerAngles = new Vector3(0, 90 * face, 0);
+                        }
+                        break;
+                }
             }
         }
     }
