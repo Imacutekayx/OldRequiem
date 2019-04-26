@@ -652,6 +652,7 @@ namespace Requiem
             int layImX;
             int layImY;
             byte layImFace;
+            List<LayerScript> layImScripts = new List<LayerScript>();
             //Cases
             List<Case> cases = new List<Case>();
             int casX;
@@ -663,6 +664,7 @@ namespace Requiem
             List<LayerScript> scripts = new List<LayerScript>();
             string scrName;
             bool scrState;
+            string scrTypeTrigger;
             int scrWeight;
             int scrHeight;
             int scrX;
@@ -711,7 +713,34 @@ namespace Requiem
                         layImX = Convert.ToInt32(imTemp[0]);
                         layImY = Convert.ToInt32(imTemp[1]);
                         layImFace = Convert.ToByte(image.SelectSingleNode("face").InnerText);
-                        lstLayers[i].Add(new LayerImage(layImName, layImWeight, layImHeight, layImX, layImY, layImFace, layImHigh));
+                        //List of scripts
+                        XmlNode xmlLayScripts = scene.SelectSingleNode("scripts");
+                        XmlNodeList xmlLayScript = xmlLayScripts.SelectNodes("script");
+                        scripts.Clear();
+                        foreach (XmlNode script in xmlLayScript)
+                        {
+                            //Attributes
+                            scrName = script.SelectSingleNode("name").InnerText;
+                            scrState = script.SelectSingleNode("state").InnerText == "true" ? true : false;
+                            scrTypeTrigger = script.SelectSingleNode("typeTrigger").InnerText;
+                            string[] scrTemp = script.SelectSingleNode("size").InnerText.Split(';');
+                            scrWeight = Convert.ToInt32(scrTemp[0]);
+                            scrHeight = Convert.ToInt32(scrTemp[1]);
+                            scrTemp = script.SelectSingleNode("coordinate").InnerText.Split(';');
+                            scrX = Convert.ToInt32(scrTemp[0]);
+                            scrY = Convert.ToInt32(scrTemp[1]);
+                            scrRange = Convert.ToInt32(script.SelectSingleNode("range").InnerText);
+                            //List of parameters
+                            XmlNode xmlParameters = script.SelectSingleNode("parameters");
+                            XmlNodeList xmlParameter = xmlParameters.SelectNodes("parameter");
+                            scrParameters.Clear();
+                            foreach (XmlNode parameter in xmlParameter)
+                            {
+                                scrParameters.Add(parameter.InnerText);
+                            }
+                            layImScripts.Add(new LayerScript(scrName, scrState, scrTypeTrigger, scrWeight, scrHeight, scrX, scrY, scrRange, scrParameters));
+                        }
+                        lstLayers[i].Add(new LayerImage(layImName, layImWeight, layImHeight, layImX, layImY, layImFace, layImHigh, layImScripts));
                     }
                 }
                 //List of cases
@@ -737,6 +766,7 @@ namespace Requiem
                     //Attributes
                     scrName = script.SelectSingleNode("name").InnerText;
                     scrState = script.SelectSingleNode("state").InnerText == "true" ? true : false;
+                    scrTypeTrigger = script.SelectSingleNode("typeTrigger").InnerText;
                     string[] scrTemp = script.SelectSingleNode("size").InnerText.Split(';');
                     scrWeight = Convert.ToInt32(scrTemp[0]);
                     scrHeight = Convert.ToInt32(scrTemp[1]);
@@ -752,7 +782,7 @@ namespace Requiem
                     {
                         scrParameters.Add(parameter.InnerText);
                     }
-                    scripts.Add(new LayerScript(scrName, scrState, scrWeight, scrHeight, scrX, scrY, scrRange, scrParameters));
+                    scripts.Add(new LayerScript(scrName, scrState, scrTypeTrigger, scrWeight, scrHeight, scrX, scrY, scrRange, scrParameters));
                 }
                 //List of entities
                 XmlNode xmlEntities = scene.SelectSingleNode("entities");

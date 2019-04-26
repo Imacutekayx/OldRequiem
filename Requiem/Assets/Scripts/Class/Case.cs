@@ -9,12 +9,12 @@
         public int x;
         public int y;
         public string type;
-        public int high;
+        public float high;
         public string state;
         public string script;
 
         //Constructor
-        public Case(int _x, int _y, string _type = null, int _high = 0, string _state = null, string _script = null)
+        public Case(int _x, int _y, string _type = null, float _high = 0, string _state = null, string _script = null)
         {
             x = _x;
             y = _y;

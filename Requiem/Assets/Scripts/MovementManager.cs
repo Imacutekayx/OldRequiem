@@ -12,24 +12,10 @@ namespace Requiem
     public class MovementManager
     {
         //Variable
-        int nextCase = 0;
+        public int nextCase = 0;
 
         //Objects
-        List<Location> path = new List<Location>();
-
-        //TEMP/////////////////////////
-        //Location[] movingPatern = { new Location(2, 7), new Location(7, 1), new Location(2, 2), new Location(7, 8)};
-        Location[] movingPatern = { new Location(2, 7), new Location(7, 8)};
-        int currentMov = -1;
-        public void TempPatern()
-        {
-            ++currentMov;
-            if (currentMov == movingPatern.Length) { currentMov = 0; }
-            path = CalculateMove(new Location(Globals.currentCharacter.x, Globals.currentCharacter.y), movingPatern[currentMov]);
-            nextCase = path.Count - 1;
-            StartMove();
-        }
-        ///////////////////////////////
+        public List<Location> path = new List<Location>();
 
         /// <summary>
         /// Method which calculate the better path to the target
@@ -112,6 +98,7 @@ namespace Requiem
         /// </summary>
         public void StartMove()
         {
+            //TODO Fix issue obstacle when size > 1
             bool success = true;
             string direction = path[nextCase - 1].x != path[nextCase].x ? (path[nextCase - 1].x > path[nextCase].x ? "right" : "left") : (path[nextCase - 1].y > path[nextCase].y ? "down" : "up");
             Act action = new Act("movement", Globals.currentCharacter.dices[0]/2, "move", Globals.currentCharacter, direction);
@@ -146,6 +133,7 @@ namespace Requiem
                     }
                     break;
             }
+
             if (success)
             {
                 Globals.timeManager.add.Add(action);
@@ -154,9 +142,6 @@ namespace Requiem
             else
             {
                 Debug.Log("Failure");
-                path = CalculateMove(new Location(path[nextCase].x, path[nextCase].y), movingPatern[currentMov]);
-                nextCase = path.Count - 1;
-                StartMove();
             }
         }
 
@@ -200,10 +185,33 @@ namespace Requiem
                     {
                         StartMove();
                     }
-                    else
+
+                    //Trigger scripts
+                    foreach(LayerScript script in Globals.currentScene.scripts)
                     {
-                        TempPatern();
+                        if (script.state)
+                        {
+                            switch (script.typeTrigger)
+                            {
+                                case "circle":      //Position + weight as area
+                                    if (ComputeHScore(action.launcher.x, action.launcher.y, script.x, script.y) < script.weight)
+                                    {
+                                        Globals.scriptManager.ExecuteScript(script, action.launcher);
+                                    }
+                                    break;
+
+                                case "square":      //PositionX + weight and PositionY + height
+                                    if (action.launcher.x >= script.x && action.launcher.x < script.x + script.weight &&
+                                        action.launcher.x >= script.y && action.launcher.y < script.y + script.height)
+                                    {
+                                        Globals.scriptManager.ExecuteScript(script, action.launcher);
+                                    }
+                                    break;
+                            }
+                        }
                     }
+
+                    //Redraw
                     Globals.cameraManager.ChangeObject("characterGrid", action.launcher.x + ";" + action.launcher.y, "redraw");
                     Globals.cameraManager.ChangeObject(action.launcher.type, action.launcher.name, "move");
                     break;

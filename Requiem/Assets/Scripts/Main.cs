@@ -23,8 +23,8 @@ namespace Requiem
             Globals.cameraManager.LoadNewScene(Globals.scenes[0]);
             Globals.currentCharacter = Globals.characters[0];
             Globals.timeManager = new TimeManager();
+            Globals.scriptManager = new ScriptManager();
             Globals.movementManager = new MovementManager();
-            Globals.movementManager.TempPatern();
         }
 
         //Update is called each frame

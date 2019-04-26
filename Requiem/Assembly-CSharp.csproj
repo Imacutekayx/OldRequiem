@@ -80,8 +80,10 @@
     <Compile Include="Assets\Scripts\Globals.cs" />
     <Compile Include="Assets\Scripts\Main.cs" />
     <Compile Include="Assets\Scripts\MovementManager.cs" />
+    <Compile Include="Assets\Scripts\Objects\CaseObject.cs" />
     <Compile Include="Assets\Scripts\Objects\EntityObject.cs" />
     <Compile Include="Assets\Scripts\Objects\ImageObject.cs" />
+    <Compile Include="Assets\Scripts\ScriptManager.cs" />
     <Compile Include="Assets\Scripts\TimeManager.cs" />
     <Compile Include="Assets\Scripts\TimeTrigger.cs" />
     <Compile Include="Assets\Scripts\XMLToClass.cs" />

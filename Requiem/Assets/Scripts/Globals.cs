@@ -12,6 +12,7 @@ namespace Requiem
         public static CameraManager cameraManager;
         public static TimeManager timeManager;
         public static MovementManager movementManager;
+        public static ScriptManager scriptManager;
 
         //Objects
         public static List<Item> useables = new List<Item>();

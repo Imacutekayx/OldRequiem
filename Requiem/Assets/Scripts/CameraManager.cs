@@ -79,9 +79,13 @@ namespace Requiem
                     {
                         name = "Grid:" + i + ";" + j
                     };
+                    obj.AddComponent<CaseObject>();
+                    obj.GetComponent<CaseObject>().c = Globals.currentScene.cases[i, j];
                     obj.AddComponent<SpriteRenderer>();
                     obj.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("images/grid/base");
                     obj.GetComponent<SpriteRenderer>().sortingOrder = 1;
+                    obj.AddComponent<BoxCollider>();
+                    obj.GetComponent<BoxCollider>().size = new Vector3(1, 1, 0.1f);
                     obj.transform.eulerAngles = new Vector3(90, 0, 0);
                     obj.transform.position = CalculatePosition(i, j, 1, 1, 0);
                     grid[i, j] = obj;
@@ -135,7 +139,8 @@ namespace Requiem
                     }
                     else if (i == 1)
                     {
-                        for(int k = add.x; k < add.x + add.weight; ++k)
+                        //TODO Add collider to Adds1
+                        for (int k = add.x; k < add.x + add.weight; ++k)
                         {
                             for(int l = add.y; l < add.y + add.height; ++l)
                             {
@@ -244,6 +249,7 @@ namespace Requiem
                 renderer.sortingOrder = 3;
                 image.AddComponent<EntityObject>();
                 image.GetComponent<EntityObject>().entity = entity;
+                //TODO Add collider to Entities
                 image.tag = "Entities";
                 for (int k = entity.x; k < entity.x + entity.weight; ++k)
                 {
@@ -534,7 +540,7 @@ namespace Requiem
         {
             if (type.Contains("Grid"))
             {
-                gameObject.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("images/grid/" + type.Substring(0, type.Length - 4));
+                gameObject.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("images/grid/" + type.Substring(0, type.Length - 4) + gameObject.GetComponent<CaseObject>().c.state);
             }
             else
             {

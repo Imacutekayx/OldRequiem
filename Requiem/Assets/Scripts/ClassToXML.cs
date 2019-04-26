@@ -110,9 +110,14 @@ namespace Requiem
 
             //SCENES
             LayerImage sceBackground = new LayerImage("grass", 20, 20, 0, 0);
+            List<string> sceParameters = new List<string>
+            {
+                "weapon;sword",
+                "useable;gold;5"
+            };
             List<LayerImage> sceAdds1 = new List<LayerImage>
             {
-                new LayerImage("bigChest", 1, 2, 1, 7, 1, 50),
+                new LayerImage("bigChest", 1, 2, 1, 7, 1, 50, new List<LayerScript>{ new LayerScript("openChest", true, sceParameters)}),
                 new LayerImage("bigRock", 1, 2, 3, 7, 1, 45)
             };
             List<LayerImage> sceWalls = new List<LayerImage>
@@ -124,15 +129,9 @@ namespace Requiem
                 new LayerImage("npcEastWall", 1, 2, 9, 1, 3)
             };
             List<Case> sceCases = new List<Case>();
-            List<string> sceParameters = new List<string>
-            {
-                "weapon;sword",
-                "useable;gold;5"
-            };
-            //TODO Think about scripts (Trigger = check when move action?)
             List<LayerScript> sceScripts = new List<LayerScript>
             {
-                //new LayerScript("openChest", true, 2, 1, 14, 7, 0, sceParameters)
+                new LayerScript("caseState", true, "circle", 3, 0, 7, 3, 3, new List<string>{"circle;fire"})
             };
             Globals.characters[0].x = 7;
             Globals.characters[0].y = 8;
@@ -575,6 +574,32 @@ namespace Requiem
                             writer.WriteElementString("high", Convert.ToString(image.high));
                             writer.WriteElementString("coordinate", image.x + ";" + image.y);
                             writer.WriteElementString("face", Convert.ToString(image.face));
+                            //List of all scripts
+                            writer.WriteStartElement("scripts");
+                            foreach (LayerScript script in scene.scripts)
+                            {
+                                //Individual script
+                                writer.WriteStartElement("script");
+                                writer.WriteElementString("name", script.name);
+                                writer.WriteElementString("state", Convert.ToString(script.state));
+                                if (script.typeTrigger != null)
+                                {
+                                    writer.WriteElementString("typeTrigger", script.typeTrigger);
+                                    writer.WriteElementString("size", script.weight + ";" + script.height);
+                                    writer.WriteElementString("coordinate", script.x + ";" + script.y);
+                                    writer.WriteElementString("range", Convert.ToString(script.range));
+                                }
+                                //List of parameters of the script
+                                writer.WriteStartElement("parameters");
+                                foreach (string parameter in script.parameters)
+                                {
+                                    //Individual parameter
+                                    writer.WriteElementString("parameter", parameter);
+                                }
+                                writer.WriteEndElement();
+                                writer.WriteEndElement();
+                            }
+                            writer.WriteEndElement();
                             writer.WriteEndElement();
                         }
                         writer.WriteEndElement();
@@ -602,9 +627,13 @@ namespace Requiem
                         writer.WriteStartElement("script");
                         writer.WriteElementString("name", script.name);
                         writer.WriteElementString("state", Convert.ToString(script.state));
-                        writer.WriteElementString("size", script.weight + ";" + script.height);
-                        writer.WriteElementString("coordinate", script.x + ";" + script.y);
-                        writer.WriteElementString("range", Convert.ToString(script.range));
+                        if(script.typeTrigger != null)
+                        {
+                            writer.WriteElementString("typeTrigger", script.typeTrigger);
+                            writer.WriteElementString("size", script.weight + ";" + script.height);
+                            writer.WriteElementString("coordinate", script.x + ";" + script.y);
+                            writer.WriteElementString("range", Convert.ToString(script.range));
+                        }
                         //List of parameters of the script
                         writer.WriteStartElement("parameters");
                         foreach(string parameter in script.parameters)
