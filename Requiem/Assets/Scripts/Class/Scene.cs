@@ -52,7 +52,8 @@ namespace Requiem.Class
                 {
                     for (int j = add1.y; j < add1.y + add1.height; ++j)
                     {
-                        cases[i, j] = new Case(i, j, "obstacle", add1.high);
+                        cases[i, j].type = "obstacle";
+                        cases[i, j].high = add1.high;
                     }
                 }
             }
@@ -62,12 +63,22 @@ namespace Requiem.Class
                 {
                     for (int j = wall.y; j < wall.y + wall.height; ++j)
                     {
-                        cases[i, j] = new Case(i, j, "wall", 100);
+                        cases[i, j].type = "wall";
                     }
                 }
             }
             scripts = _scripts;
             entities = _entities;
+            foreach(Entity entity in entities)
+            {
+                for(int i = entity.x; i < entity.x + entity.weight; ++i)
+                {
+                    for(int j = entity.y; j < entity.y + entity.height; ++j)
+                    {
+                        cases[i, j].type = "entity";
+                    }
+                }
+            }
         }
     }
 }

@@ -13,9 +13,12 @@ namespace Requiem.Objects
         //Go to the designed case
         public void OnMouseUpAsButton()
         {
-            Globals.movementManager.path = Globals.movementManager.CalculateMove(new Location(Globals.currentCharacter.x, Globals.currentCharacter.y), new Location(c.x, c.y));
-            Globals.movementManager.nextCase = Globals.movementManager.path.Count - 1;
-            Globals.movementManager.StartMove();
+            if(c.type == "free" && Globals.movementManager.nextCase == 0)
+            {
+                Globals.movementManager.path = Globals.movementManager.CalculateMove(new Location(Globals.currentCharacter.x, Globals.currentCharacter.y), new Location(c.x, c.y));
+                Globals.movementManager.nextCase = Globals.movementManager.path.Count - 1;
+                Globals.movementManager.StartMove();
+            }
         }
     }
 }

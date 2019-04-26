@@ -140,6 +140,7 @@ namespace Requiem
                     else if (i == 1)
                     {
                         //TODO Add collider to Adds1
+                        renderer.gameObject.AddComponent<BoxCollider2D>();
                         for (int k = add.x; k < add.x + add.weight; ++k)
                         {
                             for(int l = add.y; l < add.y + add.height; ++l)

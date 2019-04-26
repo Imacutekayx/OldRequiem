@@ -14,7 +14,7 @@
         public string script;
 
         //Constructor
-        public Case(int _x, int _y, string _type = null, float _high = 0, string _state = null, string _script = null)
+        public Case(int _x, int _y, string _type = "free", float _high = 0, string _state = null, string _script = null)
         {
             x = _x;
             y = _y;

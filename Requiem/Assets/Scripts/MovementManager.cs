@@ -98,7 +98,6 @@ namespace Requiem
         /// </summary>
         public void StartMove()
         {
-            //TODO Fix issue obstacle when size > 1
             bool success = true;
             string direction = path[nextCase - 1].x != path[nextCase].x ? (path[nextCase - 1].x > path[nextCase].x ? "right" : "left") : (path[nextCase - 1].y > path[nextCase].y ? "down" : "up");
             Act action = new Act("movement", Globals.currentCharacter.dices[0]/2, "move", Globals.currentCharacter, direction);
@@ -159,6 +158,7 @@ namespace Requiem
                 case "obstacle":
                     int nbr = action.type == "move" ? 1 : 2;
                     Globals.cameraManager.ChangeObject("baseGrid", action.launcher.x + ";" + action.launcher.y, "redraw");
+                    Globals.currentScene.cases[action.launcher.x, action.launcher.y].type = "free";
                     switch (action.parameters)
                     {
                         case "up":
@@ -181,7 +181,8 @@ namespace Requiem
                             action.launcher.face = 1;
                             break;
                     }
-                    if(nextCase != 0)
+                    Globals.currentScene.cases[action.launcher.x, action.launcher.y].type = "entity";
+                    if (nextCase != 0)
                     {
                         StartMove();
                     }
@@ -231,76 +232,64 @@ namespace Requiem
             //Left
             if (x > 0)
             {
-                if (Globals.currentScene.cases[x - 1, y].type != "wall")
+                if (x > 1 && Globals.currentScene.cases[x - 1, y].type == "obstacle")
                 {
-                    if (x > 1 && Globals.currentScene.cases[x - 1, y].type == "obstacle")
+                    if (Globals.currentScene.cases[x - 2, y].type != "obstacle" && Globals.currentScene.cases[x - 2, y].type != "wall")
                     {
-                        if (Globals.currentScene.cases[x - 1, y].high <= Globals.currentCharacter.dices[4])
-                        {
-                            returnable.Add(new Location(x - 2, y));
-                        }
+                        returnable.Add(new Location(x - 2, y));
                     }
-                    else
-                    {
-                        returnable.Add(new Location(x - 1, y));
-                    }
+                }
+                else if(Globals.currentScene.cases[x-1, y].type == "free")
+                {
+                    returnable.Add(new Location(x - 1, y));
                 }
             }
 
             //Right
             if (x < Globals.currentScene.weight - 1)
             {
-                if (Globals.currentScene.cases[x + 1, y].type != "wall")
+                if (x > 1 && Globals.currentScene.cases[x + 1, y].type == "obstacle")
                 {
-                    if (x < Globals.currentScene.weight - 2 && Globals.currentScene.cases[x + 1, y].type == "obstacle")
+                    if (Globals.currentScene.cases[x + 2, y].type != "obstacle" && Globals.currentScene.cases[x + 2, y].type != "wall")
                     {
-                        if (Globals.currentScene.cases[x + 1, y].high <= Globals.currentCharacter.dices[4])
-                        {
-                            returnable.Add(new Location(x + 2, y));
-                        }
+                        returnable.Add(new Location(x + 2, y));
                     }
-                    else
-                    {
-                        returnable.Add(new Location(x + 1, y));
-                    }
+                }
+                else if (Globals.currentScene.cases[x + 1, y].type == "free")
+                {
+                    returnable.Add(new Location(x + 1, y));
                 }
             }
 
             //Up
             if (y > 0)
             {
-                if (Globals.currentScene.cases[x, y - 1].type != "wall")
+                if (x > 1 && Globals.currentScene.cases[x, y - 1].type == "obstacle")
                 {
-                    if (y > 1 && Globals.currentScene.cases[x, y - 1].type == "obstacle")
+                    if (Globals.currentScene.cases[x, y - 2].type != "obstacle" && Globals.currentScene.cases[x - 2, y].type != "wall")
                     {
-                        if (Globals.currentScene.cases[x, y - 1].high <= Globals.currentCharacter.dices[4])
-                        {
-                            returnable.Add(new Location(x, y - 2));
-                        }
+                        returnable.Add(new Location(x, y - 2));
                     }
-                    else
-                    {
-                        returnable.Add(new Location(x, y - 1));
-                    }
+                }
+                else if (Globals.currentScene.cases[x, y - 1].type == "free")
+                {
+                    returnable.Add(new Location(x, y - 1));
                 }
             }
 
             //Down
             if (y < Globals.currentScene.height - 1)
             {
-                if (Globals.currentScene.cases[x, y + 1].type != "wall")
+                if (x > 1 && Globals.currentScene.cases[x, y + 1].type == "obstacle")
                 {
-                    if (y > Globals.currentScene.height - 2 && Globals.currentScene.cases[x, y + 1].type == "obstacle")
+                    if (Globals.currentScene.cases[x, y + 2].type != "obstacle" && Globals.currentScene.cases[x + 2, y].type != "wall")
                     {
-                        if (Globals.currentScene.cases[x, y + 1].high <= Globals.currentCharacter.dices[4])
-                        {
-                            returnable.Add(new Location(x, y + 2));
-                        }
+                        returnable.Add(new Location(x, y + 2));
                     }
-                    else
-                    {
-                        returnable.Add(new Location(x, y + 1));
-                    }
+                }
+                else if (Globals.currentScene.cases[x, y + 1].type == "free")
+                {
+                    returnable.Add(new Location(x, y + 1));
                 }
             }
 
