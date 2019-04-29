@@ -12,8 +12,8 @@ namespace Requiem.Class
         public string type;
 
         //Constructor
-        public Armor(string _name, int _value, string _description, string _part, string _type, Dictionary<string, int> _effects)
-            : base(_name, _value, _description, _effects)
+        public Armor(string _name, int _value, int _weight, string _description, string _part, string _type, Dictionary<string, int> _effects = null)
+            : base(_name, _value, _weight, _description, _effects)
         {
             use = "armor";
             part = _part;

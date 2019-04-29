@@ -10,12 +10,18 @@ namespace Requiem
 {
     public class ScriptManager
     {
+        /// <summary>
+        /// Execute a given script
+        /// </summary>
+        /// <param name="script">Script to execute</param>
+        /// <param name="trigger">Entity which triggered the script</param>
         public void ExecuteScript(LayerScript script, Entity trigger = null)
         {
             switch (script.name)
             {
                 //Open a chest and get what is inside //=> Show it and choose
                 case "openChest":
+                    Debug.Log("Before:" + Globals.currentCharacter.strength + ";" + Globals.currentCharacter.bag.Count());
                     foreach(string parameter in script.parameters)
                     {
                         string[] temp = parameter.Split(';');
@@ -26,7 +32,7 @@ namespace Requiem
                                 {
                                     if(weapon.name == temp[1])
                                     {
-                                        trigger.bag.Add(weapon, 1);
+                                        AddToBag(weapon, 1);
                                         break;
                                     }
                                 }
@@ -37,18 +43,18 @@ namespace Requiem
                                 {
                                     if(armor.name == temp[1])
                                     {
-                                        trigger.bag.Add(armor, 1);
+                                        AddToBag(armor, 1);
                                         break;
                                     }
                                 }
                                 break;
 
-                            case "usable":
+                            case "useable":
                                 foreach(Item useable in Globals.useables)
                                 {
                                     if(useable.name == temp[1])
                                     {
-                                        trigger.bag.Add(useable, Convert.ToInt32(temp[2]));
+                                        AddToBag(useable, Convert.ToInt32(temp[2]));
                                         break;
                                     }
                                 }
@@ -66,6 +72,7 @@ namespace Requiem
                                 break;
                         }
                     }
+                    Debug.Log("After:" + Globals.currentCharacter.strength + ";" + Globals.currentCharacter.bag.Count());
                     break;
 
                 case "caseState":
@@ -83,6 +90,27 @@ namespace Requiem
                     break;
             }
             script.state = false;
+        }
+
+        /// <summary>
+        /// Check if an item can go to the character's bag and add it if possible
+        /// </summary>
+        /// <param name="item">Item to add</param>
+        /// <param name="nbr">Number of the item</param>
+        public void AddToBag(Item item, int nbr)
+        {
+            if (Globals.currentCharacter.strength + (item.weight * nbr) <= Globals.currentCharacter.dices[0] * 10)
+            {
+                Globals.currentCharacter.strength += item.weight * nbr;
+                if (Globals.currentCharacter.bag.ContainsKey(item))
+                {
+                    Globals.currentCharacter.bag[item] += nbr;
+                }
+                else
+                {
+                    Globals.currentCharacter.bag.Add(item, nbr);
+                }
+            }
         }
     }
 }

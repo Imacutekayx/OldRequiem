@@ -13,8 +13,8 @@ namespace Requiem.Class
         public int range;
 
         //Constructor
-        public Weapon(string _name, int _value, string _description, string _type, int _damage, int _range, Dictionary<string, int> _effects)
-            : base(_name, _value, _description, _effects)
+        public Weapon(string _name, int _value, int _weight, string _description, string _type, int _damage, int _range, Dictionary<string, int> _effects = null)
+            : base(_name, _value, _weight, _description, _effects)
         {
             use = "weapon";
             type = _type;

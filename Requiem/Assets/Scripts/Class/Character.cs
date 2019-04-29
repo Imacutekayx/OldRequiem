@@ -13,7 +13,7 @@ namespace Requiem.Class
         public string race;
         public string personality;
         public string origin;
-        public int strength;
+        public int strength = 0;
 
         //Constructor
         public Character(string _name, bool _sex, int _age, string _story, string _cl, string _race, string _personality, string _origin, int _weight, int _height, int[] _dices,
@@ -33,7 +33,6 @@ namespace Requiem.Class
             dices = _dices;
             hp = dices[0] / 3;
             mp = dices[1] / 2;
-            strength = (100 - dices[0]) / 10;
             armor = _armor;
             armorChange = _armorChange;
             armortype = _armortype;
@@ -41,6 +40,10 @@ namespace Requiem.Class
             weapontype = _weapontype;
             powers = _powers;
             bag = _bag;
+            foreach(KeyValuePair<Item, int> item in bag)
+            {
+                strength += item.Key.weight * item.Value;
+            }
         }
     }
 }

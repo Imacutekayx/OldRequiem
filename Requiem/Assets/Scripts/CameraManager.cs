@@ -139,8 +139,9 @@ namespace Requiem
                     }
                     else if (i == 1)
                     {
-                        //TODO Add collider to Adds1
-                        renderer.gameObject.AddComponent<BoxCollider2D>();
+                        renderer.gameObject.AddComponent<BoxCollider>();
+                        renderer.gameObject.GetComponent<BoxCollider>().size = new Vector3(add.weight, -add.high/50, add.height);
+                        renderer.gameObject.GetComponent<BoxCollider>().center = new Vector3(0, -add.high/100, 0);
                         for (int k = add.x; k < add.x + add.weight; ++k)
                         {
                             for(int l = add.y; l < add.y + add.height; ++l)
@@ -247,10 +248,11 @@ namespace Requiem
                 };
                 image.transform.position = CalculatePosition(entity.x, entity.y, entity.weight, entity.height, 1);
                 SpriteRenderer renderer = image.AddComponent<SpriteRenderer>();
+                renderer.gameObject.AddComponent<BoxCollider>();
+                renderer.gameObject.GetComponent<BoxCollider>().size = new Vector3(entity.weight, 2, entity.height);
                 renderer.sortingOrder = 3;
                 image.AddComponent<EntityObject>();
                 image.GetComponent<EntityObject>().entity = entity;
-                //TODO Add collider to Entities
                 image.tag = "Entities";
                 for (int k = entity.x; k < entity.x + entity.weight; ++k)
                 {
@@ -557,12 +559,14 @@ namespace Requiem
                             gameObject.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("skins/" + entity.type + "/" + entity.name + "_top");
                             gameObject.transform.eulerAngles = new Vector3(90, 90 * entity.face, 0);
                             gameObject.transform.position = new Vector3(gameObject.transform.position.x, 0.1f, gameObject.transform.position.z);
+                            gameObject.GetComponent<SpriteRenderer>().gameObject.GetComponent<BoxCollider>().size = new Vector3(entity.height, 1, entity.weight);
                         }
                         else
                         {
                             gameObject.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("skins/" + entity.type + "/" + entity.name + "_" + ((face + 4 - entity.face) % 4));
                             gameObject.transform.eulerAngles = new Vector3(0, 90 * face, 0);
                             gameObject.transform.position = new Vector3(gameObject.transform.position.x, 1, gameObject.transform.position.z);
+                            gameObject.GetComponent<SpriteRenderer>().gameObject.GetComponent<BoxCollider>().size = new Vector3(face % 2 == 0 ? entity.weight : entity.height, 2, face % 2 == 0 ? entity.height : entity.weight);
                         }
                         break;
 
@@ -578,12 +582,16 @@ namespace Requiem
                             gameObject.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("images/adds1/" + image1.name + "_top");
                             gameObject.transform.eulerAngles = new Vector3(90, 90 * image1.face, 0);
                             gameObject.transform.position = new Vector3(gameObject.transform.position.x, 0.1f, gameObject.transform.position.z);
+                            gameObject.GetComponent<SpriteRenderer>().gameObject.GetComponent<BoxCollider>().size = new Vector3(image1.height, 1, image1.weight);
+                            gameObject.GetComponent<SpriteRenderer>().gameObject.GetComponent<BoxCollider>().center = new Vector3(0, 0, 0);
                         }
                         else
                         {
                             gameObject.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("images/adds1/" + image1.name + "_" + ((face + 4 - image1.face) % 4));
                             gameObject.transform.eulerAngles = new Vector3(0, 90 * face, 0);
                             gameObject.transform.position = new Vector3(gameObject.transform.position.x, 1, gameObject.transform.position.z);
+                            gameObject.GetComponent<SpriteRenderer>().gameObject.GetComponent<BoxCollider>().size = new Vector3(face %2 == 0 ? image1.weight : image1.height, -image1.high / 50, face % 2 == 0 ? image1.height : image1.weight);
+                            gameObject.GetComponent<SpriteRenderer>().gameObject.GetComponent<BoxCollider>().center = new Vector3(0, -image1.high / 100, 0);
                         }
                         break;
 

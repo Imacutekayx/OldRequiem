@@ -16,19 +16,19 @@ namespace Requiem
         public static void Save()
         {
             //USEABLES
-            Item coin = new Item("gold", 1, "A simple coin of gold", null);
+            Item coin = new Item("gold", 1, 1, "A simple coin of gold");
             Globals.useables.Add(coin);
             Useables();
 
             //ARMORS
-            Armor charHelmet = new Armor("blackScarf", 10, "A scarf used to cover Lennj's face", "helmet", "mage", null);
-            Armor charDress = new Armor("blackDress", 20, "A basic mage dress tainted in black", "armor", "mage", null);
+            Armor charHelmet = new Armor("blackScarf", 10, 5, "A scarf used to cover Lennj's face", "helmet", "mage", null);
+            Armor charDress = new Armor("blackDress", 20, 10, "A basic mage dress tainted in black", "armor", "mage", null);
             Dictionary<string, int> neckEffects = new Dictionary<string, int>
             {
                 {"mp", 3 }
             };
-            Armor charNecklace = new Armor("psychalCrystal", 0, "A crystal which gives Lennj his powers", "armor", "magic", neckEffects);
-            Armor ennTunic = new Armor("goblinTunic", 20, "A disgusting, small tunic", "armor", "light", null);
+            Armor charNecklace = new Armor("psychalCrystal", 0, 2, "A crystal which gives Lennj his powers", "armor", "magic", neckEffects);
+            Armor ennTunic = new Armor("goblinTunic", 20, 4, "A disgusting, small tunic", "armor", "light", null);
             Globals.armors.Add(charHelmet);
             Globals.armors.Add(charDress);
             Globals.armors.Add(charNecklace);
@@ -36,8 +36,10 @@ namespace Requiem
             Armors();
 
             //WEAPONS
-            Weapon psychWeapon = new Weapon("psychalSpear", 0, "A psychologic representation of a spear that Lennj can mentally control", "magic", 3, 3, null);
+            Weapon psychWeapon = new Weapon("psychalSpear", 0, 0, "A psychologic representation of a spear that Lennj can mentally control", "magic", 3, 3);
+            Weapon sword = new Weapon("sword", 15, 15, "A simple iron sword", "one-handed", 2, 1);
             Globals.weapons.Add(psychWeapon);
+            Globals.weapons.Add(sword);
             Weapons();
 
             //CHARACTERS
@@ -183,6 +185,7 @@ namespace Requiem
                     //Basic attributes
                     writer.WriteElementString("name", useable.name);
                     writer.WriteElementString("value", Convert.ToString(useable.value));
+                    writer.WriteElementString("weight", Convert.ToString(useable.weight));
                     writer.WriteElementString("description", useable.description);
                     //List of effects
                     writer.WriteStartElement("effects");
@@ -220,6 +223,7 @@ namespace Requiem
                     writer.WriteElementString("name", armor.name);
                     writer.WriteElementString("description", armor.description);
                     writer.WriteElementString("value", Convert.ToString(armor.value));
+                    writer.WriteElementString("weight", Convert.ToString(armor.weight));
                     writer.WriteElementString("part", armor.part);
                     writer.WriteElementString("type", armor.type);
                     //List of effects
@@ -258,6 +262,7 @@ namespace Requiem
                     writer.WriteElementString("name", weapon.name);
                     writer.WriteElementString("description", weapon.description);
                     writer.WriteElementString("value", Convert.ToString(weapon.value));
+                    writer.WriteElementString("weight", Convert.ToString(weapon.weight));
                     writer.WriteElementString("type", weapon.type);
                     //Combat attributes
                     writer.WriteStartElement("attributes");

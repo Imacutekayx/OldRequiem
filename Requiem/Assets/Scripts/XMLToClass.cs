@@ -49,6 +49,7 @@ namespace Requiem
             //Basic attributes
             string name;
             int value;
+            int weight;
             string description;
             //List of effects
             Dictionary<string, int> effects = new Dictionary<string, int>();
@@ -65,6 +66,7 @@ namespace Requiem
             {
                 name = useable.SelectSingleNode("name").InnerText;
                 value = Convert.ToInt32(useable.SelectSingleNode("value").InnerText);
+                weight = Convert.ToInt32(useable.SelectSingleNode("weight").InnerText);
                 description = useable.SelectSingleNode("description").InnerText;
                 XmlNodeList nodeEffects = useable.SelectNodes("effect");
                 effects.Clear();
@@ -74,7 +76,7 @@ namespace Requiem
                     effValue = Convert.ToInt32(effect.SelectSingleNode("value").InnerText);
                     effects.Add(effName, effValue);
                 }
-                Globals.useables.Add(new Item(name, value, description, effects));
+                Globals.useables.Add(new Item(name, value, weight, description, effects));
             }
         }
 
@@ -86,6 +88,7 @@ namespace Requiem
             //Basic attributes
             string name;
             int value;
+            int weight;
             string description;
             string part;
             string type;
@@ -104,6 +107,7 @@ namespace Requiem
             {
                 name = armor.SelectSingleNode("name").InnerText;
                 value = Convert.ToInt32(armor.SelectSingleNode("value").InnerText);
+                weight = Convert.ToInt32(armor.SelectSingleNode("weight").InnerText);
                 description = armor.SelectSingleNode("description").InnerText;
                 part = armor.SelectSingleNode("part").InnerText;
                 type = armor.SelectSingleNode("type").InnerText;
@@ -115,7 +119,7 @@ namespace Requiem
                     effValue = Convert.ToInt32(effect.SelectSingleNode("value").InnerText);
                     effects.Add(effTarget, effValue);
                 }
-                Globals.armors.Add(new Armor(name, value, description, part, type, effects));
+                Globals.armors.Add(new Armor(name, value, weight, description, part, type, effects));
             }
         }
 
@@ -127,6 +131,7 @@ namespace Requiem
             //Basic attributes
             string name;
             int value;
+            int weight;
             string description;
             string type;
             //Combat attributes
@@ -147,6 +152,7 @@ namespace Requiem
             {
                 name = weapon.SelectSingleNode("name").InnerText;
                 value = Convert.ToInt32(weapon.SelectSingleNode("value").InnerText);
+                weight = Convert.ToInt32(weapon.SelectSingleNode("weight").InnerText);
                 description = weapon.SelectSingleNode("description").InnerText;
                 type = weapon.SelectSingleNode("type").InnerText;
                 XmlNode attributes = weapon.SelectSingleNode("attributes");
@@ -160,7 +166,7 @@ namespace Requiem
                     effValue = Convert.ToInt32(effect.SelectSingleNode("value").InnerText);
                     effects.Add(effTarget, effValue);
                 }
-                Globals.weapons.Add(new Weapon(name, value, description, type, damage, range, effects));
+                Globals.weapons.Add(new Weapon(name, value, weight, description, type, damage, range, effects));
             }
         }
 

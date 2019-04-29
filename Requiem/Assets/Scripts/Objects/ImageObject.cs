@@ -30,14 +30,11 @@ namespace Requiem.Objects
             {
                 foreach(LayerScript script in layerImage.scripts)
                 {
-                    Globals.scriptManager.ExecuteScript(script, Globals.currentCharacter);
+                    if (script.state)
+                    {
+                        Globals.scriptManager.ExecuteScript(script, Globals.currentCharacter);
+                    }
                 }
-            }
-
-            //TEMP
-            foreach(Item item in Globals.currentCharacter.bag.Keys)
-            {
-                //Debug.Log(item.name);
             }
         }
     }
