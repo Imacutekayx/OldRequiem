@@ -9,10 +9,5 @@ namespace Requiem.Objects
     public class EntityObject : MonoBehaviour
     {
         public Entity entity;
-        
-        public void OnMouseUpAsButton()
-        {
-            
-        }
     }
 }

@@ -92,6 +92,11 @@ namespace Requiem
             script.state = false;
         }
 
+        public void ExecutePower(Power power, Fighter caster, Location target)
+        {
+            //TODO Cast Power
+        }
+
         /// <summary>
         /// Check if an item can go to the character's bag and add it if possible
         /// </summary>

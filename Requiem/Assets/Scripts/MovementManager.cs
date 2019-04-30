@@ -1,4 +1,5 @@
 ﻿using Requiem.Class;
+using Requiem.Objects;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -157,6 +158,7 @@ namespace Requiem
                 case "move":
                 case "obstacle":
                     int nbr = action.type == "move" ? 1 : 2;
+                    Globals.cameraManager.grid[action.launcher.x, action.launcher.y].GetComponent<CaseObject>().entity = null;
                     Globals.cameraManager.ChangeObject("baseGrid", action.launcher.x + ";" + action.launcher.y, "redraw");
                     Globals.currentScene.cases[action.launcher.x, action.launcher.y].type = "free";
                     switch (action.parameters)
@@ -213,6 +215,7 @@ namespace Requiem
                     }
 
                     //Redraw
+                    Globals.cameraManager.grid[action.launcher.x, action.launcher.y].GetComponent<CaseObject>().entity = action.launcher;
                     Globals.cameraManager.ChangeObject("characterGrid", action.launcher.x + ";" + action.launcher.y, "redraw");
                     Globals.cameraManager.ChangeObject(action.launcher.type, action.launcher.name, "move");
                     break;

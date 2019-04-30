@@ -12,9 +12,10 @@
         public float high;
         public string state;
         public string script;
+        public byte possibility = 0; //0=None/1=Attack/2=Power
 
         //Constructor
-        public Case(int _x, int _y, string _type = "free", float _high = 0, string _state = null, string _script = null)
+        public Case(int _x, int _y, string _type = "free", float _high = 0, string _state = "", string _script = null)
         {
             x = _x;
             y = _y;
