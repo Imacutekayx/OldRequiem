@@ -82,7 +82,7 @@ namespace Requiem
                     obj.AddComponent<CaseObject>();
                     obj.GetComponent<CaseObject>().c = Globals.currentScene.cases[i, j];
                     obj.AddComponent<SpriteRenderer>();
-                    obj.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("images/grid/base");
+                    obj.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("images/grid/free0");
                     obj.GetComponent<SpriteRenderer>().sortingOrder = 1;
                     obj.AddComponent<BoxCollider>();
                     obj.GetComponent<BoxCollider>().size = new Vector3(1, 1, 0.1f);
@@ -132,7 +132,7 @@ namespace Requiem
                     {
                         for(int l = add.y; l < add.y + add.height; ++l)
                         {
-                            grid[k, l].GetComponent<CaseObject>().layerImage = add;
+                            grid[k, l].GetComponent<CaseObject>().c.layerImage = add;
                         }
                     }
                     image.transform.eulerAngles = new Vector3(90, 90 * add.face, 0);
@@ -150,7 +150,7 @@ namespace Requiem
                         {
                             for(int l = add.y; l < add.y + add.height; ++l)
                             {
-                                grid[k, l].GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("images/grid/add1");
+                                grid[k, l].GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("images/grid/add10");
                                 image.transform.parent = add1Objects.transform;
                             }
                         }
@@ -258,8 +258,8 @@ namespace Requiem
                 {
                     for (int l = entity.y; l < entity.y + entity.height; ++l)
                     {
-                        grid[k, l].GetComponent<CaseObject>().entity = entity;
-                        grid[k, l].GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("images/grid/" + entity.type);
+                        grid[k, l].GetComponent<CaseObject>().c.entity = entity;
+                        grid[k, l].GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("images/grid/" + entity.type + 0);
                     }
                 }
                 switch (entity.type)
@@ -395,7 +395,7 @@ namespace Requiem
             {
                 objectToChange = send;
             }
-            else if (type.Contains("Grid"))
+            else if (type == "grid")
             {
                 string[] tempCoord = name.Split(';');
                 objectToChange = grid[Convert.ToInt32(tempCoord[0]), Convert.ToInt32(tempCoord[1])];
@@ -542,9 +542,10 @@ namespace Requiem
         /// <param name="type">Type of the GameObject</param>
         private void Redraw(GameObject gameObject, string type)
         {
-            if (type.Contains("Grid"))
+            if (type == "grid")
             {
-                gameObject.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("images/grid/" + type.Substring(0, type.Length - 4) + gameObject.GetComponent<CaseObject>().c.state + gameObject.GetComponent<CaseObject>().c.possibility);
+                Case c = gameObject.GetComponent<CaseObject>().c;
+                gameObject.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("images/grid/" + c.type + c.state + c.possibility);
             }
             else
             {

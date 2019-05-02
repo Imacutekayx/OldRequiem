@@ -53,7 +53,7 @@ namespace Requiem
             };
             List<Power> charPowers = new List<Power>
             {
-                new Power("summonWeapon", 3, 0, 1, 2, 3, charEffects, charOptions)
+                new Power("summonWeapon", 3, 0, "", 1, 2, 3, charEffects, charOptions)
             };
             int[] charDices = { 35, 70, 85, 60, 47, 25, 55 };
             Dictionary<Item, int> charBag = new Dictionary<Item, int>
@@ -79,11 +79,11 @@ namespace Requiem
             //ENNEMIES
             Dictionary<string, int> ennEffects = new Dictionary<string, int>
             {
-                { "hp", 1 }
+                { "damage", 1 }
             };
             List<Power> ennPowers = new List<Power>
             {
-                new Power("Scratch", 0, 1, 1, 0, 2, ennEffects)
+                new Power("Scratch", 0, 1, "circle", 1, 0, 2, ennEffects)
             };
             Dictionary<string, int> ennScripts = new Dictionary<string, int>
             {
@@ -352,7 +352,8 @@ namespace Requiem
                         writer.WriteElementString("name", power.name);
                         writer.WriteElementString("mp", Convert.ToString(power.mana));
                         writer.WriteElementString("scope", Convert.ToString(power.scope));
-                        writer.WriteElementString("area", Convert.ToString(power.area));
+                        writer.WriteElementString("areaType", power.areaType);
+                        writer.WriteElementString("areaLength", Convert.ToString(power.areaLength));
                         writer.WriteElementString("cast", Convert.ToString(power.cast));
                         writer.WriteElementString("speed", Convert.ToString(power.speed));
                         //List of effects
@@ -461,7 +462,8 @@ namespace Requiem
                         writer.WriteElementString("name", power.name);
                         writer.WriteElementString("mp", Convert.ToString(power.mana));
                         writer.WriteElementString("scope", Convert.ToString(power.scope));
-                        writer.WriteElementString("area", Convert.ToString(power.area));
+                        writer.WriteElementString("areaType", power.areaType);
+                        writer.WriteElementString("areaLength", Convert.ToString(power.areaLength));
                         writer.WriteElementString("cast", Convert.ToString(power.cast));
                         writer.WriteElementString("speed", Convert.ToString(power.speed));
                         //List of effects

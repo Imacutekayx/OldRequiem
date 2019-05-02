@@ -25,7 +25,6 @@ namespace Requiem
             Globals.timeManager = new TimeManager();
             Globals.scriptManager = new ScriptManager();
             Globals.movementManager = new MovementManager();
-            Debug.Log(Globals.mode);
         }
 
         //Update is called each frame

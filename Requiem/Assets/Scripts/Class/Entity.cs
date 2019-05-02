@@ -21,5 +21,24 @@ namespace Requiem.Class
 
         //Objects
         public Dictionary<Item, int> bag = new Dictionary<Item, int>();
+
+        /// <summary>
+        /// Deal damage to an entity
+        /// </summary>
+        /// <param name="hp">Nbr of damage</param>
+        public void ChangeHP(int hp)
+        {
+            switch (type)
+            {
+                case "character":
+                    break;
+
+                case "ennemy":
+                    break;
+
+                case "npc":
+                    break;
+            }
+        }
     }
 }

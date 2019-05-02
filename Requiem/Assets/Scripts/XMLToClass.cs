@@ -199,7 +199,8 @@ namespace Requiem
             string powName;
             int powMp;
             int powScope;
-            int powArea;
+            string powAreaType;
+            int powAreaLength;
             int powCast;
             int powSpeed;
             Dictionary<string, int> powEffects = new Dictionary<string, int>();
@@ -297,7 +298,8 @@ namespace Requiem
                     powName = power.SelectSingleNode("name").InnerText;
                     powMp = Convert.ToInt32(power.SelectSingleNode("mp").InnerText);
                     powScope = Convert.ToInt32(power.SelectSingleNode("scope").InnerText);
-                    powArea = Convert.ToInt32(power.SelectSingleNode("area").InnerText);
+                    powAreaType = power.SelectSingleNode("areaType").InnerText;
+                    powAreaLength = Convert.ToInt32(power.SelectSingleNode("areaLength").InnerText);
                     powCast = Convert.ToInt32(power.SelectSingleNode("cast").InnerText);
                     powSpeed = Convert.ToInt32(power.SelectSingleNode("speed").InnerText);
                     //List of effects of the power
@@ -318,7 +320,7 @@ namespace Requiem
                     {
                         powOptions.Add(option.InnerText);
                     }
-                    powers.Add(new Power(powName, powMp, powScope, powArea, powCast, powSpeed,
+                    powers.Add(new Power(powName, powMp, powScope, powAreaType, powAreaLength, powCast, powSpeed,
                         powEffects, powOptions.Count() != 0 ? powOptions : null));
                 }
                 //List of items
@@ -394,7 +396,8 @@ namespace Requiem
             string powName;
             int powMp;
             int powScope;
-            int powArea;
+            string powAreaType;
+            int powAreaLength;
             int powCast;
             int powSpeed;
             Dictionary<string, int> powEffects = new Dictionary<string, int>();
@@ -484,7 +487,8 @@ namespace Requiem
                     powName = power.SelectSingleNode("name").InnerText;
                     powMp = Convert.ToInt32(power.SelectSingleNode("mp").InnerText);
                     powScope = Convert.ToInt32(power.SelectSingleNode("scope").InnerText);
-                    powArea = Convert.ToInt32(power.SelectSingleNode("area").InnerText);
+                    powAreaType = power.SelectSingleNode("areaType").InnerText;
+                    powAreaLength = Convert.ToInt32(power.SelectSingleNode("areaLength").InnerText);
                     powCast = Convert.ToInt32(power.SelectSingleNode("cast").InnerText);
                     powSpeed = Convert.ToInt32(power.SelectSingleNode("speed").InnerText);
                     //List of effects of the power
@@ -497,6 +501,7 @@ namespace Requiem
                         effValue = Convert.ToInt32(effect.SelectSingleNode("value").InnerText);
                         powEffects.Add(effTarget, effValue);
                     }
+                    powers.Add(new Power(powName, powMp, powScope, powAreaType, powAreaLength, powCast, powSpeed, powEffects, powOptions));
                 }
                 //List of items
                 XmlNode nodeBag = ennemy.SelectSingleNode("bag");

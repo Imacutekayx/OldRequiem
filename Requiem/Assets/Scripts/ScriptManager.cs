@@ -1,9 +1,7 @@
-﻿using System;
+﻿using Requiem.Class;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Requiem.Class;
 using UnityEngine;
 
 namespace Requiem
@@ -82,8 +80,14 @@ namespace Requiem
                         switch (temp[0])
                         {
                             case "circle":
-                                //TODO Change case state with temp[1]
-                                Debug.Log("hey");
+                                foreach (Case c in Globals.currentScene.cases)
+                                {
+                                    if (Math.Abs(c.x - script.x) + Math.Abs(c.y - script.y) <= script.range && c.type != "wall")
+                                    {
+                                        c.state = temp[1];
+                                        Globals.cameraManager.ChangeObject("grid", c.x + ";" + c.y, "redraw");
+                                    }
+                                }
                                 break;
                         }
                     }
@@ -92,9 +96,78 @@ namespace Requiem
             script.state = false;
         }
 
+        /// <summary>
+        /// Execute a power given
+        /// </summary>
+        /// <param name="power">Power to execute</param>
+        /// <param name="caster">Fighter that casted the power</param>
+        /// <param name="target">Target location of the power</param>
         public void ExecutePower(Power power, Fighter caster, Location target)
         {
-            //TODO Cast Power
+            //TODO Execute power
+            foreach(KeyValuePair<string, int> effect in power.effects)
+            {
+                switch (effect.Key)
+                {
+                    case "weapon":  //Summon weapon
+                        break;
+
+                    case "areaDamage":  //Give damage at center and less the further
+                        switch (power.areaType)
+                        {
+                            case "circle":
+                                foreach (Case c in Globals.currentScene.cases)
+                                {
+                                    if (Math.Abs(c.x - target.x) + Math.Abs(c.y - target.y) <= power.areaLength)
+                                    {
+                                        if(c.entity != null)
+                                        {
+                                            c.entity.ChangeHP(effect.Value - (power.areaLength - Math.Abs(c.x - target.x) + Math.Abs(c.y - target.y)));
+                                        }
+                                    }
+                                }
+                                break;
+                        }
+                        break;
+
+                    case "damage":  //Give same damage to all area
+                        switch (power.areaType)
+                        {
+                            case "circle":
+                                foreach (Case c in Globals.currentScene.cases)
+                                {
+                                    if (Math.Abs(c.x - target.x) + Math.Abs(c.y - target.y) <= power.areaLength)
+                                    {
+                                        if(c.entity != null)
+                                        {
+                                            c.entity.ChangeHP(effect.Value);
+                                        }
+                                    }
+                                }
+                                break;
+                        }
+                        break;
+
+                    case "entity":  //Summon entity
+                        break;
+
+                    case "stateCaseArea":   //Change state of cases in area
+                        switch (power.areaType)
+                        {
+                            case "circle":
+                                foreach (Case c in Globals.currentScene.cases)
+                                {
+                                    if (Math.Abs(c.x - target.x) + Math.Abs(c.y - target.y) <= power.areaLength && c.type != "wall")
+                                    {
+                                        c.state = power.options[0];
+                                        Globals.cameraManager.ChangeObject("grid", c.x + ";" + c.y, "redraw");
+                                    }
+                                }
+                                break;
+                        }
+                        break;
+                }
+            }
         }
 
         /// <summary>

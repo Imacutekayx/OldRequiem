@@ -158,9 +158,9 @@ namespace Requiem
                 case "move":
                 case "obstacle":
                     int nbr = action.type == "move" ? 1 : 2;
-                    Globals.cameraManager.grid[action.launcher.x, action.launcher.y].GetComponent<CaseObject>().entity = null;
-                    Globals.cameraManager.ChangeObject("baseGrid", action.launcher.x + ";" + action.launcher.y, "redraw");
+                    Globals.cameraManager.grid[action.launcher.x, action.launcher.y].GetComponent<CaseObject>().c.entity = null;
                     Globals.currentScene.cases[action.launcher.x, action.launcher.y].type = "free";
+                    Globals.cameraManager.ChangeObject("grid", action.launcher.x + ";" + action.launcher.y, "redraw");
                     switch (action.parameters)
                     {
                         case "up":
@@ -183,7 +183,7 @@ namespace Requiem
                             action.launcher.face = 1;
                             break;
                     }
-                    Globals.currentScene.cases[action.launcher.x, action.launcher.y].type = "entity";
+                    Globals.currentScene.cases[action.launcher.x, action.launcher.y].type = action.launcher.type;
                     if (nextCase != 0)
                     {
                         StartMove();
@@ -215,8 +215,8 @@ namespace Requiem
                     }
 
                     //Redraw
-                    Globals.cameraManager.grid[action.launcher.x, action.launcher.y].GetComponent<CaseObject>().entity = action.launcher;
-                    Globals.cameraManager.ChangeObject("characterGrid", action.launcher.x + ";" + action.launcher.y, "redraw");
+                    Globals.cameraManager.grid[action.launcher.x, action.launcher.y].GetComponent<CaseObject>().c.entity = action.launcher;
+                    Globals.cameraManager.ChangeObject("grid", action.launcher.x + ";" + action.launcher.y, "redraw");
                     Globals.cameraManager.ChangeObject(action.launcher.type, action.launcher.name, "move");
                     break;
             }
