@@ -90,6 +90,9 @@ namespace Requiem.Objects
                             if (pow.name == Globals.power)
                             {
                                 power = pow;
+                                //TODO Add power to the timer
+                                Globals.power = "";
+                                Globals.cameraManager.CleanCases();
                                 break;
                             }
                         }

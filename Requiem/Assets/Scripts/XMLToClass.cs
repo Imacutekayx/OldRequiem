@@ -199,8 +199,7 @@ namespace Requiem
             string powName;
             int powMp;
             int powScope;
-            string powAreaType;
-            int powAreaLength;
+            int powArea;
             int powCast;
             int powSpeed;
             Dictionary<string, int> powEffects = new Dictionary<string, int>();
@@ -298,8 +297,7 @@ namespace Requiem
                     powName = power.SelectSingleNode("name").InnerText;
                     powMp = Convert.ToInt32(power.SelectSingleNode("mp").InnerText);
                     powScope = Convert.ToInt32(power.SelectSingleNode("scope").InnerText);
-                    powAreaType = power.SelectSingleNode("areaType").InnerText;
-                    powAreaLength = Convert.ToInt32(power.SelectSingleNode("areaLength").InnerText);
+                    powArea = Convert.ToInt32(power.SelectSingleNode("area").InnerText);
                     powCast = Convert.ToInt32(power.SelectSingleNode("cast").InnerText);
                     powSpeed = Convert.ToInt32(power.SelectSingleNode("speed").InnerText);
                     //List of effects of the power
@@ -320,7 +318,7 @@ namespace Requiem
                     {
                         powOptions.Add(option.InnerText);
                     }
-                    powers.Add(new Power(powName, powMp, powScope, powAreaType, powAreaLength, powCast, powSpeed,
+                    powers.Add(new Power(powName, powMp, powScope, powArea, powCast, powSpeed,
                         powEffects, powOptions.Count() != 0 ? powOptions : null));
                 }
                 //List of items
@@ -396,8 +394,7 @@ namespace Requiem
             string powName;
             int powMp;
             int powScope;
-            string powAreaType;
-            int powAreaLength;
+            int powArea;
             int powCast;
             int powSpeed;
             Dictionary<string, int> powEffects = new Dictionary<string, int>();
@@ -487,8 +484,7 @@ namespace Requiem
                     powName = power.SelectSingleNode("name").InnerText;
                     powMp = Convert.ToInt32(power.SelectSingleNode("mp").InnerText);
                     powScope = Convert.ToInt32(power.SelectSingleNode("scope").InnerText);
-                    powAreaType = power.SelectSingleNode("areaType").InnerText;
-                    powAreaLength = Convert.ToInt32(power.SelectSingleNode("areaLength").InnerText);
+                    powArea = Convert.ToInt32(power.SelectSingleNode("area").InnerText);
                     powCast = Convert.ToInt32(power.SelectSingleNode("cast").InnerText);
                     powSpeed = Convert.ToInt32(power.SelectSingleNode("speed").InnerText);
                     //List of effects of the power
@@ -501,7 +497,7 @@ namespace Requiem
                         effValue = Convert.ToInt32(effect.SelectSingleNode("value").InnerText);
                         powEffects.Add(effTarget, effValue);
                     }
-                    powers.Add(new Power(powName, powMp, powScope, powAreaType, powAreaLength, powCast, powSpeed, powEffects, powOptions));
+                    powers.Add(new Power(powName, powMp, powScope, powArea, powCast, powSpeed, powEffects, powOptions));
                 }
                 //List of items
                 XmlNode nodeBag = ennemy.SelectSingleNode("bag");
@@ -670,7 +666,10 @@ namespace Requiem
             int casY;
             string casType;
             string casState;
-            string casScript;
+            string ciUse;
+            string ciName;
+            int ciNbr;
+            Dictionary<Item, int> casItems = new Dictionary<Item, int>();
             //Scripts
             List<LayerScript> scripts = new List<LayerScript>();
             string scrName;
@@ -765,8 +764,54 @@ namespace Requiem
                     casY = Convert.ToInt32(cCoor[1]);
                     casType = c.SelectSingleNode("type").InnerText;
                     casState = c.SelectSingleNode("state").InnerText;
-                    casScript = c.SelectSingleNode("script").InnerText;
-                    cases.Add(new Case(casX, casY, casType, 0, casState, casScript));
+                    try
+                    {
+                        XmlNode xmlCasItems = c.SelectSingleNode("items");
+                        XmlNodeList xmlCasItem = xmlCasItems.SelectNodes("item");
+                        foreach (XmlNode ci in xmlCasItem)
+                        {
+                            ciUse = ci.SelectSingleNode("use").InnerText;
+                            ciName = ci.SelectSingleNode("name").InnerText;
+                            ciNbr = Convert.ToInt32(ci.SelectSingleNode("nbr").InnerText);
+                            switch (ciUse)
+                            {
+                                case "armor":
+                                    foreach (Armor armor in Globals.armors)
+                                    {
+                                        if (armor.name == ciName)
+                                        {
+                                            casItems.Add(armor, ciNbr);
+                                            break;
+                                        }
+                                    }
+                                    break;
+
+                                case "weapon":
+                                    foreach (Weapon weapon in Globals.weapons)
+                                    {
+                                        if (weapon.name == ciName)
+                                        {
+                                            casItems.Add(weapon, ciNbr);
+                                            break;
+                                        }
+                                    }
+                                    break;
+
+                                case "useable":
+                                    foreach (Item useable in Globals.useables)
+                                    {
+                                        if (useable.name == ciName)
+                                        {
+                                            casItems.Add(useable, ciNbr);
+                                            break;
+                                        }
+                                    }
+                                    break;
+                            }
+                        }
+                    }
+                    catch (Exception) { }
+                    cases.Add(new Case(casX, casY, casType, 0, casState, casItems));
                 }
                 //List of scripts
                 XmlNode xmlScripts = scene.SelectSingleNode("scripts");

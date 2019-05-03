@@ -97,54 +97,72 @@ namespace Requiem
         }
 
         /// <summary>
+        /// Show a given power's scope
+        /// </summary>
+        /// <param name="power">Power send</param>
+        /// <param name="current">Current location of the caster</param>
+        public void ShowPower(Power power, Location current)
+        {
+            foreach(Case c in Globals.currentScene.cases)
+            {
+                if(Math.Abs(c.x - current.x) + Math.Abs(c.y - current.y) <= power.scope)
+                {
+                    c.possibility = 3;
+                    Globals.cameraManager.ChangeObject("grid", c.x + ";" + c.y, "redraw");
+                }
+            }
+        }
+
+        /// <summary>
         /// Execute a power given
         /// </summary>
         /// <param name="power">Power to execute</param>
         /// <param name="caster">Fighter that casted the power</param>
         /// <param name="target">Target location of the power</param>
-        public void ExecutePower(Power power, Fighter caster, Location target)
+        public void ExecutePower(Power power, Fighter caster, Location target, Location basic = null)
         {
-            //TODO Execute power
+            //TODO Execute power Method
             foreach(KeyValuePair<string, int> effect in power.effects)
             {
                 switch (effect.Key)
                 {
                     case "weapon":  //Summon weapon
+                        if(Globals.currentScene.cases[target.x, target.y].entity != null)
+                        {
+                            switch(Globals.currentScene.cases[target.x, target.y].entity.type)
+                            {
+                                case "character":
+                                    break;
+
+                                case "ennemy":
+                                    break;
+                            }
+                        }
                         break;
 
                     case "areaDamage":  //Give damage at center and less the further
-                        switch (power.areaType)
+                        foreach (Case c in Globals.currentScene.cases)
                         {
-                            case "circle":
-                                foreach (Case c in Globals.currentScene.cases)
+                            if (Math.Abs(c.x - target.x) + Math.Abs(c.y - target.y) <= power.area)
+                            {
+                                if (c.entity != null)
                                 {
-                                    if (Math.Abs(c.x - target.x) + Math.Abs(c.y - target.y) <= power.areaLength)
-                                    {
-                                        if(c.entity != null)
-                                        {
-                                            c.entity.ChangeHP(effect.Value - (power.areaLength - Math.Abs(c.x - target.x) + Math.Abs(c.y - target.y)));
-                                        }
-                                    }
+                                    c.entity.ChangeHP(effect.Value - (power.area - Math.Abs(c.x - target.x) + Math.Abs(c.y - target.y)));
                                 }
-                                break;
+                            }
                         }
                         break;
 
                     case "damage":  //Give same damage to all area
-                        switch (power.areaType)
+                        foreach (Case c in Globals.currentScene.cases)
                         {
-                            case "circle":
-                                foreach (Case c in Globals.currentScene.cases)
+                            if (Math.Abs(c.x - target.x) + Math.Abs(c.y - target.y) <= power.area)
+                            {
+                                if (c.entity != null)
                                 {
-                                    if (Math.Abs(c.x - target.x) + Math.Abs(c.y - target.y) <= power.areaLength)
-                                    {
-                                        if(c.entity != null)
-                                        {
-                                            c.entity.ChangeHP(effect.Value);
-                                        }
-                                    }
+                                    c.entity.ChangeHP(effect.Value);
                                 }
-                                break;
+                            }
                         }
                         break;
 
@@ -152,19 +170,17 @@ namespace Requiem
                         break;
 
                     case "stateCaseArea":   //Change state of cases in area
-                        switch (power.areaType)
+                        foreach (Case c in Globals.currentScene.cases)
                         {
-                            case "circle":
-                                foreach (Case c in Globals.currentScene.cases)
-                                {
-                                    if (Math.Abs(c.x - target.x) + Math.Abs(c.y - target.y) <= power.areaLength && c.type != "wall")
-                                    {
-                                        c.state = power.options[0];
-                                        Globals.cameraManager.ChangeObject("grid", c.x + ";" + c.y, "redraw");
-                                    }
-                                }
-                                break;
+                            if (Math.Abs(c.x - target.x) + Math.Abs(c.y - target.y) <= power.area && c.type != "wall")
+                            {
+                                c.state = power.options[0];
+                                Globals.cameraManager.ChangeObject("grid", c.x + ";" + c.y, "redraw");
+                            }
                         }
+                        break;
+
+                    case "transport":
                         break;
                 }
             }

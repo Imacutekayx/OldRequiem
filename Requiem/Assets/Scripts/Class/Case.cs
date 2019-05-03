@@ -1,4 +1,6 @@
-﻿namespace Requiem.Class
+﻿using System.Collections.Generic;
+
+namespace Requiem.Class
 {
     /// <summary>
     /// Class which represents a case
@@ -11,22 +13,22 @@
         public string type;
         public float high;
         public string state;
-        public string script;
         public byte possibility = 0; //0=None/1=Movement/2=Attack/3=Power
 
         //Objects
+        public Dictionary<Item, int> items; //TODO items on ground + Methods (take/put)
         public Entity entity;
         public LayerImage layerImage;
 
         //Constructor
-        public Case(int _x, int _y, string _type = "free", float _high = 0, string _state = "", string _script = null)
+        public Case(int _x, int _y, string _type = "free", float _high = 0, string _state = "", Dictionary<Item, int> _items = null)
         {
             x = _x;
             y = _y;
             type = _type;
             high = _high;
             state = _state;
-            script = _script;
+            items = _items;
         }
     }
 }

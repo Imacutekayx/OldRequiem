@@ -17,5 +17,25 @@ namespace Requiem.Class
         public Armor[] armor;
         public bool[] armorChange;
         public string armortype;
+
+        //TODO Methods Fighter
+        /// <summary>
+        /// Add a weapon to the fighter
+        /// </summary>
+        /// <param name="weapon">Weapon to add</param>
+        public void AddWeapon(Weapon weapon)
+        {
+
+        }
+
+        /// <summary>
+        /// Add an armor to the fighter
+        /// </summary>
+        /// <param name="armor">Armor to add</param>
+        /// <returns>Possible</returns>
+        public bool AddArmor(Armor armor)
+        {
+            return true;
+        }
     }
 }

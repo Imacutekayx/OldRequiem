@@ -381,6 +381,21 @@ namespace Requiem
         }
 
         /// <summary>
+        /// Method which clear the cases' possibility value
+        /// </summary>
+        public void CleanCases()
+        {
+            foreach(Case c in Globals.currentScene.cases)
+            {
+                if(c.possibility != 0)
+                {
+                    c.possibility = 0;
+                    ChangeObject("grid", c.x + ";" + c.y, "redraw");
+                }
+            }
+        }
+
+        /// <summary>
         /// Method which redraw object by his type
         /// </summary>
         /// <param name="type">Type of the object</param>

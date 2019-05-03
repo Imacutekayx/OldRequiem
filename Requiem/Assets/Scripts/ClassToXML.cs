@@ -15,6 +15,8 @@ namespace Requiem
         /// </summary>
         public static void Save()
         {
+            //TODO Do a better prototype for fight
+
             //USEABLES
             Item coin = new Item("gold", 1, 1, "A simple coin of gold");
             Globals.useables.Add(coin);
@@ -27,7 +29,7 @@ namespace Requiem
             {
                 {"mp", 3 }
             };
-            Armor charNecklace = new Armor("psychalCrystal", 0, 2, "A crystal which gives Lennj his powers", "armor", "magic", neckEffects);
+            Armor charNecklace = new Armor("psychalCrystal", 0, 2, "A crystal which gives Lennj his powers", "necklace", "magic", neckEffects);
             Armor ennTunic = new Armor("goblinTunic", 20, 4, "A disgusting, small tunic", "armor", "light", null);
             Globals.armors.Add(charHelmet);
             Globals.armors.Add(charDress);
@@ -53,7 +55,7 @@ namespace Requiem
             };
             List<Power> charPowers = new List<Power>
             {
-                new Power("summonWeapon", 3, 0, "", 1, 2, 3, charEffects, charOptions)
+                new Power("summonWeapon", 3, 0, 1, 2, 3, charEffects, charOptions)
             };
             int[] charDices = { 35, 70, 85, 60, 47, 25, 55 };
             Dictionary<Item, int> charBag = new Dictionary<Item, int>
@@ -83,7 +85,7 @@ namespace Requiem
             };
             List<Power> ennPowers = new List<Power>
             {
-                new Power("Scratch", 0, 1, "circle", 1, 0, 2, ennEffects)
+                new Power("Scratch", 0, 1, 1, 0, 2, ennEffects)
             };
             Dictionary<string, int> ennScripts = new Dictionary<string, int>
             {
@@ -352,8 +354,7 @@ namespace Requiem
                         writer.WriteElementString("name", power.name);
                         writer.WriteElementString("mp", Convert.ToString(power.mana));
                         writer.WriteElementString("scope", Convert.ToString(power.scope));
-                        writer.WriteElementString("areaType", power.areaType);
-                        writer.WriteElementString("areaLength", Convert.ToString(power.areaLength));
+                        writer.WriteElementString("area", Convert.ToString(power.area));
                         writer.WriteElementString("cast", Convert.ToString(power.cast));
                         writer.WriteElementString("speed", Convert.ToString(power.speed));
                         //List of effects
@@ -462,8 +463,7 @@ namespace Requiem
                         writer.WriteElementString("name", power.name);
                         writer.WriteElementString("mp", Convert.ToString(power.mana));
                         writer.WriteElementString("scope", Convert.ToString(power.scope));
-                        writer.WriteElementString("areaType", power.areaType);
-                        writer.WriteElementString("areaLength", Convert.ToString(power.areaLength));
+                        writer.WriteElementString("area", Convert.ToString(power.area));
                         writer.WriteElementString("cast", Convert.ToString(power.cast));
                         writer.WriteElementString("speed", Convert.ToString(power.speed));
                         //List of effects
@@ -622,7 +622,19 @@ namespace Requiem
                         writer.WriteElementString("coordinate", c.x + ";" + c.y);
                         writer.WriteElementString("type", c.type);
                         writer.WriteElementString("state", c.state);
-                        writer.WriteElementString("script", c.script);
+                        if(c.items != null)
+                        {
+                            writer.WriteStartElement("items");
+                            foreach (KeyValuePair<Item, int> item in c.items)
+                            {
+                                writer.WriteStartElement("item");
+                                writer.WriteElementString("use", item.Key.use);
+                                writer.WriteElementString("name", item.Key.name);
+                                writer.WriteElementString("nbr", Convert.ToString(item.Value));
+                                writer.WriteEndElement();
+                            }
+                            writer.WriteEndElement();
+                        }
                         writer.WriteEndElement();
                     }
                     writer.WriteEndElement();
