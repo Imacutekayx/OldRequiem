@@ -19,16 +19,26 @@ namespace Requiem.Objects
         {
             if(Globals.mode == "movement" && c.type == "free" && Globals.movementManager.nextCase == 0)
             {
+                bool first = true;
                 foreach(Location location in Globals.movementManager.path)
                 {
-                    Globals.currentScene.cases[location.x, location.y].possibility = 0;
-                    Globals.cameraManager.ChangeObject("grid", location.x + ";" + location.y, "redraw");
+                    if (!first)
+                    {
+                        Globals.currentScene.cases[location.x, location.y].possibility = 0;
+                        Globals.cameraManager.ChangeObject("grid", location.x + ";" + location.y, "redraw");
+                    }
+                    else { first = false; }
                 }
                 Globals.movementManager.path = Globals.movementManager.CalculateMove(new Location(Globals.currentCharacter.x, Globals.currentCharacter.y), new Location(c.x, c.y));
-                foreach(Location location in Globals.movementManager.path)
+                first = true;
+                foreach (Location location in Globals.movementManager.path)
                 {
-                    Globals.currentScene.cases[location.x, location.y].possibility = 1;
-                    Globals.cameraManager.ChangeObject("grid", location.x + ";" + location.y, "redraw");
+                    if (!first)
+                    {
+                        Globals.currentScene.cases[location.x, location.y].possibility = 1;
+                        Globals.cameraManager.ChangeObject("grid", location.x + ";" + location.y, "redraw");
+                    }
+                    else { first = false; }
                 }
             }
         }

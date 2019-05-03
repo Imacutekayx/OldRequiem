@@ -79,6 +79,7 @@ namespace Requiem
                     {
                         name = "Grid:" + i + ";" + j
                     };
+                    obj.tag = "Cases";
                     obj.AddComponent<CaseObject>();
                     obj.GetComponent<CaseObject>().c = Globals.currentScene.cases[i, j];
                     obj.AddComponent<SpriteRenderer>();
@@ -522,6 +523,12 @@ namespace Requiem
         /// </summary>
         private void ChangeSkins()
         {
+            //Grid
+            foreach (GameObject gameObject in GameObject.FindGameObjectsWithTag("Cases"))
+            {
+                Redraw(gameObject, "grid");
+            }
+
             //Adds1
             foreach (GameObject gameObject in GameObject.FindGameObjectsWithTag("Adds1"))
             {
@@ -560,6 +567,7 @@ namespace Requiem
             if (type == "grid")
             {
                 Case c = gameObject.GetComponent<CaseObject>().c;
+                gameObject.transform.eulerAngles = new Vector3(90, 90 * face, 0);
                 gameObject.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("images/grid/" + c.type + c.state + c.possibility);
             }
             else

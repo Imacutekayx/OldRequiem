@@ -77,12 +77,14 @@ namespace Requiem
             else if (Input.GetKeyDown(KeyCode.P))
             {
                 Globals.mode = Globals.mode == "power" ? "" : "power";
+                Globals.cameraManager.CleanCases();
                 Globals.power = "";
                 Debug.Log(Globals.mode);
             }
             else if (Input.GetKeyDown(KeyCode.A))
             {
                 Globals.mode = Globals.mode == "attack" ? "" : "attack";
+                Globals.cameraManager.CleanCases();
                 Globals.power = "";
                 Debug.Log(Globals.mode);
             }
@@ -95,24 +97,28 @@ namespace Requiem
                     Globals.power = Globals.power == Globals.currentCharacter.powers[0].name ? "" : Globals.currentCharacter.powers[0].name;
                     Debug.Log(Globals.power);
                     if (Globals.power != "") { Globals.scriptManager.ShowPower(Globals.currentCharacter.powers[0], new Location(Globals.currentCharacter.x, Globals.currentCharacter.y)); }
+                    else { Globals.cameraManager.CleanCases(); }
                 }
                 else if (Input.GetKeyDown(KeyCode.W))
                 {
                     Globals.power = Globals.power == Globals.currentCharacter.powers[1].name ? "" : Globals.currentCharacter.powers[1].name;
                     Debug.Log(Globals.power);
                     if (Globals.power != "") { Globals.scriptManager.ShowPower(Globals.currentCharacter.powers[1], new Location(Globals.currentCharacter.x, Globals.currentCharacter.y)); }
+                    else { Globals.cameraManager.CleanCases(); }
                 }
                 else if (Input.GetKeyDown(KeyCode.E))
                 {
                     Globals.power = Globals.power == Globals.currentCharacter.powers[2].name ? "" : Globals.currentCharacter.powers[2].name;
                     Debug.Log(Globals.power);
                     if (Globals.power != "") { Globals.scriptManager.ShowPower(Globals.currentCharacter.powers[2], new Location(Globals.currentCharacter.x, Globals.currentCharacter.y)); }
+                    else { Globals.cameraManager.CleanCases(); }
                 }
                 else if (Input.GetKeyDown(KeyCode.R))
                 {
                     Globals.power = Globals.power == Globals.currentCharacter.powers[3].name ? "" : Globals.currentCharacter.powers[3].name;
                     Debug.Log(Globals.power);
                     if (Globals.power != "") { Globals.scriptManager.ShowPower(Globals.currentCharacter.powers[3], new Location(Globals.currentCharacter.x, Globals.currentCharacter.y)); }
+                    else { Globals.cameraManager.CleanCases(); }
                 }
             }
             else if(Globals.mode == "attack")
