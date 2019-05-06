@@ -28,17 +28,107 @@ namespace Requiem.Class
         /// <param name="hp">Nbr of damage</param>
         public void ChangeHP(int hp)
         {
-            switch (type)
+            if(type == "npc")
             {
-                case "character":
-                    break;
-
-                case "ennemy":
-                    break;
-
-                case "npc":
-                    break;
+                bool isEnnemy = false;
+                foreach(Ennemy ennemy in Globals.ennemies)
+                {
+                    if(ennemy.name == name)
+                    {
+                        //TODO Summon ennemy
+                        isEnnemy = true;
+                        break;
+                    }
+                }
+                if (!isEnnemy)
+                {
+                    dead = true;
+                }
             }
+            else
+            {
+                Fighter fighter = ((Fighter)this);
+                fighter.hp -= hp;
+                if(fighter.hp <= 0)
+                {
+                    fighter.dead = true;
+                }
+            }
+        }
+        
+        /// <summary>
+        /// Drop an item from the bag of the entity to the ground
+        /// </summary>
+        /// <param name="item">Item to drop</param>
+        /// <param name="nbr">Nbr of this item</param>
+        public void DropItem(Item item, int nbr)
+        {
+            if(Globals.currentScene.cases[x, y].items.ContainsKey(item))
+            {
+                Globals.currentScene.cases[x, y].items[item] += nbr;
+            }
+            else
+            {
+                Globals.currentScene.cases[x, y].items.Add(item, nbr);
+            }
+            if(nbr < bag[item])
+            {
+                bag[item] -= nbr;
+            }
+            else
+            {
+                bag.Remove(item);
+            }
+            if(type == "character")
+            {
+                ((Character)this).strength -= item.weight * nbr;
+            }
+        }
+
+        /// <summary>
+        /// Take item from the ground and put it in the bag
+        /// </summary>
+        /// <param name="item">Item to take</param>
+        /// <param name="nbr">Nbr of this item</param>
+        public void TakeItem(Item item, int nbr)
+        {
+            bool valid = true;
+            if(type == "character")
+            {
+                Character character = ((Character)this);
+                if(character.strength + item.weight * nbr > character.dices[0] * 10)
+                {
+                    valid = false;
+                }
+                else
+                {
+                    character.strength += item.weight * nbr;
+                }
+            }
+            if (valid)
+            {
+                if (bag.ContainsKey(item))
+                {
+                    bag[item] += nbr;
+                }
+                else
+                {
+                    bag.Add(item, nbr);
+                }
+                if (nbr < Globals.currentScene.cases[x, y].items[item])
+                {
+                    Globals.currentScene.cases[x, y].items[item] -= nbr;
+                }
+                else
+                {
+                    Globals.currentScene.cases[x, y].items.Remove(item);
+                }
+            }
+        }
+
+        public void CheckBag()
+        {
+
         }
     }
 }

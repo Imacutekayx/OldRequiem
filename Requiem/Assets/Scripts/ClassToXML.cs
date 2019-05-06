@@ -55,7 +55,7 @@ namespace Requiem
             };
             List<Power> charPowers = new List<Power>
             {
-                new Power("summonWeapon", 3, 0, 1, 2, 3, charEffects, charOptions)
+                new Power("summonWeapon", 3, 0, 1, 90, 0, charEffects, charOptions)
             };
             int[] charDices = { 35, 70, 85, 60, 47, 25, 55 };
             Dictionary<Item, int> charBag = new Dictionary<Item, int>

@@ -76,6 +76,10 @@ namespace Requiem.Objects
                             }
                         }
                     }
+                    else if(Globals.currentCharacter.x == c.x && Globals.currentCharacter.y == c.y && c.items.Count != 0)
+                    {
+                        //TODO Check items(Corpse too)
+                    }
                     break;
 
                 case "movement":
@@ -94,13 +98,12 @@ namespace Requiem.Objects
                 case "power":
                     if(Globals.power != "" && c.possibility == 3)
                     {
-                        Power power;
                         foreach (Power pow in Globals.currentCharacter.powers)
                         {
                             if (pow.name == Globals.power)
                             {
-                                power = pow;
-                                //TODO Add power to the timer
+                                //TODO Power.basic
+                                Globals.timeManager.AddAction(new Act("script", pow.cast, "castPower", Globals.currentCharacter, pow.name + ";" + c.x + ":" + c.y));
                                 Globals.power = "";
                                 Globals.cameraManager.CleanCases();
                                 break;

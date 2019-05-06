@@ -97,6 +97,36 @@ namespace Requiem
         }
 
         /// <summary>
+        /// Method which execute an action sent by the timeManager
+        /// </summary>
+        /// <param name="act">Action to execute</param>
+        public void Execute(Act act)
+        {
+            switch (act.type)
+            {
+                case "castPower":
+                    string[] parameters = act.parameters.Split(';');
+                    Power pow;
+                    foreach(Power p in ((Fighter)act.launcher).powers)
+                    {
+                        if(p.name == parameters[0])
+                        {
+                            pow = p;
+                            //TODO find path to target (from possible basic) and new act like movement
+                            break;
+                        }
+                    }
+                    break;
+
+                case "executePower":
+                    break;
+
+                case "executeAttack":
+                    break;
+            }
+        }
+
+        /// <summary>
         /// Show a given power's scope
         /// </summary>
         /// <param name="power">Power send</param>
@@ -119,7 +149,7 @@ namespace Requiem
         /// <param name="power">Power to execute</param>
         /// <param name="caster">Fighter that casted the power</param>
         /// <param name="target">Target location of the power</param>
-        public void ExecutePower(Power power, Fighter caster, Location target, Location basic = null)
+        private void ExecutePower(Power power, Fighter caster, Location target, Location basic = null)
         {
             //TODO Execute power Method
             foreach(KeyValuePair<string, int> effect in power.effects)
@@ -129,13 +159,9 @@ namespace Requiem
                     case "weapon":  //Summon weapon
                         if(Globals.currentScene.cases[target.x, target.y].entity != null)
                         {
-                            switch(Globals.currentScene.cases[target.x, target.y].entity.type)
+                            if (Globals.currentScene.cases[target.x, target.y].entity.type != "npc")
                             {
-                                case "character":
-                                    break;
-
-                                case "ennemy":
-                                    break;
+                                Fighter fighter = ((Fighter)Globals.currentScene.cases[target.x, target.y].entity);
                             }
                         }
                         break;
@@ -182,8 +208,19 @@ namespace Requiem
 
                     case "transport":
                         break;
+
+                    case "lineDamage":
+                        break;
+
+                    case "lineStateCase":
+                        break;
                 }
             }
+        }
+
+        private void ExecuteAttack()
+        {
+            //TODO Execute attack
         }
 
         /// <summary>

@@ -25,11 +25,14 @@ namespace Requiem
         /// <param name="action">Action to execute </param>
         public void Execute(Act action)
         {
-            //TODO Add more actions
             switch (action.manager)
             {
                 case "movement":
                     Globals.movementManager.Execute(action);
+                    break;
+
+                case "script":
+                    Globals.scriptManager.Execute(action);
                     break;
             }
             remove.Add(action);

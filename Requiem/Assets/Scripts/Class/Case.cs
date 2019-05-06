@@ -16,7 +16,7 @@ namespace Requiem.Class
         public byte possibility = 0; //0=None/1=Movement/2=Attack/3=Power
 
         //Objects
-        public Dictionary<Item, int> items; //TODO items on ground + Methods (take/put)
+        public Dictionary<Item, int> items;
         public Entity entity;
         public LayerImage layerImage;
 

@@ -21,7 +21,7 @@ namespace Requiem
             //Decrease the time left for an action to be executed and check if it's triggered
             foreach(Act action in Globals.timeManager.actions)
             {
-                if(--action.time == 0)
+                if(--action.time <= 0)
                 {
                     Globals.timeManager.Execute(action);
                 }
