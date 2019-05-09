@@ -14,11 +14,12 @@ namespace Requiem.Class
         public int area;
         public int cast;
         public int speed;
+        public bool needBasic;
         public Dictionary<string, int> effects;
         public List<string> options;
 
         //Constructor
-        public Power(string _name, int _mana, int _scope,int _area, int _cast, int _speed, Dictionary<string, int> _effects, List<string> _options = null)
+        public Power(string _name, int _mana, int _scope, int _area, int _cast, int _speed, Dictionary<string, int> _effects, bool _needBasic = false, List<string> _options = null)
         {
             name = _name;
             mana = _mana;
@@ -27,6 +28,7 @@ namespace Requiem.Class
             cast = _cast;
             speed = _speed;
             effects = _effects;
+            needBasic = _needBasic;
             options = _options;
         }
     }

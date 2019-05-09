@@ -15,6 +15,13 @@ namespace Requiem
         /// <param name="trigger">Entity which triggered the script</param>
         public void ExecuteScript(LayerScript script, Entity trigger = null)
         {
+            //Variables
+            bool active = false;
+
+            //Objects
+            List<string> parametersFailed = new List<string>();
+
+            //Switch script
             switch (script.name)
             {
                 //Open a chest and get what is inside //=> Show it and choose
@@ -22,6 +29,7 @@ namespace Requiem
                     Debug.Log("Before:" + Globals.currentCharacter.strength + ";" + Globals.currentCharacter.bag.Count());
                     foreach(string parameter in script.parameters)
                     {
+                        bool succeed = true;
                         string[] temp = parameter.Split(';');
                         switch (temp[0])
                         {
@@ -30,7 +38,11 @@ namespace Requiem
                                 {
                                     if(weapon.name == temp[1])
                                     {
-                                        AddToBag(weapon, 1);
+                                        if(!Globals.currentCharacter.AddItem(weapon, 1))
+                                        {
+                                            active = true;
+                                            succeed = false;
+                                        }
                                         break;
                                     }
                                 }
@@ -41,7 +53,11 @@ namespace Requiem
                                 {
                                     if(armor.name == temp[1])
                                     {
-                                        AddToBag(armor, 1);
+                                        if (!Globals.currentCharacter.AddItem(armor, 1))
+                                        {
+                                            active = true;
+                                            succeed = false;
+                                        }
                                         break;
                                     }
                                 }
@@ -52,7 +68,11 @@ namespace Requiem
                                 {
                                     if(useable.name == temp[1])
                                     {
-                                        AddToBag(useable, Convert.ToInt32(temp[2]));
+                                        if (!Globals.currentCharacter.AddItem(useable, Convert.ToInt32(temp[2])))
+                                        {
+                                            active = true;
+                                            succeed = false;
+                                        }
                                         break;
                                     }
                                 }
@@ -69,8 +89,16 @@ namespace Requiem
                                 }
                                 break;
                         }
+                        if (!succeed)
+                        {
+                            parametersFailed.Add(parameter);
+                        }
                     }
                     Debug.Log("After:" + Globals.currentCharacter.strength + ";" + Globals.currentCharacter.bag.Count());
+                    if(Globals.currentScene.gamemode == "fight")
+                    {
+                        Globals.timeManager.AddAction(new Act("time", 15, "", Globals.currentCharacter, ""));
+                    }
                     break;
 
                 case "caseState":
@@ -93,7 +121,8 @@ namespace Requiem
                     }
                     break;
             }
-            script.state = false;
+            script.parameters = parametersFailed;
+            script.state = active;
         }
 
         /// <summary>
@@ -112,6 +141,7 @@ namespace Requiem
                         if(p.name == parameters[0])
                         {
                             pow = p;
+                            ((Fighter)act.launcher).mp -= p.mana;
                             //TODO find path to target (from possible basic) and new act like movement
                             break;
                         }
@@ -119,9 +149,13 @@ namespace Requiem
                     break;
 
                 case "executePower":
+
+                    Globals.timeManager.AddAction(new Act("time", 20, "", act.launcher, ""));
                     break;
 
                 case "executeAttack":
+
+                    Globals.timeManager.AddAction(new Act("time", 15, "", act.launcher, ""));
                     break;
             }
         }
@@ -129,7 +163,7 @@ namespace Requiem
         /// <summary>
         /// Show a given power's scope
         /// </summary>
-        /// <param name="power">Power send</param>
+        /// <param name="power">Power sent</param>
         /// <param name="current">Current location of the caster</param>
         public void ShowPower(Power power, Location current)
         {
@@ -140,6 +174,24 @@ namespace Requiem
                     c.possibility = 3;
                     Globals.cameraManager.ChangeObject("grid", c.x + ";" + c.y, "redraw");
                 }
+            }
+        }
+
+        /// <summary>
+        /// Show a given power's area
+        /// </summary>
+        /// <param name="power">Power sent</param>
+        /// <param name="target">Target of the spell</param>
+        /// <param name="basic">Basic position of the spell</param>
+        public void ShowPowerArea(Power power, Location target, Location basic = null)
+        {
+            if (!power.needBasic)
+            {
+                //TODO ShowPowerArea on enter
+            }
+            else
+            {
+
             }
         }
 
@@ -195,7 +247,7 @@ namespace Requiem
                     case "entity":  //Summon entity
                         break;
 
-                    case "stateCaseArea":   //Change state of cases in area
+                    case "stateCase":   //Change state of cases in area
                         foreach (Case c in Globals.currentScene.cases)
                         {
                             if (Math.Abs(c.x - target.x) + Math.Abs(c.y - target.y) <= power.area && c.type != "wall")
@@ -221,27 +273,6 @@ namespace Requiem
         private void ExecuteAttack()
         {
             //TODO Execute attack
-        }
-
-        /// <summary>
-        /// Check if an item can go to the character's bag and add it if possible
-        /// </summary>
-        /// <param name="item">Item to add</param>
-        /// <param name="nbr">Number of the item</param>
-        public void AddToBag(Item item, int nbr)
-        {
-            if (Globals.currentCharacter.strength + (item.weight * nbr) <= Globals.currentCharacter.dices[0] * 10)
-            {
-                Globals.currentCharacter.strength += item.weight * nbr;
-                if (Globals.currentCharacter.bag.ContainsKey(item))
-                {
-                    Globals.currentCharacter.bag[item] += nbr;
-                }
-                else
-                {
-                    Globals.currentCharacter.bag.Add(item, nbr);
-                }
-            }
         }
     }
 }

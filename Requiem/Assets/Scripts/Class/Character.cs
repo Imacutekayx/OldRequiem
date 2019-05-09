@@ -33,10 +33,10 @@ namespace Requiem.Class
             dices = _dices;
             hp = dices[0] / 3;
             mp = dices[1] / 2;
-            armor = _armor;
+            armors = _armor;
             armorChange = _armorChange;
             armortype = _armortype;
-            weapon = _weapon;
+            weapons = _weapon;
             weapontype = _weapontype;
             powers = _powers;
             bag = _bag;

@@ -105,7 +105,7 @@ namespace Requiem
             switch (direction)
             {
                 case "up":
-                    if(Globals.currentScene.cases[path[nextCase].x, path[nextCase].y - 1].type == "obstacle")
+                    if(Globals.currentScene.cases[path[nextCase].x, path[nextCase].y - 1].type == "add1")
                     {
                         action.type = "obstacle";
                         //TODO Find the good algo for successfully passing an obstacle
@@ -113,21 +113,21 @@ namespace Requiem
                     break;
 
                 case "down":
-                    if (Globals.currentScene.cases[path[nextCase].x, path[nextCase].y + 1].type == "obstacle")
+                    if (Globals.currentScene.cases[path[nextCase].x, path[nextCase].y + 1].type == "add1")
                     {
                         action.type = "obstacle";
                     }
                     break;
 
                 case "left":
-                    if (Globals.currentScene.cases[path[nextCase].x - 1, path[nextCase].y].type == "obstacle")
+                    if (Globals.currentScene.cases[path[nextCase].x - 1, path[nextCase].y].type == "add1")
                     {
                         action.type = "obstacle";
                     }
                     break;
 
                 case "right":
-                    if (Globals.currentScene.cases[path[nextCase].x + 1, path[nextCase].y].type == "obstacle")
+                    if (Globals.currentScene.cases[path[nextCase].x + 1, path[nextCase].y].type == "add1")
                     {
                         action.type = "obstacle";
                     }
@@ -157,6 +157,7 @@ namespace Requiem
                 //Move the launcher based on the direction
                 case "move":
                 case "obstacle":
+                    Debug.Log(action.type + "/" + action.parameters);
                     int nbr = action.type == "move" ? 1 : 2;
                     Globals.cameraManager.grid[action.launcher.x, action.launcher.y].GetComponent<CaseObject>().c.entity = null;
                     Globals.currentScene.cases[action.launcher.x, action.launcher.y].type = "free";
@@ -187,6 +188,10 @@ namespace Requiem
                     if (nextCase != 0)
                     {
                         StartMove();
+                    }
+                    else
+                    {
+                        Globals.timeManager.AddAction(new Act("time", 10, "", action.launcher, ""));
                     }
 
                     //Trigger scripts
@@ -235,9 +240,9 @@ namespace Requiem
             //Left
             if (x > 0)
             {
-                if (x > 1 && Globals.currentScene.cases[x - 1, y].type == "obstacle")
+                if (x > 1 && Globals.currentScene.cases[x - 1, y].type == "add1")
                 {
-                    if (Globals.currentScene.cases[x - 2, y].type != "obstacle" && Globals.currentScene.cases[x - 2, y].type != "wall")
+                    if (Globals.currentScene.cases[x - 2, y].type != "add1" && Globals.currentScene.cases[x - 2, y].type != "wall")
                     {
                         returnable.Add(new Location(x - 2, y));
                     }
@@ -251,9 +256,9 @@ namespace Requiem
             //Right
             if (x < Globals.currentScene.weight - 1)
             {
-                if (x > 1 && Globals.currentScene.cases[x + 1, y].type == "obstacle")
+                if (x > 1 && Globals.currentScene.cases[x + 1, y].type == "add1")
                 {
-                    if (Globals.currentScene.cases[x + 2, y].type != "obstacle" && Globals.currentScene.cases[x + 2, y].type != "wall")
+                    if (Globals.currentScene.cases[x + 2, y].type != "add1" && Globals.currentScene.cases[x + 2, y].type != "wall")
                     {
                         returnable.Add(new Location(x + 2, y));
                     }
@@ -267,9 +272,9 @@ namespace Requiem
             //Up
             if (y > 0)
             {
-                if (x > 1 && Globals.currentScene.cases[x, y - 1].type == "obstacle")
+                if (x > 1 && Globals.currentScene.cases[x, y - 1].type == "add1")
                 {
-                    if (Globals.currentScene.cases[x, y - 2].type != "obstacle" && Globals.currentScene.cases[x - 2, y].type != "wall")
+                    if (Globals.currentScene.cases[x, y - 2].type != "add1" && Globals.currentScene.cases[x - 2, y].type != "wall")
                     {
                         returnable.Add(new Location(x, y - 2));
                     }
@@ -283,9 +288,9 @@ namespace Requiem
             //Down
             if (y < Globals.currentScene.height - 1)
             {
-                if (x > 1 && Globals.currentScene.cases[x, y + 1].type == "obstacle")
+                if (x > 1 && Globals.currentScene.cases[x, y + 1].type == "add1")
                 {
-                    if (Globals.currentScene.cases[x, y + 2].type != "obstacle" && Globals.currentScene.cases[x + 2, y].type != "wall")
+                    if (Globals.currentScene.cases[x, y + 2].type != "add1" && Globals.currentScene.cases[x + 2, y].type != "wall")
                     {
                         returnable.Add(new Location(x, y + 2));
                     }

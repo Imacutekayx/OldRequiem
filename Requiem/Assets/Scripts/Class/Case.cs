@@ -30,5 +30,10 @@ namespace Requiem.Class
             state = _state;
             items = _items;
         }
+
+        public void ShowItems()
+        {
+            //TODO Show items of case
+        }
     }
 }

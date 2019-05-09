@@ -17,6 +17,7 @@ namespace Requiem
         public void AddAction(Act action)
         {
             add.Add(action);
+            action.launcher.busy = true;
         }
 
         /// <summary>
@@ -34,8 +35,26 @@ namespace Requiem
                 case "script":
                     Globals.scriptManager.Execute(action);
                     break;
+
+                case "time":
+                    Wait(action);
+                    break;
+
             }
             remove.Add(action);
+        }
+
+        /// <summary>
+        /// Method which free an entity
+        /// </summary>
+        /// <param name="action"></param>
+        public void Wait(Act action)
+        {
+            action.launcher.busy = false;
+            if(Globals.currentScene.gamemode == "fight")
+            {
+                //TODO Wait for action
+            }
         }
     }
 }

@@ -568,7 +568,14 @@ namespace Requiem
             {
                 Case c = gameObject.GetComponent<CaseObject>().c;
                 gameObject.transform.eulerAngles = new Vector3(90, 90 * face, 0);
-                gameObject.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("images/grid/" + c.type + c.state + c.possibility);
+                if(c.type == "wall")
+                {
+                    gameObject.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("images/grid/" + c.type);
+                }
+                else
+                {
+                    gameObject.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("images/grid/" + c.type + c.state + c.possibility);
+                }
             }
             else
             {

@@ -1,5 +1,6 @@
 ﻿using Requiem.Class;
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Requiem.Objects
@@ -17,28 +18,50 @@ namespace Requiem.Objects
         /// </summary>
         public void OnMouseEnter()
         {
-            if(Globals.mode == "movement" && c.type == "free" && Globals.movementManager.nextCase == 0)
+            if (!Globals.currentCharacter.busy)
             {
-                bool first = true;
-                foreach(Location location in Globals.movementManager.path)
+                switch (Globals.mode)
                 {
-                    if (!first)
-                    {
-                        Globals.currentScene.cases[location.x, location.y].possibility = 0;
-                        Globals.cameraManager.ChangeObject("grid", location.x + ";" + location.y, "redraw");
-                    }
-                    else { first = false; }
-                }
-                Globals.movementManager.path = Globals.movementManager.CalculateMove(new Location(Globals.currentCharacter.x, Globals.currentCharacter.y), new Location(c.x, c.y));
-                first = true;
-                foreach (Location location in Globals.movementManager.path)
-                {
-                    if (!first)
-                    {
-                        Globals.currentScene.cases[location.x, location.y].possibility = 1;
-                        Globals.cameraManager.ChangeObject("grid", location.x + ";" + location.y, "redraw");
-                    }
-                    else { first = false; }
+                    case "movement":
+                        if(c.type == "free")
+                        {
+                            bool first = true;
+                            foreach (Location location in Globals.movementManager.path)
+                            {
+                                if (!first)
+                                {
+                                    Globals.currentScene.cases[location.x, location.y].possibility = 0;
+                                    Globals.cameraManager.ChangeObject("grid", location.x + ";" + location.y, "redraw");
+                                }
+                                else { first = false; }
+                            }
+                            Globals.movementManager.path = Globals.movementManager.CalculateMove(new Location(Globals.currentCharacter.x, Globals.currentCharacter.y), new Location(c.x, c.y));
+                            first = true;
+                            foreach (Location location in Globals.movementManager.path)
+                            {
+                                if (!first)
+                                {
+                                    Globals.currentScene.cases[location.x, location.y].possibility = 1;
+                                    Globals.cameraManager.ChangeObject("grid", location.x + ";" + location.y, "redraw");
+                                }
+                                else { first = false; }
+                            }
+                        }
+                        break;
+
+                    case "power":
+                        if(Globals.power != "" && c.possibility == 3)
+                        {
+                            foreach(Power pow in Globals.currentCharacter.powers)
+                            {
+                                if(pow.name == Globals.power)
+                                {
+                                    Globals.scriptManager.ShowPowerArea(pow, new Location(c.x, c.y));
+                                    break;
+                                }
+                            }
+                        }
+                        break;
                 }
             }
         }
@@ -48,11 +71,11 @@ namespace Requiem.Objects
         /// </summary>
         public void OnMouseUpAsButton()
         {
-            switch (Globals.mode)
+            if (!Globals.currentCharacter.busy)
             {
-                case "":
-                    if(c.layerImage != null)
-                    {
+                switch (Globals.mode)
+                {
+                    case "":
                         bool close = false;
 
                         //Check if the player is close
@@ -60,64 +83,80 @@ namespace Requiem.Objects
                         {
                             for (int j = c.layerImage.y; j < c.layerImage.y + c.layerImage.height; ++j)
                             {
-                                if (Math.Abs(i - Globals.currentCharacter.x) + Math.Abs(j - Globals.currentCharacter.y) == 1) { close = true; }
+                                if (Math.Abs(i - Globals.currentCharacter.x) + Math.Abs(j - Globals.currentCharacter.y) <= 1) { close = true; }
                             }
                         }
-
-                        //Execute each script if close
-                        if (close && c.layerImage.scripts != null)
+                        if (c.layerImage != null)
                         {
-                            foreach (LayerScript script in c.layerImage.scripts)
+                            //Execute each script if close
+                            if (close && c.layerImage.scripts != null)
                             {
-                                if (script.state)
+                                foreach (LayerScript script in c.layerImage.scripts)
                                 {
-                                    Globals.scriptManager.ExecuteScript(script, Globals.currentCharacter);
+                                    if (script.state)
+                                    {
+                                        Globals.scriptManager.ExecuteScript(script, Globals.currentCharacter);
+                                    }
                                 }
                             }
                         }
-                    }
-                    else if(Globals.currentCharacter.x == c.x && Globals.currentCharacter.y == c.y && c.items.Count != 0)
-                    {
-                        //TODO Check items(Corpse too)
-                    }
-                    break;
-
-                case "movement":
-                    if (c.type == "free" && Globals.movementManager.nextCase == 0)
-                    {
-                        foreach(Location location in Globals.movementManager.path)
+                        else if (close && c.items.Count != 0)
                         {
-                            Globals.currentScene.cases[location.x, location.y].possibility = 0;
-                            Globals.cameraManager.ChangeObject("grid", location.x + ";" + location.y, "redraw");
-                        }
-                        Globals.movementManager.nextCase = Globals.movementManager.path.Count - 1;
-                        Globals.movementManager.StartMove();
-                    }
-                    break;
-
-                case "power":
-                    if(Globals.power != "" && c.possibility == 3)
-                    {
-                        foreach (Power pow in Globals.currentCharacter.powers)
-                        {
-                            if (pow.name == Globals.power)
+                            if(c.entity == null)
                             {
-                                //TODO Power.basic
-                                Globals.timeManager.AddAction(new Act("script", pow.cast, "castPower", Globals.currentCharacter, pow.name + ";" + c.x + ":" + c.y));
-                                Globals.power = "";
-                                Globals.cameraManager.CleanCases();
-                                break;
+                                foreach(KeyValuePair<Item, int> item in c.items)
+                                {
+                                    Globals.currentCharacter.TakeItem(item.Key, item.Value);
+                                }
+                            }
+                            else
+                            {
+                                c.entity.CheckBag();
                             }
                         }
-                    }
-                    break;
+                        break;
 
-                case "attack":
-                    if (Globals.power != "" && c.possibility == 2)
-                    {
+                    case "movement":
+                        if (c.type == "free")
+                        {
+                            foreach (Location location in Globals.movementManager.path)
+                            {
+                                Globals.currentScene.cases[location.x, location.y].possibility = 0;
+                                Globals.cameraManager.ChangeObject("grid", location.x + ";" + location.y, "redraw");
+                            }
+                            Globals.movementManager.nextCase = Globals.movementManager.path.Count - 1;
+                            Globals.movementManager.StartMove();
+                        }
+                        break;
 
-                    }
-                    break;
+                    case "power":
+                        if (Globals.power != "" && c.possibility == 3)
+                        {
+                            foreach (Power pow in Globals.currentCharacter.powers)
+                            {
+                                if (pow.name == Globals.power)
+                                {
+                                    if(pow.mana <= Globals.currentCharacter.mp)
+                                    {
+                                        double multiple = UnityEngine.Random.Range(1, 100) <= Globals.currentCharacter.dices[2] ? 1 : 1.5f;
+                                        //TODO Power.basic
+                                        Globals.timeManager.AddAction(new Act("script", Convert.ToInt32(pow.cast * multiple), "castPower", Globals.currentCharacter, pow.name + ";" + c.x + ":" + c.y));
+                                        Globals.power = "";
+                                        Globals.cameraManager.CleanCases();
+                                    }
+                                    break;
+                                }
+                            }
+                        }
+                        break;
+
+                    case "attack":
+                        if (Globals.power != "" && c.possibility == 2)
+                        {
+
+                        }
+                        break;
+                }
             }
         }
     }

@@ -205,6 +205,7 @@ namespace Requiem
             Dictionary<string, int> powEffects = new Dictionary<string, int>();
             string effTarget;
             int effValue;
+            bool powNeedBasic;
             List<string> powOptions = new List<string>();
             //Items
             Dictionary<Item, int> bag = new Dictionary<Item, int>();
@@ -310,6 +311,7 @@ namespace Requiem
                         effValue = Convert.ToInt32(effect.SelectSingleNode("value").InnerText);
                         powEffects.Add(effTarget, effValue);
                     }
+                    powNeedBasic = Convert.ToBoolean(power.SelectSingleNode("needBasic").InnerText);
                     //List of options of the power
                     XmlNode nodeOptions = power.SelectSingleNode("options");
                     XmlNodeList xmlOptions = nodeOptions.SelectNodes("option");
@@ -319,52 +321,55 @@ namespace Requiem
                         powOptions.Add(option.InnerText);
                     }
                     powers.Add(new Power(powName, powMp, powScope, powArea, powCast, powSpeed,
-                        powEffects, powOptions.Count() != 0 ? powOptions : null));
+                        powEffects, powNeedBasic, powOptions.Count() != 0 ? powOptions : null));
                 }
                 //List of items
                 XmlNode nodeBag = character.SelectSingleNode("bag");
-                XmlNodeList xmlItems = nodeBag.SelectNodes("item");
                 bag.Clear();
-                foreach (XmlNode item in xmlItems)
+                if (nodeBag != null)
                 {
-                    iteUse = item.SelectSingleNode("use").InnerText;
-                    iteName = item.SelectSingleNode("name").InnerText;
-                    iteNbr = Convert.ToInt32(item.SelectSingleNode("nbr").InnerText);
-
-                    switch (iteUse)
+                    XmlNodeList xmlItems = nodeBag.SelectNodes("item");
+                    foreach (XmlNode item in xmlItems)
                     {
-                        case "useable":
-                            foreach (Item useable in Globals.useables)
-                            {
-                                if (iteName == useable.name)
-                                {
-                                    bag.Add(useable, iteNbr);
-                                    break;
-                                }
-                            }
-                            break;
+                        iteUse = item.SelectSingleNode("use").InnerText;
+                        iteName = item.SelectSingleNode("name").InnerText;
+                        iteNbr = Convert.ToInt32(item.SelectSingleNode("nbr").InnerText);
 
-                        case "weapon":
-                            foreach (Weapon weapon in Globals.weapons)
-                            {
-                                if (iteName == weapon.name)
+                        switch (iteUse)
+                        {
+                            case "useable":
+                                foreach (Item useable in Globals.useables)
                                 {
-                                    bag.Add(weapon, 1);
-                                    break;
+                                    if (iteName == useable.name)
+                                    {
+                                        bag.Add(useable, iteNbr);
+                                        break;
+                                    }
                                 }
-                            }
-                            break;
+                                break;
 
-                        case "armor":
-                            foreach (Armor armor in Globals.armors)
-                            {
-                                if (iteName == armor.name)
+                            case "weapon":
+                                foreach (Weapon weapon in Globals.weapons)
                                 {
-                                    bag.Add(armor, 1);
-                                    break;
+                                    if (iteName == weapon.name)
+                                    {
+                                        bag.Add(weapon, 1);
+                                        break;
+                                    }
                                 }
-                            }
-                            break;
+                                break;
+
+                            case "armor":
+                                foreach (Armor armor in Globals.armors)
+                                {
+                                    if (iteName == armor.name)
+                                    {
+                                        bag.Add(armor, 1);
+                                        break;
+                                    }
+                                }
+                                break;
+                        }
                     }
                 }
                 Globals.characters.Add(new Character(name, sex, age, story, cl, race, personality, origin, weight,
@@ -400,6 +405,7 @@ namespace Requiem
             Dictionary<string, int> powEffects = new Dictionary<string, int>();
             string effTarget;
             int effValue;
+            bool powNeedBasic;
             List<string> powOptions = new List<string>();
             //Items
             Dictionary<Item, int> bag = new Dictionary<Item, int>();
@@ -497,52 +503,64 @@ namespace Requiem
                         effValue = Convert.ToInt32(effect.SelectSingleNode("value").InnerText);
                         powEffects.Add(effTarget, effValue);
                     }
-                    powers.Add(new Power(powName, powMp, powScope, powArea, powCast, powSpeed, powEffects, powOptions));
+                    powNeedBasic = Convert.ToBoolean(power.SelectSingleNode("needBasic").InnerText);
+                    //List of options of the power
+                    XmlNode nodeOptions = power.SelectSingleNode("options");
+                    XmlNodeList xmlOptions = nodeOptions.SelectNodes("option");
+                    powOptions.Clear();
+                    foreach (XmlNode option in xmlOptions)
+                    {
+                        powOptions.Add(option.InnerText);
+                    }
+                    powers.Add(new Power(powName, powMp, powScope, powArea, powCast, powSpeed, powEffects, powNeedBasic, powOptions));
                 }
                 //List of items
                 XmlNode nodeBag = ennemy.SelectSingleNode("bag");
-                XmlNodeList xmlItems = nodeBag.SelectNodes("item");
                 bag.Clear();
-                foreach (XmlNode item in xmlItems)
+                if (nodeBag != null)
                 {
-                    iteUse = item.SelectSingleNode("use").InnerText;
-                    iteName = item.SelectSingleNode("name").InnerText;
-                    iteNbr = Convert.ToInt32(item.SelectSingleNode("nbr").InnerText);
-
-                    switch (iteUse)
+                    XmlNodeList xmlItems = nodeBag.SelectNodes("item");
+                    foreach (XmlNode item in xmlItems)
                     {
-                        case "useable":
-                            foreach (Item useable in Globals.useables)
-                            {
-                                if (iteName == useable.name)
-                                {
-                                    bag.Add(useable, iteNbr);
-                                    break;
-                                }
-                            }
-                            break;
+                        iteUse = item.SelectSingleNode("use").InnerText;
+                        iteName = item.SelectSingleNode("name").InnerText;
+                        iteNbr = Convert.ToInt32(item.SelectSingleNode("nbr").InnerText);
 
-                        case "weapon":
-                            foreach (Weapon weapon in Globals.weapons)
-                            {
-                                if (iteName == weapon.name)
+                        switch (iteUse)
+                        {
+                            case "useable":
+                                foreach (Item useable in Globals.useables)
                                 {
-                                    bag.Add(weapon, 1);
-                                    break;
+                                    if (iteName == useable.name)
+                                    {
+                                        bag.Add(useable, iteNbr);
+                                        break;
+                                    }
                                 }
-                            }
-                            break;
+                                break;
 
-                        case "armor":
-                            foreach (Armor armor in Globals.armors)
-                            {
-                                if (iteName == armor.name)
+                            case "weapon":
+                                foreach (Weapon weapon in Globals.weapons)
                                 {
-                                    bag.Add(armor, 1);
-                                    break;
+                                    if (iteName == weapon.name)
+                                    {
+                                        bag.Add(weapon, 1);
+                                        break;
+                                    }
                                 }
-                            }
-                            break;
+                                break;
+
+                            case "armor":
+                                foreach (Armor armor in Globals.armors)
+                                {
+                                    if (iteName == armor.name)
+                                    {
+                                        bag.Add(armor, 1);
+                                        break;
+                                    }
+                                }
+                                break;
+                        }
                     }
                 }
                 //Add Scripts
@@ -872,7 +890,7 @@ namespace Requiem
                                 if(ennemy.name == entName)
                                 {
                                     Ennemy ennCopy = new Ennemy(ennemy.name, ennemy.description, ennemy.weight, ennemy.height, ennemy.dices, ennemy.powers, ennemy.weapontype,
-                                        ennemy.bag, ennemy.armor, ennemy.armorChange, ennemy.armortype, ennemy.weapon, ennemy.scripts)
+                                        ennemy.bag, ennemy.armors, ennemy.armorChange, ennemy.armortype, ennemy.weapons, ennemy.scripts)
                                     {
                                         x = entX,
                                         y = entY,

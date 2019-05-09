@@ -15,8 +15,6 @@ namespace Requiem
         /// </summary>
         public static void Save()
         {
-            //TODO Do a better prototype for fight
-
             //USEABLES
             Item coin = new Item("gold", 1, 1, "A simple coin of gold");
             Globals.useables.Add(coin);
@@ -55,8 +53,23 @@ namespace Requiem
             };
             List<Power> charPowers = new List<Power>
             {
-                new Power("summonWeapon", 3, 0, 1, 90, 0, charEffects, charOptions)
+                new Power("Summon Weapon", 3, 1, 1, 90, 0, charEffects, false, charOptions)
             };
+            charEffects = new Dictionary<string, int>
+            {
+                {"areaDamage", 4 }
+            };
+            charPowers.Add(new Power("Psychic Explosion", 5, 4, 3, 60, 10, charEffects));
+            charEffects = new Dictionary<string, int>
+            {
+                {"damage", 2},
+                {"stateCase", 0 }
+            };
+            charOptions = new List<string>
+            {
+                "fire"
+            };
+            charPowers.Add(new Power("Pyrokinesy", 5, 6, 1, 15, 20, charEffects, false, charOptions));
             int[] charDices = { 35, 70, 85, 60, 47, 25, 55 };
             Dictionary<Item, int> charBag = new Dictionary<Item, int>
             {
@@ -75,7 +88,7 @@ namespace Requiem
             Weapon[] charWeapon = new Weapon[2];
             charWeapon[0] = psychWeapon;
             Globals.characters.Add(new Character("Lennj", true, 300, "Lennj lost his family at his birthday when Angels arrived to kill his race", "Psychomancien", "513", 
-                "calm;sadistic;logical", "Soft-Cliff", 1, 1, charDices, charArmor, charArmorChange, "mage;magic", charWeapon, "magic;dagger", charPowers, charBag));
+                "calm;sadistic;logical", "Soft-Cliff", 1, 1, charDices, charArmor, charArmorChange, "mage;magic", charWeapon, "magic1;magic2;dagger", charPowers, charBag));
             Characters();
 
             //ENNEMIES
@@ -321,8 +334,8 @@ namespace Requiem
                     writer.WriteEndElement();
                     //Combat attribute
                     writer.WriteStartElement("attributes");
-                    writer.WriteElementString("weapon", character.weapon[0] != null ? character.weapon[0].name : "");
-                    writer.WriteElementString("weapon", character.weapon[1] != null ? character.weapon[1].name : "");
+                    writer.WriteElementString("weapon", character.weapons[0] != null ? character.weapons[0].name : "");
+                    writer.WriteElementString("weapon", character.weapons[1] != null ? character.weapons[1].name : "");
                     writer.WriteElementString("weapontype", character.weapontype);
                     //List of dices
                     writer.WriteStartElement("dices");
@@ -340,7 +353,7 @@ namespace Requiem
                     for(int i = 0; i < 6; ++i)
                     {
                         writer.WriteStartElement("armor");
-                        writer.WriteElementString("name", character.armor[i] != null ? character.armor[i].name : "");
+                        writer.WriteElementString("name", character.armors[i] != null ? character.armors[i].name : "");
                         writer.WriteElementString("change", Convert.ToString(character.armorChange[i]));
                         writer.WriteEndElement();
                     }
@@ -368,17 +381,20 @@ namespace Requiem
                             writer.WriteEndElement();
                         }
                         writer.WriteEndElement();
+                        writer.WriteElementString("needBasic", Convert.ToString(power.needBasic));
                         //List of options for this power
                         writer.WriteStartElement("options");
-                        foreach (string option in power.options)
+                        if (power.options != null)
                         {
-                            //Individual option
-                            writer.WriteElementString("option", option);
+                            foreach (string option in power.options)
+                            {
+                                //Individual option
+                                writer.WriteElementString("option", option);
+                            }
                         }
                         writer.WriteEndElement();
                         writer.WriteEndElement();
                     }
-                    writer.WriteEndElement();
                     writer.WriteEndElement();
                     writer.WriteStartElement("bag");
                     //List of items in bag
@@ -420,8 +436,8 @@ namespace Requiem
                     writer.WriteElementString("height", Convert.ToString(ennemy.height));
                     //Combat attribute
                     writer.WriteStartElement("attributes");
-                    writer.WriteElementString("weapon", ennemy.weapon[0] != null ? ennemy.weapon[0].name : "");
-                    writer.WriteElementString("weapon", ennemy.weapon[1] != null ? ennemy.weapon[1].name : "");
+                    writer.WriteElementString("weapon", ennemy.weapons[0] != null ? ennemy.weapons[0].name : "");
+                    writer.WriteElementString("weapon", ennemy.weapons[1] != null ? ennemy.weapons[1].name : "");
                     writer.WriteElementString("weapontype", ennemy.weapontype);
                     //List of dices
                     writer.WriteStartElement("dices");
@@ -449,7 +465,7 @@ namespace Requiem
                     for(int i = 0; i < 6; ++i)
                     {
                         writer.WriteStartElement("armor");
-                        writer.WriteElementString("name", ennemy.armor[i] != null ? ennemy.armor[i].name : "");
+                        writer.WriteElementString("name", ennemy.armors[i] != null ? ennemy.armors[i].name : "");
                         writer.WriteElementString("change", Convert.ToString(ennemy.armorChange[i]));
                         writer.WriteEndElement();
                     }
@@ -477,9 +493,20 @@ namespace Requiem
                             writer.WriteEndElement();
                         }
                         writer.WriteEndElement();
+                        writer.WriteElementString("needBasic", Convert.ToString(power.needBasic));
+                        //List of options for this power
+                        writer.WriteStartElement("options");
+                        if (power.options != null)
+                        {
+                            foreach (string option in power.options)
+                            {
+                                //Individual option
+                                writer.WriteElementString("option", option);
+                            }
+                        }
+                        writer.WriteEndElement();
                         writer.WriteEndElement();
                     }
-                    writer.WriteEndElement();
                     writer.WriteEndElement();
                     writer.WriteStartElement("bag");
                     //List of items in bag

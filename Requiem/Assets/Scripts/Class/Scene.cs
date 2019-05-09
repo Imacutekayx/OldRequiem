@@ -52,7 +52,7 @@ namespace Requiem.Class
                 {
                     for (int j = add1.y; j < add1.y + add1.height; ++j)
                     {
-                        cases[i, j].type = "obstacle";
+                        cases[i, j].type = "add1";
                         cases[i, j].high = add1.high;
                     }
                 }
@@ -75,7 +75,7 @@ namespace Requiem.Class
                 {
                     for(int j = entity.y; j < entity.y + entity.height; ++j)
                     {
-                        cases[i, j].type = "entity";
+                        cases[i, j].type = entity.type;
                     }
                 }
             }

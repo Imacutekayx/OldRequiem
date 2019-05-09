@@ -14,7 +14,7 @@ namespace Requiem
         public static MovementManager movementManager;
         public static ScriptManager scriptManager;
 
-        //Objects
+        //XMLObjects
         public static List<Item> useables = new List<Item>();
         public static List<Armor> armors = new List<Armor>();
         public static List<Weapon> weapons = new List<Weapon>();
@@ -36,5 +36,9 @@ namespace Requiem
         //Variables
         public static string mode = "";
         public static string power = "";
+
+        //Objects
+        public static List<Fighter> players = new List<Fighter>();
+        public static List<Fighter> ais = new List<Fighter>();
     }
 }
