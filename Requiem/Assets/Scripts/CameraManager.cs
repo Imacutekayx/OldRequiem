@@ -39,6 +39,7 @@ namespace Requiem
         {
             camera = _camera;
             camera.transform.eulerAngles = new Vector3(30, 0, 0);
+            //TODO Create layout
         }
 
         /// <summary>

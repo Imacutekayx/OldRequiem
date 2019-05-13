@@ -141,6 +141,17 @@ namespace Requiem
             Dictionary<string, int> effects = new Dictionary<string, int>();
             string effTarget;
             int effValue;
+            //List of powers
+            List<Power> powers = new List<Power>();
+            string powName;
+            int powMp;
+            int powScope;
+            int powArea;
+            int powCast;
+            int powSpeed;
+            Dictionary<string, int> powEffects = new Dictionary<string, int>();
+            bool powNeedBasic;
+            List<string> powOptions = new List<string>();
 
             //Open XML
             var xmldoc = new XmlDocument();
@@ -166,7 +177,45 @@ namespace Requiem
                     effValue = Convert.ToInt32(effect.SelectSingleNode("value").InnerText);
                     effects.Add(effTarget, effValue);
                 }
-                Globals.weapons.Add(new Weapon(name, value, weight, description, type, damage, range, effects));
+                //List of powers
+                XmlNode nodePowers = weapon.SelectSingleNode("powers");
+                powers.Clear();
+                if(nodePowers != null)
+                {
+                    XmlNodeList xmlPowers = nodePowers.SelectNodes("power");
+                    foreach (XmlNode power in xmlPowers)
+                    {
+                        //Basic attributes of the power
+                        powName = power.SelectSingleNode("name").InnerText;
+                        powMp = Convert.ToInt32(power.SelectSingleNode("mp").InnerText);
+                        powScope = Convert.ToInt32(power.SelectSingleNode("scope").InnerText);
+                        powArea = Convert.ToInt32(power.SelectSingleNode("area").InnerText);
+                        powCast = Convert.ToInt32(power.SelectSingleNode("cast").InnerText);
+                        powSpeed = Convert.ToInt32(power.SelectSingleNode("speed").InnerText);
+                        //List of effects of the power
+                        XmlNode nodePowEffects = power.SelectSingleNode("effects");
+                        XmlNodeList xmlEffects = nodePowEffects.SelectNodes("effect");
+                        powEffects.Clear();
+                        foreach (XmlNode effect in xmlEffects)
+                        {
+                            effTarget = effect.SelectSingleNode("target").InnerText;
+                            effValue = Convert.ToInt32(effect.SelectSingleNode("value").InnerText);
+                            powEffects.Add(effTarget, effValue);
+                        }
+                        powNeedBasic = Convert.ToBoolean(power.SelectSingleNode("needBasic").InnerText);
+                        //List of options of the power
+                        XmlNode nodeOptions = power.SelectSingleNode("options");
+                        XmlNodeList xmlOptions = nodeOptions.SelectNodes("option");
+                        powOptions.Clear();
+                        foreach (XmlNode option in xmlOptions)
+                        {
+                            powOptions.Add(option.InnerText);
+                        }
+                        powers.Add(new Power(powName, powMp, powScope, powArea, powCast, powSpeed,
+                            powEffects, powNeedBasic, powOptions.Count() != 0 ? powOptions : null));
+                    }
+                }
+                Globals.weapons.Add(new Weapon(name, value, weight, description, type, damage, range, powers, effects));
             }
         }
 

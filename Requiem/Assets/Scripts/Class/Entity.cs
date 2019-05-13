@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using UnityEngine;
 
 namespace Requiem.Class
 {
@@ -49,8 +50,10 @@ namespace Requiem.Class
             else
             {
                 Fighter fighter = ((Fighter)this);
+                int temp = fighter.hp;
                 fighter.hp -= hp;
-                if(fighter.hp <= 0)
+                Debug.Log(name + ":" + temp + "=>" + fighter.hp);
+                if (fighter.hp <= 0)
                 {
                     fighter.dead = true;
                 }
@@ -146,7 +149,6 @@ namespace Requiem.Class
 
         public void CheckBag()
         {
-            //TODO Show items of entity
         }
     }
 }

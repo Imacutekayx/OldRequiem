@@ -11,15 +11,21 @@ namespace Requiem.Class
         public string type;
         public int damage;
         public int range;
+        public List<Power> powers;
 
         //Constructor
-        public Weapon(string _name, int _value, int _weight, string _description, string _type, int _damage, int _range, Dictionary<string, int> _effects = null)
+        public Weapon(string _name, int _value, int _weight, string _description, string _type, int _damage, int _range, List<Power> _powers = null, Dictionary<string, int> _effects = null)
             : base(_name, _value, _weight, _description, _effects)
         {
             use = "weapon";
             type = _type;
             damage = _damage;
             range = _range;
+            powers = new List<Power> { new Power("attack", 0, range, 1, 1, 5, new Dictionary<string, int>() { { "damage", damage } }) };
+            if(_powers != null)
+            {
+                powers.AddRange(_powers);
+            }
         }
     }
 }

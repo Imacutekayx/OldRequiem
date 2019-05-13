@@ -62,6 +62,21 @@ namespace Requiem.Objects
                             }
                         }
                         break;
+
+                    case "attack":
+                        if(Globals.power != "" && c.possibility == 2)
+                        {
+                            string[] name = Globals.power.Split(':');
+                            foreach(Power pow in Globals.currentCharacter.weapons[Convert.ToInt32(name[0])].powers)
+                            {
+                                if(pow.name == name[1])
+                                {
+                                    Globals.scriptManager.ShowPowerArea(pow, new Location(c.x, c.y));
+                                    break;
+                                }
+                            }
+                        }
+                        break;
                 }
             }
         }
@@ -153,7 +168,20 @@ namespace Requiem.Objects
                     case "attack":
                         if (Globals.power != "" && c.possibility == 2)
                         {
-
+                            string[] name = Globals.power.Split(':');
+                            foreach (Power pow in Globals.currentCharacter.weapons[Convert.ToInt32(name[0])].powers)
+                            {
+                                if (pow.name == name[1])
+                                {
+                                    if (pow.mana <= Globals.currentCharacter.mp)
+                                    {
+                                        Globals.timeManager.AddAction(new Act("script", Convert.ToInt32(pow.cast), "executeAttack", Globals.currentCharacter, Globals.power + ";" + c.x + ":" + c.y));
+                                        Globals.power = "";
+                                        Globals.cameraManager.CleanCases();
+                                    }
+                                    break;
+                                }
+                            }
                         }
                         break;
                 }

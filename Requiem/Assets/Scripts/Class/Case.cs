@@ -33,7 +33,6 @@ namespace Requiem.Class
 
         public void ShowItems()
         {
-            //TODO Show items of case
         }
     }
 }

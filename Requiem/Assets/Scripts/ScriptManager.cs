@@ -135,26 +135,46 @@ namespace Requiem
             {
                 case "castPower":
                     string[] parameters = act.parameters.Split(';');
-                    Power pow;
                     foreach(Power p in ((Fighter)act.launcher).powers)
                     {
                         if(p.name == parameters[0])
                         {
-                            pow = p;
+                            int temp = ((Fighter)act.launcher).mp;
                             ((Fighter)act.launcher).mp -= p.mana;
-                            //TODO find path to target (from possible basic) and new act like movement
+                            //TODO Find path to target (from possible basic) and new act like movement => execute methods
+                            Globals.timeManager.AddAction(new Act("script", p.speed, "executePower", act.launcher, act.parameters));
+                            Debug.Log(act.launcher.name + ":" + temp + "=>" + ((Fighter)act.launcher).mp);
                             break;
                         }
                     }
                     break;
 
                 case "executePower":
-
+                    string[] psP = act.parameters.Split(';');
+                    string[] coordP = psP[1].Split(':');
+                    foreach(Power p in ((Fighter)act.launcher).powers)
+                    {
+                        if(p.name == psP[0])
+                        {
+                            ExecutePower(p, (Fighter)act.launcher, new Location(Convert.ToInt32(coordP[0]), Convert.ToInt32(coordP[1])));
+                            break;
+                        }
+                    }
                     Globals.timeManager.AddAction(new Act("time", 20, "", act.launcher, ""));
                     break;
 
                 case "executeAttack":
-
+                    string[] psA = act.parameters.Split(';');
+                    string[] nameA = psA[0].Split(':');
+                    string[] coordA = psA[1].Split(':');
+                    foreach (Power p in ((Fighter)act.launcher).weapons[Convert.ToInt32(nameA[0])].powers)
+                    {
+                        if (p.name == nameA[1])
+                        {
+                            ExecutePower(p, (Fighter)act.launcher, new Location(Convert.ToInt32(coordA[0]), Convert.ToInt32(coordA[1])));
+                            break;
+                        }
+                    }
                     Globals.timeManager.AddAction(new Act("time", 15, "", act.launcher, ""));
                     break;
             }
@@ -165,13 +185,14 @@ namespace Requiem
         /// </summary>
         /// <param name="power">Power sent</param>
         /// <param name="current">Current location of the caster</param>
-        public void ShowPower(Power power, Location current)
+        public void ShowPower(byte type, Power power, Location current)
         {
             foreach(Case c in Globals.currentScene.cases)
             {
+                //TODO Obstacles impact
                 if(Math.Abs(c.x - current.x) + Math.Abs(c.y - current.y) <= power.scope)
                 {
-                    c.possibility = 3;
+                    c.possibility = type;
                     Globals.cameraManager.ChangeObject("grid", c.x + ";" + c.y, "redraw");
                 }
             }
@@ -203,7 +224,6 @@ namespace Requiem
         /// <param name="target">Target location of the power</param>
         private void ExecutePower(Power power, Fighter caster, Location target, Location basic = null)
         {
-            //TODO Execute power Method
             foreach(KeyValuePair<string, int> effect in power.effects)
             {
                 switch (effect.Key)
@@ -214,6 +234,19 @@ namespace Requiem
                             if (Globals.currentScene.cases[target.x, target.y].entity.type != "npc")
                             {
                                 Fighter fighter = ((Fighter)Globals.currentScene.cases[target.x, target.y].entity);
+                                string[] options = power.options[0].Split(';');
+                                for(int i = 0; i < options.Length; ++i)
+                                {
+                                    foreach (Weapon weapon in Globals.weapons)
+                                    {
+                                        if (weapon.name == options[i])
+                                        {
+                                            fighter.AddWeapon(weapon);
+                                            Debug.Log(fighter.name + ":" + fighter.weapons[0].name);
+                                            break;
+                                        }
+                                    }
+                                }
                             }
                         }
                         break;
@@ -268,11 +301,6 @@ namespace Requiem
                         break;
                 }
             }
-        }
-
-        private void ExecuteAttack()
-        {
-            //TODO Execute attack
         }
     }
 }

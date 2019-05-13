@@ -36,7 +36,7 @@ namespace Requiem
             Armors();
 
             //WEAPONS
-            Weapon psychWeapon = new Weapon("psychalSpear", 0, 0, "A psychologic representation of a spear that Lennj can mentally control", "magic", 3, 3);
+            Weapon psychWeapon = new Weapon("psychalSpear", 0, 0, "A psychologic representation of a spear that Lennj can mentally control", "magic2", 3, 2);
             Weapon sword = new Weapon("sword", 15, 15, "A simple iron sword", "one-handed", 2, 1);
             Globals.weapons.Add(psychWeapon);
             Globals.weapons.Add(sword);
@@ -53,13 +53,13 @@ namespace Requiem
             };
             List<Power> charPowers = new List<Power>
             {
-                new Power("Summon Weapon", 3, 1, 1, 90, 0, charEffects, false, charOptions)
+                new Power("Summon Weapon", 3, 0, 1, 90, 1, charEffects, false, charOptions)
             };
             charEffects = new Dictionary<string, int>
             {
                 {"areaDamage", 4 }
             };
-            charPowers.Add(new Power("Psychic Explosion", 5, 4, 3, 60, 10, charEffects));
+            charPowers.Add(new Power("Psychic Explosion", 5, 3, 3, 60, 10, charEffects));
             charEffects = new Dictionary<string, int>
             {
                 {"damage", 2},
@@ -69,7 +69,7 @@ namespace Requiem
             {
                 "fire"
             };
-            charPowers.Add(new Power("Pyrokinesy", 5, 6, 1, 15, 20, charEffects, false, charOptions));
+            charPowers.Add(new Power("Pyrokinesy", 5, 5, 1, 15, 20, charEffects, false, charOptions));
             int[] charDices = { 35, 70, 85, 60, 47, 25, 55 };
             Dictionary<Item, int> charBag = new Dictionary<Item, int>
             {
@@ -86,7 +86,6 @@ namespace Requiem
             charArmorChange[4] = true;
             charArmorChange[5] = true;
             Weapon[] charWeapon = new Weapon[2];
-            charWeapon[0] = psychWeapon;
             Globals.characters.Add(new Character("Lennj", true, 300, "Lennj lost his family at his birthday when Angels arrived to kill his race", "Psychomancien", "513", 
                 "calm;sadistic;logical", "Soft-Cliff", 1, 1, charDices, charArmor, charArmorChange, "mage;magic", charWeapon, "magic1;magic2;dagger", charPowers, charBag));
             Characters();
@@ -294,6 +293,44 @@ namespace Requiem
                             writer.WriteElementString("value", Convert.ToString(effect.Value));
                             writer.WriteEndElement();
                         }
+                    }
+                    writer.WriteEndElement();
+                    //List of powers
+                    writer.WriteStartElement("powers");
+                    for(int i = 1; i < weapon.powers.Count; ++i)
+                    {
+                        //Individual power
+                        writer.WriteStartElement("power");
+                        writer.WriteElementString("name", weapon.powers[i].name);
+                        writer.WriteElementString("mp", Convert.ToString(weapon.powers[i].mana));
+                        writer.WriteElementString("scope", Convert.ToString(weapon.powers[i].scope));
+                        writer.WriteElementString("area", Convert.ToString(weapon.powers[i].area));
+                        writer.WriteElementString("cast", Convert.ToString(weapon.powers[i].cast));
+                        writer.WriteElementString("speed", Convert.ToString(weapon.powers[i].speed));
+                        //List of effects
+                        writer.WriteStartElement("effects");
+                        foreach (KeyValuePair<string, int> effect in weapon.powers[i].effects)
+                        {
+                            //Individual effect
+                            writer.WriteStartElement("effect");
+                            writer.WriteElementString("target", effect.Key);
+                            writer.WriteElementString("value", Convert.ToString(effect.Value));
+                            writer.WriteEndElement();
+                        }
+                        writer.WriteEndElement();
+                        writer.WriteElementString("needBasic", Convert.ToString(weapon.powers[i].needBasic));
+                        //List of options for this power
+                        writer.WriteStartElement("options");
+                        if (weapon.powers[i].options != null)
+                        {
+                            foreach (string option in weapon.powers[i].options)
+                            {
+                                //Individual option
+                                writer.WriteElementString("option", option);
+                            }
+                        }
+                        writer.WriteEndElement();
+                        writer.WriteEndElement();
                     }
                     writer.WriteEndElement();
                     writer.WriteEndElement();

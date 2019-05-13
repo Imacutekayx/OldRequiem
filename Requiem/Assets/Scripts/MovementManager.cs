@@ -136,7 +136,7 @@ namespace Requiem
 
             if (success)
             {
-                Globals.timeManager.add.Add(action);
+                Globals.timeManager.AddAction(action);
                 --nextCase;
             }
             else
