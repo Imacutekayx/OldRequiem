@@ -63,7 +63,8 @@ namespace Requiem
             charEffects = new Dictionary<string, int>
             {
                 {"damage", 2},
-                {"stateCase", 0 }
+                {"stateCase", 0 },
+                {"statePath", 0 }
             };
             charOptions = new List<string>
             {

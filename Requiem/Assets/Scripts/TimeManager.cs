@@ -5,6 +5,8 @@ namespace Requiem
 {
     public class TimeManager
     {
+        //TODO Create a state effect loop
+
         public List<Act> actions = new List<Act>();
         public List<Act> add = new List<Act>();
         public List<Act> remove = new List<Act>();

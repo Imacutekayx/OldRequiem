@@ -175,7 +175,7 @@ namespace Requiem.Objects
                                 {
                                     if (pow.mana <= Globals.currentCharacter.mp)
                                     {
-                                        Globals.timeManager.AddAction(new Act("script", Convert.ToInt32(pow.cast), "executeAttack", Globals.currentCharacter, Globals.power + ";" + c.x + ":" + c.y));
+                                        Globals.timeManager.AddAction(new Act("script", Convert.ToInt32(pow.cast), "castAttack", Globals.currentCharacter, Globals.power + ";" + c.x + ":" + c.y));
                                         Globals.power = "";
                                         Globals.cameraManager.CleanCases();
                                     }

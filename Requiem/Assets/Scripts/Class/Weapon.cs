@@ -21,7 +21,7 @@ namespace Requiem.Class
             type = _type;
             damage = _damage;
             range = _range;
-            powers = new List<Power> { new Power("attack", 0, range, 1, 1, 5, new Dictionary<string, int>() { { "damage", damage } }) };
+            powers = new List<Power> { new Power("attack", 0, range, 0, 1, 5, new Dictionary<string, int>() { { "damage", damage } }) };
             if(_powers != null)
             {
                 powers.AddRange(_powers);

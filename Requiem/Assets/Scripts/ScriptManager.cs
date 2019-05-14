@@ -8,6 +8,13 @@ namespace Requiem
 {
     public class ScriptManager
     {
+        //Variables
+        int nextCase = 0;
+
+        //Objects
+        List<Location> path = new List<Location>();
+        Location current;
+
         /// <summary>
         /// Execute a given script
         /// </summary>
@@ -134,15 +141,20 @@ namespace Requiem
             switch (act.type)
             {
                 case "castPower":
-                    string[] parameters = act.parameters.Split(';');
-                    foreach(Power p in ((Fighter)act.launcher).powers)
+                case "castAttack":
+                    string[] psC = act.parameters.Split(';');
+                    string[] nameC = psC[0].Split(':');
+                    string[] coordC = psC[1].Split(':');
+                    foreach (Power p in act.type == "castPower" ? ((Fighter)act.launcher).powers : ((Fighter)act.launcher).weapons[Convert.ToInt32(nameC[0])].powers)
                     {
-                        if(p.name == parameters[0])
+                        if(p.name == nameC[act.type == "castPower" ? 0 : 1])
                         {
+                            //TODO Find path from possible basic
+                            path = Globals.movementManager.CalculateMove(new Location(act.launcher.x, act.launcher.y), new Location(Convert.ToInt32(coordC[0]), Convert.ToInt32(coordC[1])));
+                            nextCase = path.Count - 1;
                             int temp = ((Fighter)act.launcher).mp;
-                            ((Fighter)act.launcher).mp -= p.mana;
-                            //TODO Find path to target (from possible basic) and new act like movement => execute methods
-                            Globals.timeManager.AddAction(new Act("script", p.speed, "executePower", act.launcher, act.parameters));
+                            if (act.type == "castPower") { ((Fighter)act.launcher).mp -= p.mana; }
+                            Globals.timeManager.AddAction(new Act("script", p.speed, act.type == "castPower" ? "executePower" : "executeAttack", act.launcher, act.parameters));
                             Debug.Log(act.launcher.name + ":" + temp + "=>" + ((Fighter)act.launcher).mp);
                             break;
                         }
@@ -150,32 +162,43 @@ namespace Requiem
                     break;
 
                 case "executePower":
-                    string[] psP = act.parameters.Split(';');
-                    string[] coordP = psP[1].Split(':');
-                    foreach(Power p in ((Fighter)act.launcher).powers)
-                    {
-                        if(p.name == psP[0])
-                        {
-                            ExecutePower(p, (Fighter)act.launcher, new Location(Convert.ToInt32(coordP[0]), Convert.ToInt32(coordP[1])));
-                            break;
-                        }
-                    }
-                    Globals.timeManager.AddAction(new Act("time", 20, "", act.launcher, ""));
-                    break;
-
                 case "executeAttack":
-                    string[] psA = act.parameters.Split(';');
-                    string[] nameA = psA[0].Split(':');
-                    string[] coordA = psA[1].Split(':');
-                    foreach (Power p in ((Fighter)act.launcher).weapons[Convert.ToInt32(nameA[0])].powers)
+                    string[] psE = act.parameters.Split(';');
+                    string[] nameE = psE[0].Split(':');
+                    string[] coordE = psE[1].Split(':');
+                    foreach(Power p in act.type == "executePower" ? ((Fighter)act.launcher).powers : ((Fighter)act.launcher).weapons[Convert.ToInt32(nameE[0])].powers)
                     {
-                        if (p.name == nameA[1])
+                        if(p.name == nameE[act.type == "executePower" ? 0 : 1])
                         {
-                            ExecutePower(p, (Fighter)act.launcher, new Location(Convert.ToInt32(coordA[0]), Convert.ToInt32(coordA[1])));
+                            if (path.Count != 1)
+                            {
+                                current = path[--nextCase];
+                            }
+                            if (nextCase == 0)
+                            {
+                                ExecutePower(p, (Fighter)act.launcher, new Location(Convert.ToInt32(coordE[0]), Convert.ToInt32(coordE[1])));
+                                Globals.timeManager.AddAction(new Act("time", act.type == "executePower" ? 20 : 15, "", act.launcher, ""));
+                            }
+                            else
+                            {
+                                foreach(KeyValuePair<string, int> effect in p.effects)
+                                {
+                                    if (effect.Key.Contains("Path"))
+                                    {
+                                        switch (effect.Key)
+                                        {
+                                            case "statePath":
+                                                Globals.currentScene.cases[current.x, current.y].state = p.options[0];
+                                                Globals.cameraManager.ChangeObject("grid", current.x + ";" + current.y, "redraw");
+                                                break;
+                                        }
+                                    }
+                                }
+                                Globals.timeManager.AddAction(new Act("script", p.speed, act.type, act.launcher, act.parameters));
+                            }
                             break;
                         }
                     }
-                    Globals.timeManager.AddAction(new Act("time", 15, "", act.launcher, ""));
                     break;
             }
         }
