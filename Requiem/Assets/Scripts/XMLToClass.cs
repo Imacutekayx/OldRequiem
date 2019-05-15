@@ -572,7 +572,7 @@ namespace Requiem
                 immunities = new List<string>();
                 resistances = new List<string>();
                 vulnerabilities = new List<string>();
-                XmlNode nodeParticularities = ennemy.SelectSingleNode("particularities");
+                XmlNode nodeParticularities = nodeAttributes.SelectSingleNode("particularities");
                 XmlNode nodeLanguages = nodeParticularities.SelectSingleNode("languages");
                 XmlNodeList nodeLanguage = nodeLanguages.SelectNodes("language");
                 foreach (XmlNode language in nodeLanguage)
@@ -1042,7 +1042,7 @@ namespace Requiem
                             {
                                 if(ennemy.name == entName)
                                 {
-                                    Ennemy ennCopy = new Ennemy(ennemy.name, ennemy.description, ennemy.weight, ennemy.height, ennemy.dices, ennemy.powers, 
+                                    Ennemy ennCopy = new Ennemy(ennemy.name, ennemy.description, ennemy.weight, ennemy.height, ennemy.dices, ennemy.armor, ennemy.powers, 
                                         ennemy.weapontype, ennemy.bag, ennemy.languages, ennemy.competences, ennemy.immunities, ennemy.resistances, 
                                         ennemy.vulnerabilities, ennemy.armors, ennemy.armorChange, ennemy.armortype, ennemy.weapons, ennemy.scripts)
                                     {

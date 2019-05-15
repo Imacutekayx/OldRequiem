@@ -185,10 +185,11 @@ namespace Requiem
                                 {
                                     if (effect.Key.Contains("Path"))
                                     {
-                                        switch (effect.Key)
+                                        string[] effectType = effect.Key.Split(';');
+                                        switch (effectType[0])
                                         {
                                             case "statePath":
-                                                Globals.currentScene.cases[current.x, current.y].state = p.options[0];
+                                                Globals.currentScene.cases[current.x, current.y].state = effectType[1];
                                                 Globals.cameraManager.ChangeObject("grid", current.x + ";" + current.y, "redraw");
                                                 break;
                                         }

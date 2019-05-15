@@ -62,7 +62,7 @@ namespace Requiem
             charPowers.Add(new Power("Psychic Explosion", 5, 3, 3, 60, 10, charEffects));
             charEffects = new Dictionary<string, int>
             {
-                {"damage;fire", 2},
+                {"damage;fire", 3},
                 {"stateCase;fire", 0 },
                 {"statePath;fire", 0 }
             };
@@ -368,26 +368,10 @@ namespace Requiem
                     writer.WriteElementString("weight", Convert.ToString(character.weight));
                     writer.WriteElementString("height", Convert.ToString(character.height));
                     writer.WriteEndElement();
-                    //Combat attribute
-                    writer.WriteStartElement("attributes");
-                    writer.WriteElementString("weapon", character.weapons[0] != null ? character.weapons[0].name : "");
-                    writer.WriteElementString("weapon", character.weapons[1] != null ? character.weapons[1].name : "");
-                    writer.WriteElementString("weapontype", character.weapontype);
-                    //List of dices
-                    writer.WriteStartElement("dices");
-                    writer.WriteElementString("constitution", Convert.ToString(character.dices[0]));
-                    writer.WriteElementString("knowledge", Convert.ToString(character.dices[1]));
-                    writer.WriteElementString("focus", Convert.ToString(character.dices[2]));
-                    writer.WriteElementString("charisma", Convert.ToString(character.dices[3]));
-                    writer.WriteElementString("agility", Convert.ToString(character.dices[4]));
-                    writer.WriteElementString("arcane", Convert.ToString(character.dices[5]));
-                    writer.WriteElementString("temper", Convert.ToString(character.dices[6]));
-                    writer.WriteEndElement();
-                    writer.WriteElementString("armor", Convert.ToString(character.armor);
                     //List of particularities
                     writer.WriteStartElement("particularities");
                     writer.WriteStartElement("languages");
-                    foreach(string language in character.languages)
+                    foreach (string language in character.languages)
                     {
                         writer.WriteElementString("language", language);
                     }
@@ -413,10 +397,26 @@ namespace Requiem
                     writer.WriteStartElement("vulnerabilities");
                     foreach (string vulnerability in character.vulnerabilities)
                     {
-                        writer.WriteElementString("language", vulnerability);
+                        writer.WriteElementString("vulnerabilty", vulnerability);
                     }
                     writer.WriteEndElement();
                     writer.WriteEndElement();
+                    //Combat attribute
+                    writer.WriteStartElement("attributes");
+                    writer.WriteElementString("weapon", character.weapons[0] != null ? character.weapons[0].name : "");
+                    writer.WriteElementString("weapon", character.weapons[1] != null ? character.weapons[1].name : "");
+                    writer.WriteElementString("weapontype", character.weapontype);
+                    //List of dices
+                    writer.WriteStartElement("dices");
+                    writer.WriteElementString("constitution", Convert.ToString(character.dices[0]));
+                    writer.WriteElementString("knowledge", Convert.ToString(character.dices[1]));
+                    writer.WriteElementString("focus", Convert.ToString(character.dices[2]));
+                    writer.WriteElementString("charisma", Convert.ToString(character.dices[3]));
+                    writer.WriteElementString("agility", Convert.ToString(character.dices[4]));
+                    writer.WriteElementString("arcane", Convert.ToString(character.dices[5]));
+                    writer.WriteElementString("temper", Convert.ToString(character.dices[6]));
+                    writer.WriteEndElement();
+                    writer.WriteElementString("armor", Convert.ToString(character.armor));
                     //List of armor of the character
                     writer.WriteElementString("typearmor", character.armortype);
                     writer.WriteStartElement("armors");
@@ -549,7 +549,7 @@ namespace Requiem
                     writer.WriteStartElement("vulnerabilities");
                     foreach (string vulnerability in ennemy.vulnerabilities)
                     {
-                        writer.WriteElementString("language", vulnerability);
+                        writer.WriteElementString("vulnerability", vulnerability);
                     }
                     writer.WriteEndElement();
                     writer.WriteEndElement();

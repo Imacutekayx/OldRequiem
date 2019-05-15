@@ -1,1 +1,1 @@
-﻿<?xml version="1.0" encoding="utf-8"?><useables><useable><name>gold</name><value>1</value><weight>1</weight><description>A simple coin of gold</description><effects /></useable></useables>
+﻿<?xml version="1.0" encoding="utf-8"?><useables><useable><name>gold</name><value>1</value><weight>1</weight><description>A simple coin of gold</description><scope>1</scope><effects /></useable></useables>
