@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Requiem.Class
@@ -20,6 +21,7 @@ namespace Requiem.Class
         public int height;
         public bool dead;
         public bool busy = false;
+        public List<string> languages = new List<string>();
 
         //Objects
         public Dictionary<Item, int> bag = new Dictionary<Item, int>();
@@ -28,35 +30,66 @@ namespace Requiem.Class
         /// Deal damage to an entity
         /// </summary>
         /// <param name="hp">Nbr of damage</param>
-        public void ChangeHP(int hp)
+        public void ChangeHP(int hp, string typeDamage, bool heal = false)
         {
             if(type == "npc")
             {
-                bool isEnnemy = false;
-                foreach(Ennemy ennemy in Globals.ennemies)
+                if (heal)
                 {
-                    if(ennemy.name == name)
-                    {
-                        //TODO Summon ennemy
-                        isEnnemy = true;
-                        break;
-                    }
+                    //TODO Heal npc
                 }
-                if (!isEnnemy)
+                else
                 {
-                    dead = true;
+                    bool isEnnemy = false;
+                    foreach (Ennemy ennemy in Globals.ennemies)
+                    {
+                        if (ennemy.name == name)
+                        {
+                            //TODO Summon ennemy
+                            isEnnemy = true;
+                            break;
+                        }
+                    }
+                    if (!isEnnemy)
+                    {
+                        dead = true;
+                    }
                 }
             }
             else
             {
+                double multiply = 1;
                 Fighter fighter = ((Fighter)this);
-                int temp = fighter.hp;
-                fighter.hp -= hp;
-                Debug.Log(name + ":" + temp + "=>" + fighter.hp);
-                if (fighter.hp <= 0)
+                if (heal)
                 {
-                    fighter.dead = true;
+                    int temp = fighter.hp;
+                    fighter.hp += hp;
+                    if(fighter.hp > fighter.dices[0]/3 + (fighter.boosts.ContainsKey("hp") ? fighter.boosts["hp"] : 0))
+                    {
+                        fighter.hp = fighter.dices[0] / 3 + (fighter.boosts.ContainsKey("hp") ? fighter.boosts["hp"] : 0);
+                    }
+                    Debug.Log(name + ":" + temp + "=>" + fighter.hp);
                 }
+                else
+                {
+                    if (fighter.immunities.Contains(typeDamage))
+                    {
+                        multiply = 0;
+                    }
+                    else if (fighter.resistances.Contains(typeDamage))
+                    {
+                        multiply = 0.5;
+                    }
+                    else if (fighter.vulnerabilities.Contains(typeDamage))
+                    {
+                        multiply = 1.5;
+                    }
+                    int temp = fighter.hp;
+                    fighter.hp -= (Convert.ToInt32(hp * multiply) - (fighter.armor + (fighter.boosts.ContainsKey("armor") ? fighter.boosts["armor"] : 0)));
+                    Debug.Log(name + ":" + temp + "=>" + fighter.hp);
+                }
+                //TODO Death
+                fighter.dead = fighter.hp <= 0;
             }
         }
 

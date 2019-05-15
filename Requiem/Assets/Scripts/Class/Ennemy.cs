@@ -14,8 +14,9 @@ namespace Requiem.Class
         public Dictionary<string, int> scripts;
 
         //Constructor
-        public Ennemy(string _name, string _description, int _weight, int _height, int[] _dices, List<Power> _powers, string _weapontype, Dictionary<Item, int> _bag,
-            Armor[] _armor, bool[] _armorChange, string _armortype, Weapon[] _weapon, Dictionary<string, int> _scripts = null)
+        public Ennemy(string _name, string _description, int _weight, int _height, int[] _dices, int _armor, List<Power> _powers, string _weapontype, 
+            Dictionary<Item, int> _bag, List<string> _languages, List<string> _competences, List<string> _immunities, List<string> _resistances, 
+            List<string> _vulnerabilities, Armor[] _armors, bool[] _armorChange, string _armortype, Weapon[] _weapon, Dictionary<string, int> _scripts = null)
         {
             name = _name;
             description = _description;
@@ -25,7 +26,13 @@ namespace Requiem.Class
             dices = _dices;
             hp = dices[0] / 3;
             mp = dices[1] / 2;
-            armors = _armor;
+            armor = _armor;
+            languages = _languages;
+            competences = _competences;
+            immunities = _immunities;
+            resistances = _resistances;
+            vulnerabilities = _vulnerabilities;
+            armors = _armors;
             armorChange = _armorChange;
             armortype = _armortype;
             weapons = _weapon;

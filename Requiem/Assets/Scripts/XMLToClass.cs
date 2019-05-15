@@ -51,6 +51,7 @@ namespace Requiem
             int value;
             int weight;
             string description;
+            int scope;
             //List of effects
             Dictionary<string, int> effects = new Dictionary<string, int>();
             string effName;
@@ -68,6 +69,7 @@ namespace Requiem
                 value = Convert.ToInt32(useable.SelectSingleNode("value").InnerText);
                 weight = Convert.ToInt32(useable.SelectSingleNode("weight").InnerText);
                 description = useable.SelectSingleNode("description").InnerText;
+                scope = Convert.ToInt32(useable.SelectSingleNode("scope").InnerText);
                 XmlNodeList nodeEffects = useable.SelectNodes("effect");
                 effects.Clear();
                 foreach(XmlNode effect in nodeEffects)
@@ -76,7 +78,7 @@ namespace Requiem
                     effValue = Convert.ToInt32(effect.SelectSingleNode("value").InnerText);
                     effects.Add(effName, effValue);
                 }
-                Globals.useables.Add(new Item(name, value, weight, description, effects));
+                Globals.useables.Add(new Item(name, value, weight, description, scope, effects));
             }
         }
 
@@ -236,10 +238,17 @@ namespace Requiem
             string origin;
             int weight;
             int height;
+            //Particularities
+            List<string> languages;
+            List<string> competences;
+            List<string> immunities;
+            List<string> resistances;
+            List<string> vulnerabilities;
             //Combat attributes
             Weapon[] charWeapons = new Weapon[2];
             string weapontype;
             int[] dices = new int[7];
+            int charArmor;
             string typearmor;
             Armor[] charArmors = new Armor[6];
             bool[] armorChanges = new bool[6];
@@ -283,6 +292,43 @@ namespace Requiem
                 origin = nodeDescription.SelectSingleNode("origin").InnerText;
                 weight = Convert.ToInt32(nodeDescription.SelectSingleNode("weight").InnerText);
                 height = Convert.ToInt32(nodeDescription.SelectSingleNode("height").InnerText);
+                //Particularities
+                languages = new List<string>();
+                competences = new List<string>();
+                immunities = new List<string>();
+                resistances = new List<string>();
+                vulnerabilities = new List<string>();
+                XmlNode nodeParticularities = character.SelectSingleNode("particularities");
+                XmlNode nodeLanguages = nodeParticularities.SelectSingleNode("languages");
+                XmlNodeList nodeLanguage = nodeLanguages.SelectNodes("language");
+                foreach (XmlNode language in nodeLanguage)
+                {
+                    languages.Add(language.InnerText);
+                }
+                XmlNode nodeCompetences = nodeParticularities.SelectSingleNode("competences");
+                XmlNodeList nodeCompetence = nodeCompetences.SelectNodes("competence");
+                foreach (XmlNode competence in nodeCompetence)
+                {
+                    competences.Add(competence.InnerText);
+                }
+                XmlNode nodeImmunities = nodeParticularities.SelectSingleNode("immunities");
+                XmlNodeList nodeImmunity = nodeImmunities.SelectNodes("immunity");
+                foreach (XmlNode immunity in nodeImmunity)
+                {
+                    immunities.Add(immunity.InnerText);
+                }
+                XmlNode nodeResistances = nodeParticularities.SelectSingleNode("resistances");
+                XmlNodeList nodeResistance = nodeResistances.SelectNodes("resistance");
+                foreach (XmlNode resistance in nodeResistance)
+                {
+                    resistances.Add(resistance.InnerText);
+                }
+                XmlNode nodeVulnerabilities = nodeParticularities.SelectSingleNode("vulnerabilities");
+                XmlNodeList nodeVulnerability = nodeVulnerabilities.SelectNodes("vulnerability");
+                foreach (XmlNode vulnerability in nodeVulnerability)
+                {
+                    vulnerabilities.Add(vulnerability.InnerText);
+                }
                 //Combat attributes
                 XmlNode nodeAttributes = character.SelectSingleNode("attributes");
                 XmlNodeList weaponNames = nodeAttributes.SelectNodes("weapon");
@@ -318,6 +364,7 @@ namespace Requiem
                 dices[4] = Convert.ToInt32(nodeDices.SelectSingleNode("agility").InnerText);
                 dices[5] = Convert.ToInt32(nodeDices.SelectSingleNode("arcane").InnerText);
                 dices[6] = Convert.ToInt32(nodeDices.SelectSingleNode("temper").InnerText);
+                charArmor = Convert.ToInt32(nodeAttributes.SelectSingleNode("armor").InnerText);
                 //List of armors
                 typearmor = nodeAttributes.SelectSingleNode("typearmor").InnerText;
                 XmlNode nodeArmors = nodeAttributes.SelectSingleNode("armors");
@@ -421,8 +468,9 @@ namespace Requiem
                         }
                     }
                 }
-                Globals.characters.Add(new Character(name, sex, age, story, cl, race, personality, origin, weight,
-                    height, dices, charArmors, armorChanges, typearmor, charWeapons, weapontype, powers, bag));
+                Globals.characters.Add(new Character(name, sex, age, story, cl, race, personality, origin, 
+                    weight, height, dices, charArmor, languages, competences, immunities, resistances, vulnerabilities, 
+                    charArmors, armorChanges, typearmor, charWeapons, weapontype, powers, bag));
             }
         }
 
@@ -440,9 +488,16 @@ namespace Requiem
             Weapon[] ennWeapons = new Weapon[2];
             string weapontype;
             int[] dices = new int[7];
+            int ennArmor;
             string typearmor;
             Armor[] ennArmors = new Armor[6];
             bool[] armorChanges = new bool[6];
+            //Particularities
+            List<string> languages;
+            List<string> competences;
+            List<string> immunities;
+            List<string> resistances;
+            List<string> vulnerabilities;
             //Powers
             List<Power> powers = new List<Power>();
             string powName;
@@ -510,6 +565,44 @@ namespace Requiem
                 dices[4] = Convert.ToInt32(nodeDices.SelectSingleNode("agility").InnerText);
                 dices[5] = Convert.ToInt32(nodeDices.SelectSingleNode("arcane").InnerText);
                 dices[6] = Convert.ToInt32(nodeDices.SelectSingleNode("temper").InnerText);
+                ennArmor = Convert.ToInt32(nodeAttributes.SelectSingleNode("armor").InnerText);
+                //Particularities
+                languages = new List<string>();
+                competences = new List<string>();
+                immunities = new List<string>();
+                resistances = new List<string>();
+                vulnerabilities = new List<string>();
+                XmlNode nodeParticularities = ennemy.SelectSingleNode("particularities");
+                XmlNode nodeLanguages = nodeParticularities.SelectSingleNode("languages");
+                XmlNodeList nodeLanguage = nodeLanguages.SelectNodes("language");
+                foreach (XmlNode language in nodeLanguage)
+                {
+                    languages.Add(language.InnerText);
+                }
+                XmlNode nodeCompetences = nodeParticularities.SelectSingleNode("competences");
+                XmlNodeList nodeCompetence = nodeCompetences.SelectNodes("competence");
+                foreach (XmlNode competence in nodeCompetence)
+                {
+                    competences.Add(competence.InnerText);
+                }
+                XmlNode nodeImmunities = nodeParticularities.SelectSingleNode("immunities");
+                XmlNodeList nodeImmunity = nodeImmunities.SelectNodes("immunity");
+                foreach (XmlNode immunity in nodeImmunity)
+                {
+                    immunities.Add(immunity.InnerText);
+                }
+                XmlNode nodeResistances = nodeParticularities.SelectSingleNode("resistances");
+                XmlNodeList nodeResistance = nodeResistances.SelectNodes("resistance");
+                foreach (XmlNode resistance in nodeResistance)
+                {
+                    resistances.Add(resistance.InnerText);
+                }
+                XmlNode nodeVulnerabilities = nodeParticularities.SelectSingleNode("vulnerabilities");
+                XmlNodeList nodeVulnerability = nodeVulnerabilities.SelectNodes("vulnerability");
+                foreach (XmlNode vulnerability in nodeVulnerability)
+                {
+                    vulnerabilities.Add(vulnerability.InnerText);
+                }
                 //List of armors
                 typearmor = nodeAttributes.SelectSingleNode("typearmor").InnerText;
                 XmlNode nodeArmors = nodeAttributes.SelectSingleNode("armors");
@@ -613,7 +706,8 @@ namespace Requiem
                     }
                 }
                 //Add Scripts
-                Globals.ennemies.Add(new Ennemy(name, description, weight, height, dices, powers, weapontype, bag, ennArmors, armorChanges, typearmor, ennWeapons));
+                Globals.ennemies.Add(new Ennemy(name, description, weight, height, dices, ennArmor, powers, weapontype, bag, 
+                    languages, competences, immunities, resistances, vulnerabilities, ennArmors, armorChanges, typearmor, ennWeapons));
             }
         }
 
@@ -630,8 +724,10 @@ namespace Requiem
             string temper;
             int weight;
             int height;
+            bool unique;
             //Items
             Dictionary<Item, int> bag = new Dictionary<Item, int>();
+            List<string> languages;
             string iteUse;
             string iteName;
             int iteNbr;
@@ -652,6 +748,14 @@ namespace Requiem
                 temper = npc.SelectSingleNode("temper").InnerText;
                 weight = Convert.ToInt32(npc.SelectSingleNode("weight").InnerText);
                 height = Convert.ToInt32(npc.SelectSingleNode("height").InnerText);
+                unique = Convert.ToBoolean(npc.SelectSingleNode("unique").InnerText);
+                languages = new List<string>();
+                XmlNode nodeLanguages = npc.SelectSingleNode("languages");
+                XmlNodeList nodeLanguage = nodeLanguages.SelectNodes("language");
+                foreach(XmlNode language in nodeLanguage)
+                {
+                    languages.Add(language.InnerText);
+                }
                 //List of items
                 XmlNode nodeBag = npc.SelectSingleNode("bag");
                 XmlNodeList xmlItems = nodeBag.SelectNodes("item");
@@ -698,7 +802,7 @@ namespace Requiem
                             break;
                     }
                 }
-                Globals.npcs.Add(new Npc(name, sex, age, job, temper, weight, height, bag));
+                Globals.npcs.Add(new Npc(name, sex, age, job, temper, weight, height, unique, languages, bag));
             }
         }
 
@@ -938,8 +1042,9 @@ namespace Requiem
                             {
                                 if(ennemy.name == entName)
                                 {
-                                    Ennemy ennCopy = new Ennemy(ennemy.name, ennemy.description, ennemy.weight, ennemy.height, ennemy.dices, ennemy.powers, ennemy.weapontype,
-                                        ennemy.bag, ennemy.armors, ennemy.armorChange, ennemy.armortype, ennemy.weapons, ennemy.scripts)
+                                    Ennemy ennCopy = new Ennemy(ennemy.name, ennemy.description, ennemy.weight, ennemy.height, ennemy.dices, ennemy.powers, 
+                                        ennemy.weapontype, ennemy.bag, ennemy.languages, ennemy.competences, ennemy.immunities, ennemy.resistances, 
+                                        ennemy.vulnerabilities, ennemy.armors, ennemy.armorChange, ennemy.armortype, ennemy.weapons, ennemy.scripts)
                                     {
                                         x = entX,
                                         y = entY,
@@ -956,7 +1061,14 @@ namespace Requiem
                             {
                                 if(npc.name == entName)
                                 {
-                                    entities.Add(npc);
+                                    if (npc.unique)
+                                    {
+                                        entities.Add(npc);
+                                    }
+                                    else
+                                    {
+                                        Npc npcCopy = new Npc(npc.name, npc.sex, npc.age, npc.job, npc.temper, npc.weight, npc.height, false, npc.languages, npc.bag);
+                                    }
                                     break;
                                 }
                             }

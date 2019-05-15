@@ -88,6 +88,7 @@ namespace Requiem.Objects
         {
             if (!Globals.currentCharacter.busy)
             {
+                //TODO Add item mode (item's effects on case and entities)
                 switch (Globals.mode)
                 {
                     case "":

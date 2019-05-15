@@ -206,14 +206,14 @@ namespace Requiem
         /// <summary>
         /// Show a given power's scope
         /// </summary>
-        /// <param name="power">Power sent</param>
-        /// <param name="current">Current location of the caster</param>
-        public void ShowPower(byte type, Power power, Location current)
+        /// <param name="scope">Scope of the zone</param>
+        /// <param name="current">Current location of the launcher</param>
+        public void ShowZone(byte type, int scope, Location current)
         {
             foreach(Case c in Globals.currentScene.cases)
             {
                 //TODO Obstacles impact
-                if(Math.Abs(c.x - current.x) + Math.Abs(c.y - current.y) <= power.scope)
+                if(Math.Abs(c.x - current.x) + Math.Abs(c.y - current.y) <= scope)
                 {
                     c.possibility = type;
                     Globals.cameraManager.ChangeObject("grid", c.x + ";" + c.y, "redraw");
@@ -247,9 +247,12 @@ namespace Requiem
         /// <param name="target">Target location of the power</param>
         private void ExecutePower(Power power, Fighter caster, Location target, Location basic = null)
         {
+            //ConeX => increment area each X cases
+            //TODO Add effects (entity/transport/lineDamage/lineStateCase/coneDamage/coneStateCase)
             foreach(KeyValuePair<string, int> effect in power.effects)
             {
-                switch (effect.Key)
+                string[] effectType = effect.Key.Split(';');
+                switch (effectType[0])
                 {
                     case "weapon":  //Summon weapon
                         if(Globals.currentScene.cases[target.x, target.y].entity != null)
@@ -281,7 +284,8 @@ namespace Requiem
                             {
                                 if (c.entity != null)
                                 {
-                                    c.entity.ChangeHP(effect.Value - (power.area - Math.Abs(c.x - target.x) + Math.Abs(c.y - target.y)));
+                                    int dmg = effect.Value + (caster.boosts.ContainsKey(effectType[1] + "Damage") ? caster.boosts[effectType[1] + "Damage"] : 0);
+                                    c.entity.ChangeHP(dmg - (power.area - Math.Abs(c.x - target.x) + Math.Abs(c.y - target.y)), effectType[1]);
                                 }
                             }
                         }
@@ -294,13 +298,11 @@ namespace Requiem
                             {
                                 if (c.entity != null)
                                 {
-                                    c.entity.ChangeHP(effect.Value);
+                                    int dmg = effect.Value + (caster.boosts.ContainsKey(effectType[1] + "Damage") ? caster.boosts[effectType[1] + "Damage"] : 0);
+                                    c.entity.ChangeHP(dmg, effectType[1]);
                                 }
                             }
                         }
-                        break;
-
-                    case "entity":  //Summon entity
                         break;
 
                     case "stateCase":   //Change state of cases in area
@@ -308,19 +310,16 @@ namespace Requiem
                         {
                             if (Math.Abs(c.x - target.x) + Math.Abs(c.y - target.y) <= power.area && c.type != "wall")
                             {
-                                c.state = power.options[0];
+                                c.state = effectType[1];
                                 Globals.cameraManager.ChangeObject("grid", c.x + ";" + c.y, "redraw");
                             }
                         }
                         break;
 
-                    case "transport":
+                    case "coneDamage":
                         break;
 
-                    case "lineDamage":
-                        break;
-
-                    case "lineStateCase":
+                    case "coneStateCase":
                         break;
                 }
             }

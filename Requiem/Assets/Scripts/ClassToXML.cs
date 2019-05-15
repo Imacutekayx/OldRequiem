@@ -57,18 +57,14 @@ namespace Requiem
             };
             charEffects = new Dictionary<string, int>
             {
-                {"areaDamage", 4 }
+                {"areaDamage;psychic", 4 }
             };
             charPowers.Add(new Power("Psychic Explosion", 5, 3, 3, 60, 10, charEffects));
             charEffects = new Dictionary<string, int>
             {
-                {"damage", 2},
-                {"stateCase", 0 },
-                {"statePath", 0 }
-            };
-            charOptions = new List<string>
-            {
-                "fire"
+                {"damage;fire", 2},
+                {"stateCase;fire", 0 },
+                {"statePath;fire", 0 }
             };
             charPowers.Add(new Power("Pyrokinesy", 5, 5, 1, 15, 20, charEffects, false, charOptions));
             int[] charDices = { 35, 70, 85, 60, 47, 25, 55 };
@@ -88,13 +84,13 @@ namespace Requiem
             charArmorChange[5] = true;
             Weapon[] charWeapon = new Weapon[2];
             Globals.characters.Add(new Character("Lennj", true, 300, "Lennj lost his family at his birthday when Angels arrived to kill his race", "Psychomancien", "513", 
-                "calm;sadistic;logical", "Soft-Cliff", 1, 1, charDices, charArmor, charArmorChange, "mage;magic", charWeapon, "magic1;magic2;dagger", charPowers, charBag));
+                "calm;sadistic;logical", "Soft-Cliff", 1, 1, charDices, 0, new List<string>() { "common" }, new List<string>(), new List<string>(), new List<string>(), new List<string>(), charArmor, charArmorChange, "mage;magic", charWeapon, "magic1;magic2;dagger", charPowers, charBag));
             Characters();
 
             //ENNEMIES
             Dictionary<string, int> ennEffects = new Dictionary<string, int>
             {
-                { "damage", 1 }
+                { "damage;sharp", 1 }
             };
             List<Power> ennPowers = new List<Power>
             {
@@ -113,7 +109,8 @@ namespace Requiem
             bool[] ennArmorChange = new bool[6];
             Weapon[] ennWeapon = new Weapon[2];
             Globals.ennemies.Add(new Ennemy("CavernGoblin", "Small and twisted, this evil creature haunts many dark places",
-                1, 1, ennDices, ennPowers, "", ennBag, ennArmor, ennArmorChange, "", ennWeapon, ennScripts));
+                1, 1, ennDices, 0, ennPowers, "", ennBag, new List<string>() { "common" }, new List<string>(), new List<string>(), 
+                new List<string>(), new List<string>() { "fire" }, ennArmor, ennArmorChange, "", ennWeapon, ennScripts));
             Ennemies();
 
             //NPCS
@@ -121,7 +118,7 @@ namespace Requiem
             {
                 {Globals.useables[0], 30}
             };
-            Npc npc = new Npc("Butcher", true, 41, "butcher", "hotblood", 1, 1, npcBag);
+            Npc npc = new Npc("Butcher", true, 41, "butcher", "hotblood", 1, 1, true, new List<string>() { "common" }, npcBag);
             Globals.npcs.Add(npc);
             Npcs();
 
@@ -202,6 +199,7 @@ namespace Requiem
                     writer.WriteElementString("value", Convert.ToString(useable.value));
                     writer.WriteElementString("weight", Convert.ToString(useable.weight));
                     writer.WriteElementString("description", useable.description);
+                    writer.WriteElementString("scope", Convert.ToString(useable.scope));
                     //List of effects
                     writer.WriteStartElement("effects");
                     if(useable.effects != null)
@@ -385,6 +383,40 @@ namespace Requiem
                     writer.WriteElementString("arcane", Convert.ToString(character.dices[5]));
                     writer.WriteElementString("temper", Convert.ToString(character.dices[6]));
                     writer.WriteEndElement();
+                    writer.WriteElementString("armor", Convert.ToString(character.armor);
+                    //List of particularities
+                    writer.WriteStartElement("particularities");
+                    writer.WriteStartElement("languages");
+                    foreach(string language in character.languages)
+                    {
+                        writer.WriteElementString("language", language);
+                    }
+                    writer.WriteEndElement();
+                    writer.WriteStartElement("competences");
+                    foreach (string competence in character.competences)
+                    {
+                        writer.WriteElementString("competence", competence);
+                    }
+                    writer.WriteEndElement();
+                    writer.WriteStartElement("immunities");
+                    foreach (string immunity in character.immunities)
+                    {
+                        writer.WriteElementString("language", immunity);
+                    }
+                    writer.WriteEndElement();
+                    writer.WriteStartElement("resistances");
+                    foreach (string resistance in character.resistances)
+                    {
+                        writer.WriteElementString("resistance", resistance);
+                    }
+                    writer.WriteEndElement();
+                    writer.WriteStartElement("vulnerabilities");
+                    foreach (string vulnerability in character.vulnerabilities)
+                    {
+                        writer.WriteElementString("language", vulnerability);
+                    }
+                    writer.WriteEndElement();
+                    writer.WriteEndElement();
                     //List of armor of the character
                     writer.WriteElementString("typearmor", character.armortype);
                     writer.WriteStartElement("armors");
@@ -487,6 +519,40 @@ namespace Requiem
                     writer.WriteElementString("arcane", Convert.ToString(ennemy.dices[5]));
                     writer.WriteElementString("temper", Convert.ToString(ennemy.dices[6]));
                     writer.WriteEndElement();
+                    //List of particularities
+                    writer.WriteElementString("armor", Convert.ToString(ennemy.armor));
+                    writer.WriteStartElement("particularities");
+                    writer.WriteStartElement("languages");
+                    foreach (string language in ennemy.languages)
+                    {
+                        writer.WriteElementString("language", language);
+                    }
+                    writer.WriteEndElement();
+                    writer.WriteStartElement("competences");
+                    foreach (string competence in ennemy.competences)
+                    {
+                        writer.WriteElementString("competence", competence);
+                    }
+                    writer.WriteEndElement();
+                    writer.WriteStartElement("immunities");
+                    foreach (string immunity in ennemy.immunities)
+                    {
+                        writer.WriteElementString("language", immunity);
+                    }
+                    writer.WriteEndElement();
+                    writer.WriteStartElement("resistances");
+                    foreach (string resistance in ennemy.resistances)
+                    {
+                        writer.WriteElementString("resistance", resistance);
+                    }
+                    writer.WriteEndElement();
+                    writer.WriteStartElement("vulnerabilities");
+                    foreach (string vulnerability in ennemy.vulnerabilities)
+                    {
+                        writer.WriteElementString("language", vulnerability);
+                    }
+                    writer.WriteEndElement();
+                    writer.WriteEndElement();
                     //List of special scripts
                     writer.WriteStartElement("scripts");
                     foreach(KeyValuePair<string, int> script in ennemy.scripts)
@@ -586,6 +652,13 @@ namespace Requiem
                     writer.WriteElementString("temper", npc.temper);
                     writer.WriteElementString("weight", Convert.ToString(npc.weight));
                     writer.WriteElementString("height", Convert.ToString(npc.height));
+                    writer.WriteElementString("unique", Convert.ToString(npc.unique));
+                    writer.WriteStartElement("languages");
+                    foreach(string language in npc.languages)
+                    {
+                        writer.WriteElementString("language", language);
+                    }
+                    writer.WriteEndElement();
                     //List of items in the bag
                     writer.WriteStartElement("bag");
                     foreach (KeyValuePair<Item, int> item in npc.bag)

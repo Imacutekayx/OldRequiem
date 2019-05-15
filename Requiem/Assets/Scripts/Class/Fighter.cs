@@ -14,10 +14,18 @@ namespace Requiem.Class
         public Weapon[] weapons;
         public string weapontype;
         public List<Power> powers;
-        public Armor[] armors;           //Helmet/Armor/Boots/Necklace/LRing/RRing
+        public int armor;               //TODO Add to XML => armor basic
+        public Armor[] armors;          //Helmet/Armor/Boots/Necklace/LRing/RRing
         public bool[] armorChange;
         public string armortype;
+        public List<string> competences;
+        public List<string> immunities;
+        public List<string> resistances;
+        public List<string> vulnerabilities;
+        public Dictionary<string, int[]> effects = new Dictionary<string, int[]>();     //Effect + frame until damage + turn until stop
+        public Dictionary<string, int> boosts = new Dictionary<string, int>();
         
+        //TODO Effects of armor
         /// <summary>
         /// Add a weapon to the fighter
         /// </summary>
@@ -34,7 +42,7 @@ namespace Requiem.Class
                     case "crossbow1":
                         if (weapons[part] != null)
                         {
-                            if (weapons[part].type.Contains("magic"))
+                            if (!weapons[part].type.Contains("magic"))
                             {
                                 if (!AddItem(weapons[part], 1))
                                 {
@@ -121,6 +129,7 @@ namespace Requiem.Class
                 {
                     if(armors[part] != null)
                     {
+                        //TODO Remove effects of armor
                         if(armors[part].type != "magic")
                         {
                             if(!AddItem(armors[part], 1))
@@ -129,9 +138,24 @@ namespace Requiem.Class
                             }
                         }
                     }
+                    //TODO Add effects of armor
                     armors[part] = armor;
                 }
             }
+        }
+
+        public void ArmorBoost(string boost, int value, bool add)
+        {
+            switch (boost)
+            {
+                case "armor":
+                    break;
+            }
+        }
+
+        public void ChangeMP()
+        {
+            //TODO Change MP
         }
     }
 }
