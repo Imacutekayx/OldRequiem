@@ -14,7 +14,7 @@ namespace Requiem.Class
         public Weapon[] weapons;
         public string weapontype;
         public List<Power> powers;
-        public int armor;               //TODO Add to XML => armor basic
+        public int armor;
         public Armor[] armors;          //Helmet/Armor/Boots/Necklace/LRing/RRing
         public bool[] armorChange;
         public string armortype;
@@ -22,10 +22,9 @@ namespace Requiem.Class
         public List<string> immunities;
         public List<string> resistances;
         public List<string> vulnerabilities;
-        public Dictionary<string, int[]> effects = new Dictionary<string, int[]>();     //Effect + frame until damage + turn until stop
+        public Dictionary<string, int[]> effects = new Dictionary<string, int[]>();     //Effect + frame until triggered + turn until stop
         public Dictionary<string, int> boosts = new Dictionary<string, int>();
         
-        //TODO Effects of armor
         /// <summary>
         /// Add a weapon to the fighter
         /// </summary>
@@ -129,7 +128,10 @@ namespace Requiem.Class
                 {
                     if(armors[part] != null)
                     {
-                        //TODO Remove effects of armor
+                        foreach(KeyValuePair<string, int> boost in armors[part].effects)
+                        {
+                            ArmorBoost(boost.Key, boost.Value, false);
+                        }
                         if(armors[part].type != "magic")
                         {
                             if(!AddItem(armors[part], 1))
@@ -138,18 +140,44 @@ namespace Requiem.Class
                             }
                         }
                     }
-                    //TODO Add effects of armor
+                    foreach (KeyValuePair<string, int> boost in armor.effects)
+                    {
+                        ArmorBoost(boost.Key, boost.Value, true);
+                    }
                     armors[part] = armor;
                 }
             }
         }
 
+        /// <summary>
+        /// Add or remove a boost given by the armor
+        /// </summary>
+        /// <param name="boost">Name of the boost</param>
+        /// <param name="value">Value of the boost</param>
+        /// <param name="add">Adding or removing</param>
         public void ArmorBoost(string boost, int value, bool add)
         {
-            switch (boost)
+            if (add)
             {
-                case "armor":
-                    break;
+                if (boosts.ContainsKey(boost))
+                {
+                    boosts[boost] += value;
+                }
+                else
+                {
+                    boosts.Add(boost, value);
+                }
+            }
+            else
+            {
+                if(boosts[boost] - value == 0)
+                {
+                    boosts.Remove(boost);
+                }
+                else
+                {
+                    boosts[boost] -= value;
+                }
             }
         }
 

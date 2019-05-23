@@ -36,8 +36,8 @@ namespace Requiem
             Armors();
 
             //WEAPONS
-            Weapon psychWeapon = new Weapon("psychalSpear", 0, 0, "A psychologic representation of a spear that Lennj can mentally control", "magic2", 3, 2);
-            Weapon sword = new Weapon("sword", 15, 15, "A simple iron sword", "one-handed", 2, 1);
+            Weapon psychWeapon = new Weapon("psychalSpear", 0, 0, "A psychologic representation of a spear that Lennj can mentally control", "magic2", 3, 2, "pierce");
+            Weapon sword = new Weapon("sword", 15, 15, "A simple iron sword", "one-handed", 2, 1, "sharp");
             Globals.weapons.Add(psychWeapon);
             Globals.weapons.Add(sword);
             Weapons();
@@ -294,6 +294,7 @@ namespace Requiem
                         }
                     }
                     writer.WriteEndElement();
+                    writer.WriteElementString("typeAttack", weapon.typeAttack);
                     //List of powers
                     writer.WriteStartElement("powers");
                     for(int i = 1; i < weapon.powers.Count; ++i)

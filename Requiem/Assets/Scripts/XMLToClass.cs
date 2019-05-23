@@ -144,6 +144,7 @@ namespace Requiem
             string effTarget;
             int effValue;
             //List of powers
+            string typeAttack;
             List<Power> powers = new List<Power>();
             string powName;
             int powMp;
@@ -180,6 +181,7 @@ namespace Requiem
                     effects.Add(effTarget, effValue);
                 }
                 //List of powers
+                typeAttack = weapon.SelectSingleNode("typeAttack").InnerText;
                 XmlNode nodePowers = weapon.SelectSingleNode("powers");
                 powers.Clear();
                 if(nodePowers != null)
@@ -217,7 +219,7 @@ namespace Requiem
                             powEffects, powNeedBasic, powOptions.Count() != 0 ? powOptions : null));
                     }
                 }
-                Globals.weapons.Add(new Weapon(name, value, weight, description, type, damage, range, powers, effects));
+                Globals.weapons.Add(new Weapon(name, value, weight, description, type, damage, range, typeAttack, powers, effects));
             }
         }
 

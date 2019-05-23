@@ -13,7 +13,6 @@ namespace Requiem
         private int speed = 5;
         private int theScreenWidth;
         private int theScreenHeight;
-        private List<Item> useables;
 
         //Start is called before the first frame update
         void Start()
@@ -95,12 +94,12 @@ namespace Requiem
                 Globals.mode = Globals.mode == "item" ? "" : "item";
                 if(Globals.mode == "item")
                 {
-                    useables = new List<Item>();
+                    Globals.currentUsables = new List<Item>();
                     foreach(KeyValuePair<Item, int> item in Globals.currentCharacter.bag)
                     {
                         if(item.Key.use == "useable")
                         {
-                            useables.Add(item.Key);
+                            Globals.currentUsables.Add(item.Key);
                         }
                     }
                 }
@@ -175,31 +174,31 @@ namespace Requiem
             else if(Globals.mode == "item"){
                 if (Input.GetKeyDown(KeyCode.Q))
                 {
-                    Globals.power = Globals.power == useables[0].name ? "" : useables[0].name;
+                    Globals.power = Globals.power == Globals.currentUsables[0].name ? "" : Globals.currentUsables[0].name;
                     Debug.Log(Globals.power);
                     Globals.cameraManager.CleanCases();
-                    if (Globals.power != "") { Globals.scriptManager.ShowZone(4, useables[0].scope, new Location(Globals.currentCharacter.x, Globals.currentCharacter.y)); }
+                    if (Globals.power != "") { Globals.scriptManager.ShowZone(4, Globals.currentUsables[0].scope, new Location(Globals.currentCharacter.x, Globals.currentCharacter.y)); }
                 }
                 else if (Input.GetKeyDown(KeyCode.W))
                 {
-                    Globals.power = Globals.power == useables[1].name ? "" : useables[1].name;
+                    Globals.power = Globals.power == Globals.currentUsables[1].name ? "" : Globals.currentUsables[1].name;
                     Debug.Log(Globals.power);
                     Globals.cameraManager.CleanCases();
-                    if (Globals.power != "") { Globals.scriptManager.ShowZone(4, useables[1].scope, new Location(Globals.currentCharacter.x, Globals.currentCharacter.y)); }
+                    if (Globals.power != "") { Globals.scriptManager.ShowZone(4, Globals.currentUsables[1].scope, new Location(Globals.currentCharacter.x, Globals.currentCharacter.y)); }
                 }
                 else if (Input.GetKeyDown(KeyCode.E))
                 {
-                    Globals.power = Globals.power == useables[2].name ? "" : useables[2].name;
+                    Globals.power = Globals.power == Globals.currentUsables[2].name ? "" : Globals.currentUsables[2].name;
                     Debug.Log(Globals.power);
                     Globals.cameraManager.CleanCases();
-                    if (Globals.power != "") { Globals.scriptManager.ShowZone(4, useables[2].scope, new Location(Globals.currentCharacter.x, Globals.currentCharacter.y)); }
+                    if (Globals.power != "") { Globals.scriptManager.ShowZone(4, Globals.currentUsables[2].scope, new Location(Globals.currentCharacter.x, Globals.currentCharacter.y)); }
                 }
                 else if (Input.GetKeyDown(KeyCode.R))
                 {
-                    Globals.power = Globals.power == useables[3].name ? "" : useables[3].name;
+                    Globals.power = Globals.power == Globals.currentUsables[3].name ? "" : Globals.currentUsables[3].name;
                     Debug.Log(Globals.power);
                     Globals.cameraManager.CleanCases();
-                    if (Globals.power != "") { Globals.scriptManager.ShowZone(4, useables[3].scope, new Location(Globals.currentCharacter.x, Globals.currentCharacter.y)); }
+                    if (Globals.power != "") { Globals.scriptManager.ShowZone(4, Globals.currentUsables[3].scope, new Location(Globals.currentCharacter.x, Globals.currentCharacter.y)); }
                 }
             }
         }

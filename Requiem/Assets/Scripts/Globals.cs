@@ -32,6 +32,7 @@ namespace Requiem
         //Currents
         public static Scene currentScene;
         public static Character currentCharacter;
+        public static List<Item> currentUsables;
 
         //Variables
         public static string mode = "";

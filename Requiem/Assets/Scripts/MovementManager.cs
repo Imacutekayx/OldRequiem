@@ -23,7 +23,7 @@ namespace Requiem
         /// </summary>
         /// <param name="start">Basic position</param>
         /// <param name="target">Target position</param>
-        public List<Location> CalculateMove(Location start, Location target)
+        public List<Location> CalculateMove(Location start, Location target)    //Base: A*
         {
             Location current = null;
             List<Location> openList = new List<Location>();

@@ -129,6 +129,29 @@ namespace Requiem.Class
         }
 
         /// <summary>
+        /// Remove an item used
+        /// </summary>
+        /// <param name="item">Item used</param>
+        /// <returns>Still in bag</returns>
+        public bool UseItem(Item item)
+        {
+            if(type == "character")
+            {
+                ((Character)this).strength -= item.weight;
+            }
+            if(bag[item] == 1)
+            {
+                bag.Remove(item);
+                return false;
+            }
+            else
+            {
+                --bag[item];
+                return true;
+            }
+        }
+
+        /// <summary>
         /// Drop an item from the bag of the entity to the ground
         /// </summary>
         /// <param name="item">Item to drop</param>

@@ -88,7 +88,6 @@ namespace Requiem.Objects
         {
             if (!Globals.currentCharacter.busy)
             {
-                //TODO Add item mode (item's effects on case and entities)
                 switch (Globals.mode)
                 {
                     case "":
@@ -180,6 +179,26 @@ namespace Requiem.Objects
                                         Globals.power = "";
                                         Globals.cameraManager.CleanCases();
                                     }
+                                    break;
+                                }
+                            }
+                        }
+                        break;
+
+                    case "item":
+                        if(Globals.power != "" && c.possibility == 4)
+                        {
+                            foreach(Item item in Globals.currentUsables)
+                            {
+                                if(item.name == Globals.power)
+                                {
+                                    Globals.timeManager.AddAction(new Act("script", Convert.ToInt32(Globals.currentCharacter.dices[0] / 5), "useItem", Globals.currentCharacter, Globals.power + ";" + c.x + ":" + c.y));
+                                    if (!Globals.currentCharacter.UseItem(item))
+                                    {
+                                        Globals.currentUsables.Remove(item);
+                                    }
+                                    Globals.power = "";
+                                    Globals.cameraManager.CleanCases();
                                     break;
                                 }
                             }

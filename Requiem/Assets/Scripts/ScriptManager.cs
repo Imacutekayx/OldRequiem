@@ -201,6 +201,19 @@ namespace Requiem
                         }
                     }
                     break;
+
+                case "useItem":
+                    string[] split = act.parameters.Split(';');
+                    string[] cases = split[1].Split(':');
+                    foreach(Item item in Globals.useables)
+                    {
+                        if(item.name == split[0])
+                        {
+                            UseItem(item, new Location(Convert.ToInt32(cases[0]), Convert.ToInt32(cases[1])));
+                            break;
+                        }
+                    }
+                    break;
             }
         }
 
@@ -316,11 +329,26 @@ namespace Requiem
                             }
                         }
                         break;
+                }
+            }
+        }
 
-                    case "coneDamage":
-                        break;
-
-                    case "coneStateCase":
+        /// <summary>
+        /// Use an item on a given case
+        /// </summary>
+        /// <param name="item">Item used</param>
+        /// <param name="target">Case targeted</param>
+        public void UseItem(Item item, Location target)
+        {
+            foreach(KeyValuePair<string, int> effect in item.effects)
+            {
+                switch (effect.Key)
+                {
+                    case "hp":
+                        if(Globals.currentScene.cases[target.x, target.y].entity != null)
+                        {
+                            Globals.currentScene.cases[target.x, target.y].entity.ChangeHP(effect.Value, "", true);
+                        }
                         break;
                 }
             }
