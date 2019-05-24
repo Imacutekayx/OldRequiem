@@ -218,24 +218,6 @@ namespace Requiem
         }
 
         /// <summary>
-        /// Show a given power's scope
-        /// </summary>
-        /// <param name="scope">Scope of the zone</param>
-        /// <param name="current">Current location of the launcher</param>
-        public void ShowZone(byte type, int scope, Location current)
-        {
-            foreach(Case c in Globals.currentScene.cases)
-            {
-                //TODO Obstacles impact
-                if(Math.Abs(c.x - current.x) + Math.Abs(c.y - current.y) <= scope)
-                {
-                    c.possibility = type;
-                    Globals.cameraManager.ChangeObject("grid", c.x + ";" + c.y, "redraw");
-                }
-            }
-        }
-
-        /// <summary>
         /// Show a given power's area
         /// </summary>
         /// <param name="power">Power sent</param>

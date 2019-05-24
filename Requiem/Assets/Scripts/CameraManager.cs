@@ -279,6 +279,8 @@ namespace Requiem
                         break;
                 }
             }
+
+            Globals.visibilityManager.Compute(1, new Location(Globals.currentCharacter.x, Globals.currentCharacter.y), -1);
             
             ChangeCameraPosition();
         }
@@ -476,6 +478,45 @@ namespace Requiem
 
             }
         }
+        
+        /// <summary>
+        /// Method which change the skins in the scene
+        /// </summary>
+        public void ChangeSkins()
+        {
+            //Grid
+            foreach (GameObject gameObject in GameObject.FindGameObjectsWithTag("Cases"))
+            {
+                Redraw(gameObject, "grid");
+            }
+
+            //Adds1
+            foreach (GameObject gameObject in GameObject.FindGameObjectsWithTag("Adds1"))
+            {
+                Redraw(gameObject, "add1");
+            }
+
+            //Adds2
+            foreach (GameObject gameObject in GameObject.FindGameObjectsWithTag("Adds2"))
+            {
+                Redraw(gameObject, "add2");
+            }
+
+            //Hide walls
+            if (!top)
+            {
+                foreach (GameObject obj in lstWalls[face])
+                {
+                    obj.SetActive(false);
+                }
+            }
+
+            //Entities
+            foreach (GameObject gameObject in GameObject.FindGameObjectsWithTag("Entities"))
+            {
+                Redraw(gameObject, "entity");
+            }
+        }
 
         /// <summary>
         /// Method which calculate the position of a GameObject
@@ -520,62 +561,31 @@ namespace Requiem
         }
 
         /// <summary>
-        /// Method which change the skins in the scene
-        /// </summary>
-        private void ChangeSkins()
-        {
-            //Grid
-            foreach (GameObject gameObject in GameObject.FindGameObjectsWithTag("Cases"))
-            {
-                Redraw(gameObject, "grid");
-            }
-
-            //Adds1
-            foreach (GameObject gameObject in GameObject.FindGameObjectsWithTag("Adds1"))
-            {
-                Redraw(gameObject, "add1");
-            }
-
-            //Adds2
-            foreach (GameObject gameObject in GameObject.FindGameObjectsWithTag("Adds2"))
-            {
-                Redraw(gameObject, "add2");
-            }
-
-            //Hide walls
-            if (!top)
-            {
-                foreach (GameObject obj in lstWalls[face])
-                {
-                    obj.SetActive(false);
-                }
-            }
-
-            //Entities
-            foreach(GameObject gameObject in GameObject.FindGameObjectsWithTag("Entities"))
-            {
-                Redraw(gameObject, "entity");
-            }
-        }        
-
-        /// <summary>
         /// Method which redraw a GameObject
         /// </summary>
         /// <param name="gameObject">GameObject to redraw</param>
         /// <param name="type">Type of the GameObject</param>
         private void Redraw(GameObject gameObject, string type)
         {
+            //TODO Visibility
             if (type == "grid")
             {
                 Case c = gameObject.GetComponent<CaseObject>().c;
                 gameObject.transform.eulerAngles = new Vector3(90, 90 * face, 0);
-                if(c.type == "wall")
+                if (c.visible)
                 {
-                    gameObject.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("images/grid/" + c.type);
+                    if (c.type == "wall")
+                    {
+                        gameObject.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("images/grid/" + c.type);
+                    }
+                    else
+                    {
+                        gameObject.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("images/grid/" + c.type + c.state + c.possibility);
+                    }
                 }
                 else
                 {
-                    gameObject.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("images/grid/" + c.type + c.state + c.possibility);
+                    gameObject.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("images/grid/black");
                 }
             }
             else

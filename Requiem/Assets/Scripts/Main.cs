@@ -27,6 +27,7 @@ namespace Requiem
             Globals.timeManager = new TimeManager();
             Globals.scriptManager = new ScriptManager();
             Globals.movementManager = new MovementManager();
+            Globals.visibilityManager = new VisibilityManager();
         }
 
         //Update is called each frame
@@ -116,28 +117,28 @@ namespace Requiem
                     Globals.power = Globals.power == Globals.currentCharacter.powers[0].name ? "" : Globals.currentCharacter.powers[0].name;
                     Debug.Log(Globals.power);
                     Globals.cameraManager.CleanCases();
-                    if (Globals.power != "") { Globals.scriptManager.ShowZone(3, Globals.currentCharacter.powers[0].scope, new Location(Globals.currentCharacter.x, Globals.currentCharacter.y)); }
+                    if (Globals.power != "") { Globals.visibilityManager.Compute(3, new Location(Globals.currentCharacter.x, Globals.currentCharacter.y), Globals.currentCharacter.powers[0].scope); }
                 }
                 else if (Input.GetKeyDown(KeyCode.W))
                 {
                     Globals.power = Globals.power == Globals.currentCharacter.powers[1].name ? "" : Globals.currentCharacter.powers[1].name;
                     Debug.Log(Globals.power);
                     Globals.cameraManager.CleanCases();
-                    if (Globals.power != "") { Globals.scriptManager.ShowZone(3, Globals.currentCharacter.powers[1].scope, new Location(Globals.currentCharacter.x, Globals.currentCharacter.y)); }
+                    if (Globals.power != "") { Globals.visibilityManager.Compute(3, new Location(Globals.currentCharacter.x, Globals.currentCharacter.y), Globals.currentCharacter.powers[1].scope); }
                 }
                 else if (Input.GetKeyDown(KeyCode.E))
                 {
                     Globals.power = Globals.power == Globals.currentCharacter.powers[2].name ? "" : Globals.currentCharacter.powers[2].name;
                     Debug.Log(Globals.power);
                     Globals.cameraManager.CleanCases();
-                    if (Globals.power != "") { Globals.scriptManager.ShowZone(3, Globals.currentCharacter.powers[2].scope, new Location(Globals.currentCharacter.x, Globals.currentCharacter.y)); }
+                    if (Globals.power != "") { Globals.visibilityManager.Compute(3, new Location(Globals.currentCharacter.x, Globals.currentCharacter.y), Globals.currentCharacter.powers[2].scope); }
                 }
                 else if (Input.GetKeyDown(KeyCode.R))
                 {
                     Globals.power = Globals.power == Globals.currentCharacter.powers[3].name ? "" : Globals.currentCharacter.powers[3].name;
                     Debug.Log(Globals.power);
                     Globals.cameraManager.CleanCases();
-                    if (Globals.power != "") { Globals.scriptManager.ShowZone(3, Globals.currentCharacter.powers[3].scope, new Location(Globals.currentCharacter.x, Globals.currentCharacter.y)); }
+                    if (Globals.power != "") { Globals.visibilityManager.Compute(3, new Location(Globals.currentCharacter.x, Globals.currentCharacter.y), Globals.currentCharacter.powers[3].scope); }
                 }
             }
             else if(Globals.mode == "attack")
@@ -147,28 +148,28 @@ namespace Requiem
                     Globals.power = Globals.power == "0:" + Globals.currentCharacter.weapons[0].powers[0].name ? "" : "0:" + Globals.currentCharacter.weapons[0].powers[0].name;
                     Debug.Log(Globals.power);
                     Globals.cameraManager.CleanCases();
-                    if (Globals.power != "") { Globals.scriptManager.ShowZone(2, Globals.currentCharacter.weapons[0].powers[0].scope, new Location(Globals.currentCharacter.x, Globals.currentCharacter.y)); }
+                    if (Globals.power != "") { Globals.visibilityManager.Compute(2, new Location(Globals.currentCharacter.x, Globals.currentCharacter.y), Globals.currentCharacter.weapons[0].powers[0].scope); }
                 }
                 else if (Input.GetKeyDown(KeyCode.W))
                 {
                     Globals.power = Globals.power == "1:" + Globals.currentCharacter.weapons[1].powers[0].name ? "" : "1:" + Globals.currentCharacter.weapons[1].powers[0].name;
                     Debug.Log(Globals.power);
                     Globals.cameraManager.CleanCases();
-                    if (Globals.power != "") { Globals.scriptManager.ShowZone(2, Globals.currentCharacter.weapons[1].powers[0].scope, new Location(Globals.currentCharacter.x, Globals.currentCharacter.y)); }
+                    if (Globals.power != "") { Globals.visibilityManager.Compute(2, new Location(Globals.currentCharacter.x, Globals.currentCharacter.y), Globals.currentCharacter.weapons[1].powers[0].scope); }
                 }
                 else if (Input.GetKeyDown(KeyCode.E))
                 {
                     Globals.power = Globals.power == "0:" + Globals.currentCharacter.weapons[0].powers[1].name ? "" : "0:" + Globals.currentCharacter.weapons[0].powers[1].name;
                     Debug.Log(Globals.power);
                     Globals.cameraManager.CleanCases();
-                    if (Globals.power != "") { Globals.scriptManager.ShowZone(2, Globals.currentCharacter.weapons[1].powers[1].scope, new Location(Globals.currentCharacter.x, Globals.currentCharacter.y)); }
+                    if (Globals.power != "") { Globals.visibilityManager.Compute(2, new Location(Globals.currentCharacter.x, Globals.currentCharacter.y), Globals.currentCharacter.weapons[0].powers[1].scope); }
                 }
                 else if (Input.GetKeyDown(KeyCode.R))
                 {
                     Globals.power = Globals.power == "1:" + Globals.currentCharacter.weapons[1].powers[1].name ? "" : "1:" + Globals.currentCharacter.weapons[1].powers[1].name;
                     Debug.Log(Globals.power);
                     Globals.cameraManager.CleanCases();
-                    if (Globals.power != "") { Globals.scriptManager.ShowZone(2, Globals.currentCharacter.weapons[1].powers[1].scope, new Location(Globals.currentCharacter.x, Globals.currentCharacter.y)); }
+                    if (Globals.power != "") { Globals.visibilityManager.Compute(2, new Location(Globals.currentCharacter.x, Globals.currentCharacter.y), Globals.currentCharacter.weapons[1].powers[1].scope); }
                 }
             }
             else if(Globals.mode == "item"){
@@ -177,28 +178,28 @@ namespace Requiem
                     Globals.power = Globals.power == Globals.currentUsables[0].name ? "" : Globals.currentUsables[0].name;
                     Debug.Log(Globals.power);
                     Globals.cameraManager.CleanCases();
-                    if (Globals.power != "") { Globals.scriptManager.ShowZone(4, Globals.currentUsables[0].scope, new Location(Globals.currentCharacter.x, Globals.currentCharacter.y)); }
+                    if (Globals.power != "") { Globals.visibilityManager.Compute(4, new Location(Globals.currentCharacter.x, Globals.currentCharacter.y), Globals.currentUsables[0].scope); }
                 }
                 else if (Input.GetKeyDown(KeyCode.W))
                 {
                     Globals.power = Globals.power == Globals.currentUsables[1].name ? "" : Globals.currentUsables[1].name;
                     Debug.Log(Globals.power);
                     Globals.cameraManager.CleanCases();
-                    if (Globals.power != "") { Globals.scriptManager.ShowZone(4, Globals.currentUsables[1].scope, new Location(Globals.currentCharacter.x, Globals.currentCharacter.y)); }
+                    if (Globals.power != "") { Globals.visibilityManager.Compute(4, new Location(Globals.currentCharacter.x, Globals.currentCharacter.y), Globals.currentUsables[1].scope); }
                 }
                 else if (Input.GetKeyDown(KeyCode.E))
                 {
                     Globals.power = Globals.power == Globals.currentUsables[2].name ? "" : Globals.currentUsables[2].name;
                     Debug.Log(Globals.power);
                     Globals.cameraManager.CleanCases();
-                    if (Globals.power != "") { Globals.scriptManager.ShowZone(4, Globals.currentUsables[2].scope, new Location(Globals.currentCharacter.x, Globals.currentCharacter.y)); }
+                    if (Globals.power != "") { Globals.visibilityManager.Compute(4, new Location(Globals.currentCharacter.x, Globals.currentCharacter.y), Globals.currentUsables[2].scope); }
                 }
                 else if (Input.GetKeyDown(KeyCode.R))
                 {
                     Globals.power = Globals.power == Globals.currentUsables[3].name ? "" : Globals.currentUsables[3].name;
                     Debug.Log(Globals.power);
                     Globals.cameraManager.CleanCases();
-                    if (Globals.power != "") { Globals.scriptManager.ShowZone(4, Globals.currentUsables[3].scope, new Location(Globals.currentCharacter.x, Globals.currentCharacter.y)); }
+                    if (Globals.power != "") { Globals.visibilityManager.Compute(4, new Location(Globals.currentCharacter.x, Globals.currentCharacter.y), Globals.currentUsables[3].scope); }
                 }
             }
         }

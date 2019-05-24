@@ -15,6 +15,7 @@ namespace Requiem.Class
         public string state;
         public int timeState;
         public byte possibility = 0; //0=None/1=Movement/2=Attack/3=Power/4=Item
+        public bool visible = false;
         //TODO State time and triggered when entered
         //Objects
         public Dictionary<Item, int> items;

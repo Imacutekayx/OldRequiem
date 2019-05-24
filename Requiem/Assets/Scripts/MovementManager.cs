@@ -185,6 +185,10 @@ namespace Requiem
                             break;
                     }
                     Globals.currentScene.cases[action.launcher.x, action.launcher.y].type = action.launcher.type;
+                    if(action.launcher == Globals.currentCharacter)
+                    {
+                        Globals.visibilityManager.Compute(1, new Location(action.launcher.x, action.launcher.y), -1);
+                    }
                     if (nextCase != 0)
                     {
                         StartMove();
