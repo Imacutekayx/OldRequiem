@@ -181,7 +181,7 @@ namespace Requiem
                     effects.Add(effTarget, effValue);
                 }
                 //List of powers
-                typeAttack = weapon.SelectSingleNode("typeAttack").InnerText;
+                typeAttack = attributes.SelectSingleNode("typeAttack").InnerText;
                 XmlNode nodePowers = weapon.SelectSingleNode("powers");
                 powers.Clear();
                 if(nodePowers != null)

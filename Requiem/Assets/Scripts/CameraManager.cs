@@ -178,6 +178,8 @@ namespace Requiem
                 };
                 obj.transform.position = CalculatePosition(wall.x, wall.y, wall.weight, wall.height, 1.5f);
                 obj.tag = "Walls";
+                obj.AddComponent<WallObject>();
+                obj.GetComponent<WallObject>().wall = wall;
 
                 //Grids of the wall
                 for (int k = wall.x; k < wall.x + wall.weight; ++k)
@@ -300,10 +302,6 @@ namespace Requiem
                         top = true;
                         camera.transform.Rotate(60, 0, 0);
                         camera.transform.position = new Vector3(0, 10, 0);
-                        foreach (GameObject obj in lstWalls[face])
-                        {
-                            obj.SetActive(true);
-                        }
                         ChangeSkins();
                     }
                     break;
@@ -314,20 +312,12 @@ namespace Requiem
                         top = false;
                         camera.transform.Rotate(-60, 0, 0);
                         ChangeCameraPosition();
-                        foreach (GameObject obj in lstWalls[face])
-                        {
-                            obj.SetActive(false);
-                        }
                     }
                     break;
 
                 case 2:
                 case 3:
                     camera.transform.Rotate(0, (direction == 2 ? 90 : -90), 0, Space.World);
-                    foreach (GameObject obj in lstWalls[face])
-                    {
-                        obj.SetActive(true);
-                    }
                     face = Convert.ToByte((face + (direction == 2 ? 1 : 3))%4);
                     if(!top)
                     {
@@ -503,12 +493,9 @@ namespace Requiem
             }
 
             //Hide walls
-            if (!top)
+            foreach(GameObject gameObject in GameObject.FindGameObjectsWithTag("Walls"))
             {
-                foreach (GameObject obj in lstWalls[face])
-                {
-                    obj.SetActive(false);
-                }
+                Redraw(gameObject, "wall");
             }
 
             //Entities
@@ -567,7 +554,6 @@ namespace Requiem
         /// <param name="type">Type of the GameObject</param>
         private void Redraw(GameObject gameObject, string type)
         {
-            //TODO Visibility
             if (type == "grid")
             {
                 Case c = gameObject.GetComponent<CaseObject>().c;
@@ -597,52 +583,157 @@ namespace Requiem
                     case "ennemy":
                     case "npc":
                         Entity entity = gameObject.GetComponent<EntityObject>().entity;
-                        if (top)
+                        bool visible = false;
+                        for(int i = entity.x; i < entity.x + entity.weight; ++i)
                         {
-                            gameObject.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("skins/" + entity.type + "/" + entity.name + "_top");
-                            gameObject.transform.eulerAngles = new Vector3(90, 90 * entity.face, 0);
-                            gameObject.transform.position = new Vector3(gameObject.transform.position.x, 0.1f, gameObject.transform.position.z);
+                            for(int j = entity.y; j < entity.y + entity.height; ++j)
+                            {
+                                if(Globals.currentScene.cases[i, j].visible)
+                                {
+                                    visible = true;
+                                    break;
+                                }
+                            }
+                            if (visible) { break; }
+                        }
+                        if (visible)
+                        {
+                            if (top)
+                            {
+                                gameObject.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("skins/" + entity.type + "/" + entity.name + "_top");
+                                gameObject.transform.eulerAngles = new Vector3(90, 90 * entity.face, 0);
+                                gameObject.transform.position = new Vector3(gameObject.transform.position.x, 0.1f, gameObject.transform.position.z);
+                            }
+                            else
+                            {
+                                gameObject.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("skins/" + entity.type + "/" + entity.name + "_" + ((face + 4 - entity.face) % 4));
+                                gameObject.transform.eulerAngles = new Vector3(0, 90 * face, 0);
+                                gameObject.transform.position = new Vector3(gameObject.transform.position.x, 1, gameObject.transform.position.z);
+                            }
                         }
                         else
                         {
-                            gameObject.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("skins/" + entity.type + "/" + entity.name + "_" + ((face + 4 - entity.face) % 4));
-                            gameObject.transform.eulerAngles = new Vector3(0, 90 * face, 0);
-                            gameObject.transform.position = new Vector3(gameObject.transform.position.x, 1, gameObject.transform.position.z);
+                            gameObject.GetComponent<SpriteRenderer>().sprite = null;
                         }
                         break;
 
                     case "add0":
                         LayerImage image0 = gameObject.GetComponent<ImageObject>().layerImage;
-                        gameObject.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("images/adds0/" + image0.name);
+                        visible = false;
+                        for (int i = image0.x; i < image0.x + image0.weight; ++i)
+                        {
+                            for (int j = image0.y; j < image0.y + image0.height; ++j)
+                            {
+                                if (Globals.currentScene.cases[i, j].visible)
+                                {
+                                    visible = true;
+                                    break;
+                                }
+                            }
+                            if (visible) { break; }
+                        }
+                        if (visible)
+                        {
+                            gameObject.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("images/adds0/" + image0.name);
+                        }
+                        else
+                        {
+                            gameObject.GetComponent<SpriteRenderer>().sprite = null;
+                        }
                         break;
 
                     case "add1":
                         LayerImage image1 = gameObject.GetComponent<ImageObject>().layerImage;
-                        if (top)
+                        visible = false;
+                        for (int i = image1.x; i < image1.x + image1.weight; ++i)
                         {
-                            gameObject.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("images/adds1/" + image1.name + "_top");
-                            gameObject.transform.eulerAngles = new Vector3(90, 90 * image1.face, 0);
-                            gameObject.transform.position = new Vector3(gameObject.transform.position.x, 0.1f, gameObject.transform.position.z);
+                            for (int j = image1.y; j < image1.y + image1.height; ++j)
+                            {
+                                if (Globals.currentScene.cases[i, j].visible)
+                                {
+                                    visible = true;
+                                    break;
+                                }
+                            }
+                            if (visible) { break; }
+                        }
+                        if (visible)
+                        {
+                            if (top)
+                            {
+                                gameObject.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("images/adds1/" + image1.name + "_top");
+                                gameObject.transform.eulerAngles = new Vector3(90, 90 * image1.face, 0);
+                                gameObject.transform.position = new Vector3(gameObject.transform.position.x, 0.1f, gameObject.transform.position.z);
+                            }
+                            else
+                            {
+                                gameObject.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("images/adds1/" + image1.name + "_" + ((face + 4 - image1.face) % 4));
+                                gameObject.transform.eulerAngles = new Vector3(0, 90 * face, 0);
+                                gameObject.transform.position = new Vector3(gameObject.transform.position.x, 1, gameObject.transform.position.z);
+                            }
                         }
                         else
                         {
-                            gameObject.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("images/adds1/" + image1.name + "_" + ((face + 4 - image1.face) % 4));
-                            gameObject.transform.eulerAngles = new Vector3(0, 90 * face, 0);
-                            gameObject.transform.position = new Vector3(gameObject.transform.position.x, 1, gameObject.transform.position.z);
+                            gameObject.GetComponent<SpriteRenderer>().sprite = null;
                         }
                         break;
 
                     case "add2":
                         LayerImage image2 = gameObject.GetComponent<ImageObject>().layerImage;
-                        if (top)
+                        visible = false;
+                        for (int i = image2.x; i < image2.x + image2.weight; ++i)
                         {
-                            gameObject.SetActive(false);
+                            for (int j = image2.y; j < image2.y + image2.height; ++j)
+                            {
+                                if (Globals.currentScene.cases[i, j].visible)
+                                {
+                                    visible = true;
+                                    break;
+                                }
+                            }
+                            if (visible) { break; }
+                        }
+                        if (visible)
+                        {
+                            if (top)
+                            {
+                                gameObject.SetActive(false);
+                            }
+                            else
+                            {
+                                gameObject.SetActive(true);
+                                gameObject.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("images/adds2/" + image2.name + "_" + ((face + 4 - image2.face) % 4));
+                                gameObject.transform.eulerAngles = new Vector3(0, 90 * face, 0);
+                            }
                         }
                         else
                         {
-                            gameObject.SetActive(true);
-                            gameObject.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("images/adds2/" + image2.name + "_" + ((face + 4 - image2.face) % 4));
-                            gameObject.transform.eulerAngles = new Vector3(0, 90 * face, 0);
+                            gameObject.GetComponent<SpriteRenderer>().sprite = null;
+                        }
+                        break;
+
+                    case "wall":
+                        LayerImage wall = gameObject.GetComponent<WallObject>().wall;
+                        visible = false;
+                        for (int i = wall.x; i < wall.x + wall.weight; ++i)
+                        {
+                            for (int j = wall.y; j < wall.y + wall.height; ++j)
+                            {
+                                if (Globals.currentScene.cases[i, j].visible)
+                                {
+                                    visible = true;
+                                    break;
+                                }
+                            }
+                            if (visible) { break; }
+                        }
+                        if (visible)
+                        {
+                            gameObject.SetActive(!(!top && lstWalls[face].Contains(gameObject)));
+                        }
+                        else
+                        {
+                            gameObject.SetActive(false);
                         }
                         break;
                 }

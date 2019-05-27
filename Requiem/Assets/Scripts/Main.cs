@@ -21,13 +21,13 @@ namespace Requiem
             XMLToClass.Load();
             theScreenWidth = Screen.width;
             theScreenHeight = Screen.height;
-            Globals.cameraManager = new CameraManager(Camera.main);
-            Globals.cameraManager.LoadNewScene(Globals.scenes[0]);
             Globals.currentCharacter = Globals.characters[0];
+            Globals.cameraManager = new CameraManager(Camera.main);
             Globals.timeManager = new TimeManager();
             Globals.scriptManager = new ScriptManager();
             Globals.movementManager = new MovementManager();
             Globals.visibilityManager = new VisibilityManager();
+            Globals.cameraManager.LoadNewScene(Globals.scenes[0]);
         }
 
         //Update is called each frame
