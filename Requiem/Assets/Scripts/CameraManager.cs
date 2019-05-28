@@ -282,7 +282,7 @@ namespace Requiem
                 }
             }
 
-            Globals.visibilityManager.Compute(1, new Location(Globals.currentCharacter.x, Globals.currentCharacter.y), -1);
+            Globals.visibilityManager.Compute(1, new Location(Globals.currentCharacter.x, Globals.currentCharacter.y), Globals.currentCharacter.fov);
             
             ChangeCameraPosition();
         }
@@ -493,9 +493,12 @@ namespace Requiem
             }
 
             //Hide walls
-            foreach(GameObject gameObject in GameObject.FindGameObjectsWithTag("Walls"))
+            foreach(List<GameObject> walls in lstWalls)
             {
-                Redraw(gameObject, "wall");
+                foreach(GameObject wall in walls)
+                {
+                    Redraw(wall, "wall");
+                }
             }
 
             //Entities
@@ -727,6 +730,7 @@ namespace Requiem
                             }
                             if (visible) { break; }
                         }
+                        Debug.Log(wall.name + ":" + visible);
                         if (visible)
                         {
                             gameObject.SetActive(!(!top && lstWalls[face].Contains(gameObject)));

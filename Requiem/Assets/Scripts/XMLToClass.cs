@@ -240,6 +240,7 @@ namespace Requiem
             string origin;
             int weight;
             int height;
+            int fov;
             //Particularities
             List<string> languages;
             List<string> competences;
@@ -294,6 +295,7 @@ namespace Requiem
                 origin = nodeDescription.SelectSingleNode("origin").InnerText;
                 weight = Convert.ToInt32(nodeDescription.SelectSingleNode("weight").InnerText);
                 height = Convert.ToInt32(nodeDescription.SelectSingleNode("height").InnerText);
+                fov = Convert.ToInt32(nodeDescription.SelectSingleNode("fov").InnerText);
                 //Particularities
                 languages = new List<string>();
                 competences = new List<string>();
@@ -471,8 +473,8 @@ namespace Requiem
                     }
                 }
                 Globals.characters.Add(new Character(name, sex, age, story, cl, race, personality, origin, 
-                    weight, height, dices, charArmor, languages, competences, immunities, resistances, vulnerabilities, 
-                    charArmors, armorChanges, typearmor, charWeapons, weapontype, powers, bag));
+                    weight, height, fov, dices, charArmor, languages, competences, immunities, resistances, 
+                    vulnerabilities, charArmors, armorChanges, typearmor, charWeapons, weapontype, powers, bag));
             }
         }
 
@@ -818,6 +820,7 @@ namespace Requiem
             int weight;
             int height;
             string gamemode;
+            int darkness;
             //Images
             string[] layers = { "adds0", "adds1", "adds2" , "walls" };
             List<List<LayerImage>> lstLayers = new List<List<LayerImage>>();
@@ -877,6 +880,7 @@ namespace Requiem
                 height = Convert.ToInt32(size[1]);
                 //Basic gamemode
                 gamemode = scene.SelectSingleNode("gamemode").InnerText;
+                darkness = Convert.ToInt32(scene.SelectSingleNode("darkness").InnerText);
                 //List of layers
                 XmlNode xmlLayers = scene.SelectSingleNode("layers");
                 for (int i = 0; i < layers.Length; ++i)
@@ -1077,7 +1081,7 @@ namespace Requiem
                             break;
                     }
                 }
-                Globals.scenes.Add(new Scene(name, weight, height, gamemode, lstLayers[0], lstLayers[1], lstLayers[2], lstLayers[3], cases, scripts, entities));
+                Globals.scenes.Add(new Scene(name, weight, height, gamemode, darkness, lstLayers[0], lstLayers[1], lstLayers[2], lstLayers[3], cases, scripts, entities));
             }
         }
 

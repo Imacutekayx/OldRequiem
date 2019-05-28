@@ -1,5 +1,6 @@
 ﻿using Requiem.Class;
 using System;
+using UnityEngine;
 
 namespace Requiem
 {
@@ -17,6 +18,18 @@ namespace Requiem
         public void Compute(byte _type, Location origin, int rangeLimit)
         {
             type = _type;
+            if(type == 1)
+            {
+                if(Globals.currentScene.darkness == -1)
+                {
+                    rangeLimit = -1;
+                }
+                else
+                {
+                    rangeLimit -= Globals.currentScene.darkness;
+                    if(rangeLimit < 1) { rangeLimit = 1; }
+                }
+            }
             foreach(Case c in Globals.currentScene.cases)
             {
                 c.visible = false;

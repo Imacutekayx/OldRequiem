@@ -18,6 +18,7 @@ namespace Requiem
         //Objects
         public List<Location> path = new List<Location>();
 
+        //TODO Upgrade algo
         /// <summary>
         /// Method which calculate the better path to the target
         /// </summary>
@@ -187,7 +188,7 @@ namespace Requiem
                     Globals.currentScene.cases[action.launcher.x, action.launcher.y].type = action.launcher.type;
                     if(action.launcher == Globals.currentCharacter)
                     {
-                        Globals.visibilityManager.Compute(1, new Location(action.launcher.x, action.launcher.y), -1);
+                        Globals.visibilityManager.Compute(1, new Location(action.launcher.x, action.launcher.y), Globals.currentCharacter.fov);
                     }
                     if (nextCase != 0)
                     {

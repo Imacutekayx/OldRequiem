@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using UnityEngine;
 
 namespace Requiem.Class
 {
@@ -12,6 +13,7 @@ namespace Requiem.Class
         public int weight;
         public int height;
         public string gamemode;
+        public int darkness;
 
         //Objects
         public List<LayerImage> adds0;
@@ -23,13 +25,14 @@ namespace Requiem.Class
         public List<Entity> entities;
 
         //Constructor
-        public Scene(string _name, int _weight, int _height, string _gamemode, List<LayerImage> _adds0,
+        public Scene(string _name, int _weight, int _height, string _gamemode, int _darkness, List<LayerImage> _adds0,
             List<LayerImage> _adds1, List<LayerImage> _adds2, List<LayerImage> _walls, List<Case> _cases, List<LayerScript> _scripts, List<Entity> _entities)
         {
             name = _name;
             weight = _weight;
             height = _height;
             gamemode = _gamemode;
+            darkness = _darkness;
             adds0 = _adds0;
             adds1 = _adds1;
             adds2 = _adds2;

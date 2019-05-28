@@ -84,7 +84,7 @@ namespace Requiem
             charArmorChange[5] = true;
             Weapon[] charWeapon = new Weapon[2];
             Globals.characters.Add(new Character("Lennj", true, 300, "Lennj lost his family at his birthday when Angels arrived to kill his race", "Psychomancien", "513", 
-                "calm;sadistic;logical", "Soft-Cliff", 1, 1, charDices, 0, new List<string>() { "common" }, new List<string>(), new List<string>(), new List<string>(), new List<string>(), charArmor, charArmorChange, "mage;magic", charWeapon, "magic1;magic2;dagger", charPowers, charBag));
+                "calm;sadistic;logical", "Soft-Cliff", 1, 1, 10, charDices, 0, new List<string>() { "common" }, new List<string>(), new List<string>(), new List<string>(), new List<string>(), charArmor, charArmorChange, "mage;magic", charWeapon, "magic1;magic2;dagger", charPowers, charBag));
             Characters();
 
             //ENNEMIES
@@ -160,7 +160,7 @@ namespace Requiem
             {
                 Globals.characters[0], Globals.ennemies[0], Globals.npcs[0]
             };
-            Globals.scenes.Add(new Scene("forestStart", 10, 10, "exploration", new List<LayerImage>(),
+            Globals.scenes.Add(new Scene("forestStart", 10, 10, "exploration", -1, new List<LayerImage>(),
                 sceAdds1, new List<LayerImage>(), sceWalls, sceCases, sceScripts, entities));
             Scenes();
             
@@ -368,6 +368,7 @@ namespace Requiem
                     writer.WriteElementString("origin", character.origin);
                     writer.WriteElementString("weight", Convert.ToString(character.weight));
                     writer.WriteElementString("height", Convert.ToString(character.height));
+                    writer.WriteElementString("fov", Convert.ToString(character.fov));
                     writer.WriteEndElement();
                     //List of particularities
                     writer.WriteStartElement("particularities");
@@ -707,6 +708,7 @@ namespace Requiem
                     writer.WriteElementString("size", scene.weight + ";" + scene.height);
                     //Basic gamemode
                     writer.WriteElementString("gamemode", scene.gamemode);
+                    writer.WriteElementString("darkness", Convert.ToString(scene.darkness));
                     //List of the layers
                     writer.WriteStartElement("layers");
                     for(int i = 0; i < adds.Length; ++i)
