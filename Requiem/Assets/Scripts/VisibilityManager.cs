@@ -42,7 +42,7 @@ namespace Requiem
                 lightsource = false;
                 Compute(type, origin, -1, true);
                 lightsource = true;
-                foreach(Case c in los)
+                foreach(Case c in Globals.currentScene.cases)
                 {
                     if (c.lightsource)
                     {
