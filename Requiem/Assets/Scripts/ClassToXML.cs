@@ -142,7 +142,10 @@ namespace Requiem
                 new LayerImage("npcNorthWall", 3, 1, 7, 0, 2),
                 new LayerImage("npcEastWall", 1, 2, 9, 1, 3)
             };
-            List<Case> sceCases = new List<Case>();
+            List<Case> sceCases = new List<Case>
+            {
+                new Case(4, 2, "free", 0, true, 2)
+            };
             List<LayerScript> sceScripts = new List<LayerScript>
             {
                 new LayerScript("caseState", true, "circle", 3, 0, 7, 3, 3, new List<string>{"circle;fire"})
@@ -160,7 +163,7 @@ namespace Requiem
             {
                 Globals.characters[0], Globals.ennemies[0], Globals.npcs[0]
             };
-            Globals.scenes.Add(new Scene("forestStart", 10, 10, "exploration", -1, new List<LayerImage>(),
+            Globals.scenes.Add(new Scene("forestStart", 10, 10, "exploration", 4, new List<LayerImage>(),
                 sceAdds1, new List<LayerImage>(), sceWalls, sceCases, sceScripts, entities));
             Scenes();
             
@@ -762,7 +765,10 @@ namespace Requiem
                         //Coordinates of the case
                         writer.WriteElementString("coordinate", c.x + ";" + c.y);
                         writer.WriteElementString("type", c.type);
+                        writer.WriteElementString("lightsource", Convert.ToString(c.lightsource));
+                        writer.WriteElementString("lpower", Convert.ToString(c.lpower));
                         writer.WriteElementString("state", c.state);
+                        writer.WriteElementString("timeState", Convert.ToString(c.timeState));
                         if(c.items != null)
                         {
                             writer.WriteStartElement("items");

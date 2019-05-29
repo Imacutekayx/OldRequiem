@@ -841,7 +841,10 @@ namespace Requiem
             int casX;
             int casY;
             string casType;
+            bool casLightsource;
+            int casLPower;
             string casState;
+            int casTimeState;
             string ciUse;
             string ciName;
             int ciNbr;
@@ -940,7 +943,10 @@ namespace Requiem
                     casX = Convert.ToInt32(cCoor[0]);
                     casY = Convert.ToInt32(cCoor[1]);
                     casType = c.SelectSingleNode("type").InnerText;
+                    casLightsource = Convert.ToBoolean(c.SelectSingleNode("lightsource").InnerText);
+                    casLPower = Convert.ToInt32(c.SelectSingleNode("lpower").InnerText);
                     casState = c.SelectSingleNode("state").InnerText;
+                    casTimeState = Convert.ToInt32(c.SelectSingleNode("timeState").InnerText);
                     try
                     {
                         XmlNode xmlCasItems = c.SelectSingleNode("items");
@@ -988,7 +994,7 @@ namespace Requiem
                         }
                     }
                     catch (Exception) { }
-                    cases.Add(new Case(casX, casY, casType, 0, casState, casItems));
+                    cases.Add(new Case(casX, casY, casType, 0, casLightsource, casLPower, casState, casTimeState, casItems));
                 }
                 //List of scripts
                 XmlNode xmlScripts = scene.SelectSingleNode("scripts");

@@ -142,7 +142,7 @@ namespace Requiem
             }
             else
             {
-                Debug.Log("Failure");
+                
             }
         }
 
@@ -158,7 +158,6 @@ namespace Requiem
                 //Move the launcher based on the direction
                 case "move":
                 case "obstacle":
-                    Debug.Log(action.type + "/" + action.parameters);
                     int nbr = action.type == "move" ? 1 : 2;
                     Globals.cameraManager.grid[action.launcher.x, action.launcher.y].GetComponent<CaseObject>().c.entity = null;
                     Globals.currentScene.cases[action.launcher.x, action.launcher.y].type = "free";

@@ -264,7 +264,7 @@ namespace Requiem
                                         if (weapon.name == options[i])
                                         {
                                             fighter.AddWeapon(weapon);
-                                            Debug.Log(fighter.name + ":" + fighter.weapons[0].name);
+                                            Debug.Log(fighter.name + ":" + weapon.name);
                                             break;
                                         }
                                     }

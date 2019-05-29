@@ -1,5 +1,6 @@
 ﻿using Requiem.Class;
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Requiem
@@ -7,36 +8,52 @@ namespace Requiem
     public class VisibilityManager
     {
         //Variables
-        byte type;
+        private byte type;
+        private bool light;
+        private bool lightsource;
 
-        //TODO Lightsources
+        //Objects
+        private List<Case> los;
 
         /// <param name="origin">The location of the monster whose field of view will be calculated.</param>
         /// <param name="rangeLimit">The maximum distance from the origin that tiles will be lit.
         /// If equal to -1, no limit will be applied.
         /// </param>
-        public void Compute(byte _type, Location origin, int rangeLimit)
+        public void Compute(byte _type, Location origin, int rangeLimit, bool _light = false)
         {
+            light = _light;
             type = _type;
-            if(type == 1)
+            if(type == 1 && !light)
             {
-                if(Globals.currentScene.darkness == -1)
+                if (Globals.currentScene.darkness == -1)
                 {
                     rangeLimit = -1;
                 }
                 else
                 {
                     rangeLimit -= Globals.currentScene.darkness;
-                    if(rangeLimit < 1) { rangeLimit = 1; }
+                    if (rangeLimit < 1) { rangeLimit = 1; }
                 }
-            }
-            foreach(Case c in Globals.currentScene.cases)
-            {
-                c.visible = false;
+                foreach (Case c in Globals.currentScene.cases)
+                {
+                    c.visible = false;
+                }
+                los = new List<Case>();
+                lightsource = false;
+                Compute(type, origin, -1, true);
+                lightsource = true;
+                foreach(Case c in los)
+                {
+                    if (c.lightsource)
+                    {
+                        Compute(type, new Location(c.x, c.y), c.lpower, true);
+                    }
+                }
+                light = false;
             }
             SetVisible(Convert.ToUInt32(origin.x), Convert.ToUInt32(origin.y), 8, origin);
             for (uint octant = 0; octant < 8; octant++) Compute(octant, origin, rangeLimit, 1, new Slope(1, 1), new Slope(0, 1));
-            if(type == 1)
+            if (!light && type == 1)
             {
                 Globals.cameraManager.ChangeSkins();
             }
@@ -54,7 +71,7 @@ namespace Requiem
             public readonly uint X, Y;
         }
         
-        void Compute(uint octant, Location origin, int rangeLimit, uint x, Slope top, Slope bottom)
+        private void Compute(uint octant, Location origin, int rangeLimit, uint x, Slope top, Slope bottom)
         {
             // throughout this function there are references to various parts of tiles. a tile's coordinates refer to its
             // center, and the following diagram shows the parts of the tile and the vectors from the origin that pass through
@@ -280,15 +297,32 @@ namespace Requiem
             }
             if (nx >= 0 && nx < Globals.currentScene.weight && ny >= 0 && ny < Globals.currentScene.height)
             {
-                if(type == 1)
+                if (light)
                 {
-                    Globals.currentScene.cases[nx, ny].visible = true;
+                    if (lightsource)
+                    {
+                        if(los.Contains(Globals.currentScene.cases[nx, ny]))
+                        {
+                            Globals.currentScene.cases[nx, ny].visible = true;
+                        }
+                    }
+                    else
+                    {
+                        los.Add(Globals.currentScene.cases[nx, ny]);
+                    }
                 }
                 else
                 {
-                    Globals.currentScene.cases[nx, ny].possibility = type;
+                    if (type == 1)
+                    {
+                        Globals.currentScene.cases[nx, ny].visible = true;
+                    }
+                    else
+                    {
+                        Globals.currentScene.cases[nx, ny].possibility = type;
+                    }
+                    Globals.cameraManager.ChangeObject("grid", nx + ";" + ny, "redraw");
                 }
-                Globals.cameraManager.ChangeObject("grid", nx + ";" + ny, "redraw");
             }
         }
 

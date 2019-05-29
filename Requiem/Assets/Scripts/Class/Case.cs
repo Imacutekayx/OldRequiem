@@ -12,6 +12,8 @@ namespace Requiem.Class
         public int y;
         public string type;
         public float high;
+        public bool lightsource;
+        public int lpower;
         public string state;
         public int timeState;
         public byte possibility = 0; //0=None/1=Movement/2=Attack/3=Power/4=Item
@@ -23,12 +25,14 @@ namespace Requiem.Class
         public LayerImage layerImage;
 
         //Constructor
-        public Case(int _x, int _y, string _type = "free", float _high = 0, string _state = "", Dictionary<Item, int> _items = null)
+        public Case(int _x, int _y, string _type = "free", float _high = 0, bool _lightsource = false, int _lpower = 0, string _state = "", int _timeState = 0, Dictionary<Item, int> _items = null)
         {
             x = _x;
             y = _y;
             type = _type;
             high = _high;
+            lightsource = _lightsource;
+            lpower = _lpower;
             state = _state;
             items = _items;
         }

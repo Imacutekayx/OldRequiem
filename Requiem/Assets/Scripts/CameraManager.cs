@@ -730,7 +730,6 @@ namespace Requiem
                             }
                             if (visible) { break; }
                         }
-                        Debug.Log(wall.name + ":" + visible);
                         if (visible)
                         {
                             gameObject.SetActive(!(!top && lstWalls[face].Contains(gameObject)));
