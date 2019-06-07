@@ -64,7 +64,7 @@ namespace Requiem.Class
                 {
                     int temp = fighter.hp;
                     fighter.hp += hp;
-                    if(fighter.hp > fighter.dices[0]/3 + (fighter.boosts.ContainsKey("hp") ? fighter.boosts["hp"] : 0))
+                    if(fighter.hp > fighter.dices[0] / 3 + (fighter.boosts.ContainsKey("hp") ? fighter.boosts["hp"] : 0))
                     {
                         fighter.hp = fighter.dices[0] / 3 + (fighter.boosts.ContainsKey("hp") ? fighter.boosts["hp"] : 0);
                     }

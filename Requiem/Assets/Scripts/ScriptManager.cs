@@ -6,6 +6,9 @@ using UnityEngine;
 
 namespace Requiem
 {
+    /// <summary>
+    /// Class which manage the scripts and powers
+    /// </summary>
     public class ScriptManager
     {
         //Variables
@@ -119,7 +122,7 @@ namespace Requiem
                                 {
                                     if (Math.Abs(c.x - script.x) + Math.Abs(c.y - script.y) <= script.range && c.type != "wall")
                                     {
-                                        c.state = temp[1];
+                                        c.ChangeState(temp[1]);
                                         Globals.cameraManager.ChangeObject("grid", c.x + ";" + c.y, "redraw");
                                     }
                                 }
@@ -153,7 +156,7 @@ namespace Requiem
                             path = Globals.movementManager.CalculateMove(new Location(act.launcher.x, act.launcher.y), new Location(Convert.ToInt32(coordC[0]), Convert.ToInt32(coordC[1])));
                             nextCase = path.Count - 1;
                             int temp = ((Fighter)act.launcher).mp;
-                            if (act.type == "castPower") { ((Fighter)act.launcher).mp -= p.mana; }
+                            if (act.type == "castPower") { ((Fighter)act.launcher).ChangeMP(p.mana); }
                             Globals.timeManager.AddAction(new Act("script", p.speed, act.type == "castPower" ? "executePower" : "executeAttack", act.launcher, act.parameters));
                             Debug.Log(act.launcher.name + ":" + temp + "=>" + ((Fighter)act.launcher).mp);
                             break;
@@ -172,7 +175,21 @@ namespace Requiem
                         {
                             if (path.Count != 1)
                             {
+                                Location temp = current;
                                 current = path[--nextCase];
+                                //If is obstacle
+                                if(Math.Abs(current.x - temp.x) + Math.Abs(current.y - temp.y) == 2)
+                                {
+                                    int obsX = current.x == temp.x ? current.x : (current.x > temp.x ? temp.x + 1 : current.x + 1); 
+                                    int obsY = current.y == temp.y ? current.y : (current.y > temp.y ? temp.y + 1 : current.y + 1);
+                                    //TODO Better way to pass obstacle?
+                                    if (UnityEngine.Random.Range(1, 100) > 100 - Globals.currentScene.cases[obsX, obsY].high)
+                                    {
+                                        nextCase = 0;
+                                        coordE[0] = Convert.ToString(obsX);
+                                        coordE[1] = Convert.ToString(obsY);
+                                    }
+                                }
                             }
                             if (nextCase == 0)
                             {
@@ -189,7 +206,7 @@ namespace Requiem
                                         switch (effectType[0])
                                         {
                                             case "statePath":
-                                                Globals.currentScene.cases[current.x, current.y].state = effectType[1];
+                                                Globals.currentScene.cases[current.x, current.y].ChangeState(effectType[1]);
                                                 Globals.cameraManager.ChangeObject("grid", current.x + ";" + current.y, "redraw");
                                                 break;
                                         }
@@ -306,7 +323,7 @@ namespace Requiem
                         {
                             if (Math.Abs(c.x - target.x) + Math.Abs(c.y - target.y) <= power.area && c.type != "wall")
                             {
-                                c.state = effectType[1];
+                                c.ChangeState(effectType[1]);
                                 Globals.cameraManager.ChangeObject("grid", c.x + ";" + c.y, "redraw");
                             }
                         }

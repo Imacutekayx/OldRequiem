@@ -181,9 +181,18 @@ namespace Requiem.Class
             }
         }
 
-        public void ChangeMP()
+        /// <summary>
+        /// Take mana from a fighter
+        /// </summary>
+        /// <param name="_mp"></param>
+        public void ChangeMP(int _mp)
         {
-            //TODO Change MP
+            mp -= _mp;
+            if(mp < 0) { mp = 0; }
+            else if(mp > dices[1] / 2 + (boosts.ContainsKey("mp") ? boosts["mp"] : 0))
+            {
+                mp = dices[1] / 2 + (boosts.ContainsKey("mp") ? boosts["mp"] : 0);
+            }
         }
     }
 }

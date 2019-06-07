@@ -5,6 +5,9 @@ using UnityEngine;
 
 namespace Requiem
 {
+    /// <summary>
+    /// Class which manage the visibility of characters or powers
+    /// </summary>
     public class VisibilityManager
     {
         //Variables

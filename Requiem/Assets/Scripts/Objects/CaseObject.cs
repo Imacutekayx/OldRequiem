@@ -144,27 +144,6 @@ namespace Requiem.Objects
                         }
                         break;
 
-                    case "power":
-                        if (Globals.power != "" && c.possibility == 3)
-                        {
-                            foreach (Power pow in Globals.currentCharacter.powers)
-                            {
-                                if (pow.name == Globals.power)
-                                {
-                                    if(pow.mana <= Globals.currentCharacter.mp)
-                                    {
-                                        double multiple = UnityEngine.Random.Range(1, 100) <= Globals.currentCharacter.dices[2] ? 1 : 1.5f;
-                                        //TODO Power.basic
-                                        Globals.timeManager.AddAction(new Act("script", Convert.ToInt32(pow.cast * multiple), "castPower", Globals.currentCharacter, pow.name + ";" + c.x + ":" + c.y));
-                                        Globals.power = "";
-                                        Globals.cameraManager.CleanCases();
-                                    }
-                                    break;
-                                }
-                            }
-                        }
-                        break;
-
                     case "attack":
                         if (Globals.power != "" && c.possibility == 2)
                         {
@@ -176,6 +155,27 @@ namespace Requiem.Objects
                                     if (pow.mana <= Globals.currentCharacter.mp)
                                     {
                                         Globals.timeManager.AddAction(new Act("script", Convert.ToInt32(pow.cast), "castAttack", Globals.currentCharacter, Globals.power + ";" + c.x + ":" + c.y));
+                                        Globals.power = "";
+                                        Globals.cameraManager.CleanCases();
+                                    }
+                                    break;
+                                }
+                            }
+                        }
+                        break;
+
+                    case "power":
+                        if (Globals.power != "" && c.possibility == 3)
+                        {
+                            foreach (Power pow in Globals.currentCharacter.powers)
+                            {
+                                if (pow.name == Globals.power)
+                                {
+                                    if (pow.mana <= Globals.currentCharacter.mp)
+                                    {
+                                        double multiple = UnityEngine.Random.Range(1, 100) <= Globals.currentCharacter.dices[2] ? 1 : 1.5f;
+                                        //TODO Power.basic
+                                        Globals.timeManager.AddAction(new Act("script", Convert.ToInt32(pow.cast * multiple), "castPower", Globals.currentCharacter, pow.name + ";" + c.x + ":" + c.y));
                                         Globals.power = "";
                                         Globals.cameraManager.CleanCases();
                                     }

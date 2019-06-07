@@ -37,6 +37,20 @@ namespace Requiem.Class
             items = _items;
         }
 
+        /// <summary>
+        /// Change the state of the case
+        /// </summary>
+        /// <param name="_state"></param>
+        public void ChangeState(string _state)
+        {
+            state = _state;
+            if(state == "fire" && !lightsource)
+            {
+                lightsource = true;
+                lpower = 1;
+            }
+        }
+
         public void ShowItems()
         {
         }
