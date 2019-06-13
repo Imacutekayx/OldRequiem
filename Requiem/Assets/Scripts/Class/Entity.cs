@@ -4,6 +4,7 @@ using UnityEngine;
 
 namespace Requiem.Class
 {
+    [Serializable]
     /// <summary>
     /// Parent class of entity
     /// </summary>

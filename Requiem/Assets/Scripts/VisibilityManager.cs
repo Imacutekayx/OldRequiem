@@ -272,7 +272,8 @@ namespace Requiem
             }
             if(nx >= 0 && nx < Globals.currentScene.weight && ny >= 0 && ny < Globals.currentScene.height)
             {
-                return Globals.currentScene.cases[nx, ny].type == "wall";
+                //TODO Change reach based on obstacle => !light?
+                return Globals.currentScene.cases[nx, ny].high == 100;
             }
             return true;
         }

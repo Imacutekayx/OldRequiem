@@ -1,7 +1,9 @@
+using System;
 using System.Collections.Generic;
 
 namespace Requiem.Class
 {
+    [Serializable]
     /// <summary>
     /// Class which represent all the powers and attacks
     /// </summary>

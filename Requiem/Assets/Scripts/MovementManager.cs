@@ -18,7 +18,7 @@ namespace Requiem
         //Objects
         public List<Location> path = new List<Location>();
 
-        //TODO Upgrade algo
+        //TODO UP Upgrade algo
         /// <summary>
         /// Method which calculate the better path to the target
         /// </summary>
@@ -50,7 +50,7 @@ namespace Requiem
                 if (closedList.FirstOrDefault(l => l.x == target.x && l.y == target.y) != null)
                     break;
 
-                var adjacentSquares = GetWalkableAdjacentSquares(current.x, current.y);
+                var adjacentSquares = GetWalkableAdjacentSquares(current.x, current.y, target.x, target.y);
                 varG++;
 
                 foreach (var adjacentSquare in adjacentSquares)
@@ -237,7 +237,7 @@ namespace Requiem
         /// <param name="x">current x</param>
         /// <param name="y">current y</param>
         /// <returns>List of accessible location</returns>
-        private List<Location> GetWalkableAdjacentSquares(int x, int y)
+        private List<Location> GetWalkableAdjacentSquares(int x, int y, int tx, int ty)
         {
             List<Location> returnable = new List<Location>();
 
@@ -246,9 +246,16 @@ namespace Requiem
             {
                 if (x > 1 && Globals.currentScene.cases[x - 1, y].type == "add1")
                 {
-                    if (Globals.currentScene.cases[x - 2, y].type != "add1" && Globals.currentScene.cases[x - 2, y].type != "wall")
+                    if(x - 1 == tx && y == ty)
                     {
-                        returnable.Add(new Location(x - 2, y));
+                        returnable.Add(new Location(x - 1, y));
+                    }
+                    else
+                    {
+                        if (Globals.currentScene.cases[x - 1, y].high < 100 && Globals.currentScene.cases[x - 2, y].type != "add1" && Globals.currentScene.cases[x - 2, y].type != "wall")
+                        {
+                            returnable.Add(new Location(x - 2, y));
+                        }
                     }
                 }
                 else if(Globals.currentScene.cases[x-1, y].type == "free")
@@ -262,9 +269,16 @@ namespace Requiem
             {
                 if (x > 1 && Globals.currentScene.cases[x + 1, y].type == "add1")
                 {
-                    if (Globals.currentScene.cases[x + 2, y].type != "add1" && Globals.currentScene.cases[x + 2, y].type != "wall")
+                    if (x + 1 == tx && y == ty)
                     {
-                        returnable.Add(new Location(x + 2, y));
+                        returnable.Add(new Location(x - 1, y));
+                    }
+                    else
+                    {
+                        if (Globals.currentScene.cases[x + 1, y].high < 100 && Globals.currentScene.cases[x + 2, y].type != "add1" && Globals.currentScene.cases[x + 2, y].type != "wall")
+                        {
+                            returnable.Add(new Location(x + 2, y));
+                        }
                     }
                 }
                 else if (Globals.currentScene.cases[x + 1, y].type == "free")
@@ -278,9 +292,16 @@ namespace Requiem
             {
                 if (x > 1 && Globals.currentScene.cases[x, y - 1].type == "add1")
                 {
-                    if (Globals.currentScene.cases[x, y - 2].type != "add1" && Globals.currentScene.cases[x - 2, y].type != "wall")
+                    if(x == tx && y - 1 == ty)
                     {
-                        returnable.Add(new Location(x, y - 2));
+                        returnable.Add(new Location(x, y - 1));
+                    }
+                    else
+                    {
+                        if (Globals.currentScene.cases[x, y - 1].high < 100 && Globals.currentScene.cases[x, y - 2].type != "add1" && Globals.currentScene.cases[x - 2, y].type != "wall")
+                        {
+                            returnable.Add(new Location(x, y - 2));
+                        }
                     }
                 }
                 else if (Globals.currentScene.cases[x, y - 1].type == "free")
@@ -294,9 +315,16 @@ namespace Requiem
             {
                 if (x > 1 && Globals.currentScene.cases[x, y + 1].type == "add1")
                 {
-                    if (Globals.currentScene.cases[x, y + 2].type != "add1" && Globals.currentScene.cases[x + 2, y].type != "wall")
+                    if(x == tx && y + 1 == ty)
                     {
-                        returnable.Add(new Location(x, y + 2));
+                        returnable.Add(new Location(x, y + 1));
+                    }
+                    else
+                    {
+                        if (Globals.currentScene.cases[x, y + 1].high < 100 && Globals.currentScene.cases[x, y + 2].type != "add1" && Globals.currentScene.cases[x + 2, y].type != "wall")
+                        {
+                            returnable.Add(new Location(x, y + 2));
+                        }
                     }
                 }
                 else if (Globals.currentScene.cases[x, y + 1].type == "free")

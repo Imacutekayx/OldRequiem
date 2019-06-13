@@ -155,6 +155,7 @@ namespace Requiem
                             //TODO Find path from possible basic
                             path = Globals.movementManager.CalculateMove(new Location(act.launcher.x, act.launcher.y), new Location(Convert.ToInt32(coordC[0]), Convert.ToInt32(coordC[1])));
                             nextCase = path.Count - 1;
+                            current = path[nextCase];
                             int temp = ((Fighter)act.launcher).mp;
                             if (act.type == "castPower") { ((Fighter)act.launcher).ChangeMP(p.mana); }
                             Globals.timeManager.AddAction(new Act("script", p.speed, act.type == "castPower" ? "executePower" : "executeAttack", act.launcher, act.parameters));
@@ -182,7 +183,7 @@ namespace Requiem
                                 {
                                     int obsX = current.x == temp.x ? current.x : (current.x > temp.x ? temp.x + 1 : current.x + 1); 
                                     int obsY = current.y == temp.y ? current.y : (current.y > temp.y ? temp.y + 1 : current.y + 1);
-                                    //TODO Better way to pass obstacle?
+                                    //TODO UP Better way to pass obstacle?
                                     if (UnityEngine.Random.Range(1, 100) > 100 - Globals.currentScene.cases[obsX, obsY].high)
                                     {
                                         nextCase = 0;
@@ -264,6 +265,7 @@ namespace Requiem
             //TODO Add effects (entity/transport/lineDamage/lineStateCase/coneDamage/coneStateCase)
             foreach(KeyValuePair<string, int> effect in power.effects)
             {
+                //TODO effects area == visibility
                 string[] effectType = effect.Key.Split(';');
                 switch (effectType[0])
                 {

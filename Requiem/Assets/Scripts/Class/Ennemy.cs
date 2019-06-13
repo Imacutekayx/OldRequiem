@@ -1,7 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Requiem.Class
 {
+    [Serializable]
     /// <summary>
     /// Class which represent every ennemy entity and inherit from fighter
     /// </summary>

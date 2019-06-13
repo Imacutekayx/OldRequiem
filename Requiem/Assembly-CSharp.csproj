@@ -76,7 +76,7 @@
     <Compile Include="Assets\Scripts\Class\Power.cs" />
     <Compile Include="Assets\Scripts\Class\Scene.cs" />
     <Compile Include="Assets\Scripts\Class\Weapon.cs" />
-    <Compile Include="Assets\Scripts\ClassToXML.cs" />
+    <Compile Include="Assets\Scripts\ClassToREQ.cs" />
     <Compile Include="Assets\Scripts\Globals.cs" />
     <Compile Include="Assets\Scripts\Main.cs" />
     <Compile Include="Assets\Scripts\MovementManager.cs" />
@@ -84,11 +84,11 @@
     <Compile Include="Assets\Scripts\Objects\EntityObject.cs" />
     <Compile Include="Assets\Scripts\Objects\ImageObject.cs" />
     <Compile Include="Assets\Scripts\Objects\WallObject.cs" />
+    <Compile Include="Assets\Scripts\REQToClass.cs" />
     <Compile Include="Assets\Scripts\ScriptManager.cs" />
     <Compile Include="Assets\Scripts\TimeManager.cs" />
     <Compile Include="Assets\Scripts\TimeTrigger.cs" />
     <Compile Include="Assets\Scripts\VisibilityManager.cs" />
-    <Compile Include="Assets\Scripts\XMLToClass.cs" />
     <None Include="Assets\Scripts\XML\CharacterModel.xml" />
     <None Include="Assets\Scripts\XML\SceneModel.xml" />
     <None Include="Assets\Scripts\XML\EnnemyModel.xml" />

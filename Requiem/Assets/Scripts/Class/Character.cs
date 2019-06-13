@@ -1,8 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Requiem.Class
 {
+    [Serializable]
     /// <summary>
     /// Class which represent every playable character and inherit from fighter
     /// </summary>

@@ -1,8 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Requiem.Class
 {
+    [Serializable]
     /// <summary>
     /// Class which represents a scene
     /// </summary>
@@ -67,6 +69,7 @@ namespace Requiem.Class
                     for (int j = wall.y; j < wall.y + wall.height; ++j)
                     {
                         cases[i, j].type = "wall";
+                        cases[i, j].high = 100;
                     }
                 }
             }

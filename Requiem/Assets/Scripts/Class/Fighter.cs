@@ -1,7 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Requiem.Class
 {
+    [Serializable]
     /// <summary>
     /// Parent class of all fighting entity
     /// </summary>

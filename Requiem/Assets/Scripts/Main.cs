@@ -9,24 +9,24 @@ namespace Requiem
     /// </summary>
     public class Main : MonoBehaviour
     {
-        private int Boundary  = 50; // distance from edge scrolling starts
-        private int speed = 5;
+        private readonly int boundary  = 50; // distance from edge scrolling starts
+        private readonly int speed = 5;
         private int theScreenWidth;
         private int theScreenHeight;
 
         //Start is called before the first frame update
         void Start()
         {
-            ClassToXML.Save();
-            XMLToClass.Load();
+            ClassToREQ.Save();
+            REQToClass.Load();
             theScreenWidth = Screen.width;
             theScreenHeight = Screen.height;
-            Globals.currentCharacter = Globals.characters[0];
             Globals.cameraManager = new CameraManager(Camera.main);
             Globals.timeManager = new TimeManager();
             Globals.scriptManager = new ScriptManager();
             Globals.movementManager = new MovementManager();
             Globals.visibilityManager = new VisibilityManager();
+            Globals.currentCharacter = (Character)Globals.scenes[0].entities.Find(i => i.name == "Lennj");
             Globals.cameraManager.LoadNewScene(Globals.scenes[0]);
         }
 
@@ -52,19 +52,19 @@ namespace Requiem
             }
 
             //Move camera
-            if (Input.mousePosition.x > theScreenWidth - Boundary)
+            if (Input.mousePosition.x > theScreenWidth - boundary)
             {
                 Globals.cameraManager.MoveCamera(0, speed);
             }
-            if (Input.mousePosition.x < 0 + Boundary)
+            if (Input.mousePosition.x < 0 + boundary)
             {
                 Globals.cameraManager.MoveCamera(2, speed);
             }
-            if (Input.mousePosition.y > theScreenHeight - Boundary)
+            if (Input.mousePosition.y > theScreenHeight - boundary)
             {
                 Globals.cameraManager.MoveCamera(1, speed);
             }
-            if (Input.mousePosition.y < 0 + Boundary)
+            if (Input.mousePosition.y < 0 + boundary)
             {
                 Globals.cameraManager.MoveCamera(3, speed);
             }
