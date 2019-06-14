@@ -377,14 +377,17 @@ namespace Requiem
         /// <summary>
         /// Method which clear the cases' possibility value
         /// </summary>
-        public void CleanCases()
+        public void CleanCases(bool effect = false)
         {
             foreach(Case c in Globals.currentScene.cases)
             {
                 if(c.possibility != 0)
                 {
-                    c.possibility = 0;
-                    ChangeObject("grid", c.x + ";" + c.y, "redraw");
+                    if (!effect || (effect && c.possibility != 2 && c.possibility != 3))
+                    {
+                        c.possibility = 0;
+                        ChangeObject("grid", c.x + ";" + c.y, "redraw");
+                    }
                 }
             }
         }
@@ -566,6 +569,10 @@ namespace Requiem
                     if (c.type == "wall")
                     {
                         gameObject.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("images/grid/" + c.type);
+                    }
+                    else if(c.possibility == 5)
+                    {
+                        gameObject.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("images/grid/effect");
                     }
                     else
                     {

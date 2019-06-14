@@ -81,6 +81,39 @@ namespace Requiem.Objects
             }
         }
 
+        public void OnMouseExit()
+        {
+            if(c.possibility == 5 || c.possibility == 2 || c.possibility == 3)
+            {
+                Globals.cameraManager.CleanCases(true);
+                switch (Globals.mode)
+                {
+                    case "attack":
+                        string[] name = Globals.power.Split(':');
+                        foreach (Power pow in Globals.currentCharacter.weapons[Convert.ToInt32(name[0])].powers)
+                        {
+                            if (pow.name == name[1])
+                            {
+                                Globals.visibilityManager.Compute(2, new Location(Globals.currentCharacter.x, Globals.currentCharacter.y), pow.scope, true);
+                                break;
+                            }
+                        }
+                        break;
+
+                    case "power":
+                        foreach (Power pow in Globals.currentCharacter.powers)
+                        {
+                            if (pow.name == Globals.power)
+                            {
+                                Globals.visibilityManager.Compute(3, new Location(Globals.currentCharacter.x, Globals.currentCharacter.y), pow.scope, true);
+                                break;
+                            }
+                        }
+                        break;
+                }
+            }
+        }
+
         /// <summary>
         /// Trigger when the caseObject is clicked
         /// </summary>
@@ -145,7 +178,7 @@ namespace Requiem.Objects
                         break;
 
                     case "attack":
-                        if (Globals.power != "" && c.possibility == 2)
+                        if (Globals.power != "" && (c.possibility == 5 || c.possibility == 2))
                         {
                             string[] name = Globals.power.Split(':');
                             foreach (Power pow in Globals.currentCharacter.weapons[Convert.ToInt32(name[0])].powers)
@@ -165,7 +198,7 @@ namespace Requiem.Objects
                         break;
 
                     case "power":
-                        if (Globals.power != "" && c.possibility == 3)
+                        if (Globals.power != "" && (c.possibility == 5 || c.possibility == 3))
                         {
                             foreach (Power pow in Globals.currentCharacter.powers)
                             {

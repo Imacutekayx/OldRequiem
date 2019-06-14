@@ -186,9 +186,14 @@ namespace Requiem
                                     //TODO UP Better way to pass obstacle?
                                     if (UnityEngine.Random.Range(1, 100) > 100 - Globals.currentScene.cases[obsX, obsY].high)
                                     {
+                                        Debug.Log("Failure");
                                         nextCase = 0;
                                         coordE[0] = Convert.ToString(obsX);
                                         coordE[1] = Convert.ToString(obsY);
+                                    }
+                                    else
+                                    {
+                                        Debug.Log("Success");
                                     }
                                 }
                             }
@@ -245,7 +250,7 @@ namespace Requiem
         {
             if (!power.needBasic)
             {
-                //TODO ShowPowerArea on enter
+                Globals.visibilityManager.Compute(5, target, power.area);
             }
             else
             {
@@ -265,7 +270,6 @@ namespace Requiem
             //TODO Add effects (entity/transport/lineDamage/lineStateCase/coneDamage/coneStateCase)
             foreach(KeyValuePair<string, int> effect in power.effects)
             {
-                //TODO effects area == visibility
                 string[] effectType = effect.Key.Split(';');
                 switch (effectType[0])
                 {
@@ -292,41 +296,21 @@ namespace Requiem
                         }
                         break;
 
-                    case "areaDamage":  //Give damage at center and less the further
-                        foreach (Case c in Globals.currentScene.cases)
+                    case "areaDamage":
+                    case "damage":
+                    case "stateCase":
+                        List<Case> cases = Globals.visibilityManager.Compute(6, target, power.area);
+                        foreach(Case c in cases)
                         {
-                            if (Math.Abs(c.x - target.x) + Math.Abs(c.y - target.y) <= power.area)
-                            {
-                                if (c.entity != null)
-                                {
-                                    int dmg = effect.Value + (caster.boosts.ContainsKey(effectType[1] + "Damage") ? caster.boosts[effectType[1] + "Damage"] : 0);
-                                    c.entity.ChangeHP(dmg - (power.area - Math.Abs(c.x - target.x) + Math.Abs(c.y - target.y)), effectType[1]);
-                                }
-                            }
-                        }
-                        break;
-
-                    case "damage":  //Give same damage to all area
-                        foreach (Case c in Globals.currentScene.cases)
-                        {
-                            if (Math.Abs(c.x - target.x) + Math.Abs(c.y - target.y) <= power.area)
-                            {
-                                if (c.entity != null)
-                                {
-                                    int dmg = effect.Value + (caster.boosts.ContainsKey(effectType[1] + "Damage") ? caster.boosts[effectType[1] + "Damage"] : 0);
-                                    c.entity.ChangeHP(dmg, effectType[1]);
-                                }
-                            }
-                        }
-                        break;
-
-                    case "stateCase":   //Change state of cases in area
-                        foreach (Case c in Globals.currentScene.cases)
-                        {
-                            if (Math.Abs(c.x - target.x) + Math.Abs(c.y - target.y) <= power.area && c.type != "wall")
+                            if(effectType[0] == "stateCase")
                             {
                                 c.ChangeState(effectType[1]);
                                 Globals.cameraManager.ChangeObject("grid", c.x + ";" + c.y, "redraw");
+                            }
+                            else if(c.entity != null)
+                            {
+                                int dmg = effect.Value + (caster.boosts.ContainsKey(effectType[1] + "Damage") ? caster.boosts[effectType[1] + "Damage"] : 0);
+                                c.entity.ChangeHP(effectType[0] == "damage" ? dmg : dmg - (power.area - Math.Abs(c.x - target.x) + Math.Abs(c.y - target.y)), effectType[1]);
                             }
                         }
                         break;

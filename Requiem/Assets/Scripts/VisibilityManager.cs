@@ -12,21 +12,22 @@ namespace Requiem
     {
         //Variables
         private byte type;
-        private bool light;
+        private bool special;
         private bool lightsource;
 
         //Objects
         private List<Case> los;
+        private List<Case> toReturn;
 
         /// <param name="origin">The location of the monster whose field of view will be calculated.</param>
         /// <param name="rangeLimit">The maximum distance from the origin that tiles will be lit.
         /// If equal to -1, no limit will be applied.
         /// </param>
-        public void Compute(byte _type, Location origin, int rangeLimit, bool _light = false)
+        public List<Case> Compute(byte _type, Location origin, int rangeLimit, bool _special = false)
         {
-            light = _light;
+            special = _special;
             type = _type;
-            if(type == 1 && !light)
+            if(type == 1 && !special)
             {
                 if (Globals.currentScene.darkness == -1)
                 {
@@ -52,14 +53,23 @@ namespace Requiem
                         Compute(type, new Location(c.x, c.y), c.lpower, true);
                     }
                 }
-                light = false;
+                special = false;
+            }
+            if(type == 6)
+            {
+                toReturn = new List<Case>();
             }
             SetVisible(Convert.ToUInt32(origin.x), Convert.ToUInt32(origin.y), 8, origin);
             for (uint octant = 0; octant < 8; octant++) Compute(octant, origin, rangeLimit, 1, new Slope(1, 1), new Slope(0, 1));
-            if (!light && type == 1)
+            if (!special && type == 1)
             {
                 Globals.cameraManager.ChangeSkins();
             }
+            if(type == 6)
+            {
+                return toReturn;
+            }
+            return null;
         }
 
         struct Slope // represents the slope Y/X as a rational number
@@ -301,31 +311,49 @@ namespace Requiem
             }
             if (nx >= 0 && nx < Globals.currentScene.weight && ny >= 0 && ny < Globals.currentScene.height)
             {
-                if (light)
+                if (special)
                 {
-                    if (lightsource)
+                    if(type == 1)
                     {
-                        if(los.Contains(Globals.currentScene.cases[nx, ny]))
+                        if (lightsource)
                         {
-                            Globals.currentScene.cases[nx, ny].visible = true;
+                            if (los.Contains(Globals.currentScene.cases[nx, ny]))
+                            {
+                                Globals.currentScene.cases[nx, ny].visible = true;
+                            }
+                        }
+                        else
+                        {
+                            los.Add(Globals.currentScene.cases[nx, ny]);
                         }
                     }
                     else
                     {
-                        los.Add(Globals.currentScene.cases[nx, ny]);
+                        if (Globals.currentScene.cases[nx, ny].possibility != type)
+                        {
+                            Globals.currentScene.cases[nx, ny].possibility = type;
+                            Globals.cameraManager.ChangeObject("grid", nx + ";" + ny, "redraw");
+                        }
                     }
                 }
                 else
                 {
-                    if (type == 1)
+                    if(type == 6)
                     {
-                        Globals.currentScene.cases[nx, ny].visible = true;
+                        toReturn.Add(Globals.currentScene.cases[nx, ny]);
                     }
                     else
                     {
-                        Globals.currentScene.cases[nx, ny].possibility = type;
+                        if (type == 1)
+                        {
+                            Globals.currentScene.cases[nx, ny].visible = true;
+                        }
+                        else
+                        {
+                            Globals.currentScene.cases[nx, ny].possibility = type;
+                        }
+                        Globals.cameraManager.ChangeObject("grid", nx + ";" + ny, "redraw");
                     }
-                    Globals.cameraManager.ChangeObject("grid", nx + ";" + ny, "redraw");
                 }
             }
         }
