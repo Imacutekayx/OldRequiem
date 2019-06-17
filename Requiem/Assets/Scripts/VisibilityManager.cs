@@ -14,6 +14,7 @@ namespace Requiem
         private byte type;
         private bool special;
         private bool lightsource;
+        private string condition;
 
         //Objects
         private List<Case> los;
@@ -23,10 +24,11 @@ namespace Requiem
         /// <param name="rangeLimit">The maximum distance from the origin that tiles will be lit.
         /// If equal to -1, no limit will be applied.
         /// </param>
-        public List<Case> Compute(byte _type, Location origin, int rangeLimit, bool _special = false)
+        public List<Case> Compute(byte _type, Location origin, int rangeLimit, bool _special = false, string _condition = "")   //1-5=GivePossibility/6=ReturnList
         {
             special = _special;
             type = _type;
+            condition = _condition;
             if(type == 1 && !special)
             {
                 if (Globals.currentScene.darkness == -1)
@@ -329,7 +331,15 @@ namespace Requiem
                     }
                     else
                     {
-                        if (Globals.currentScene.cases[nx, ny].possibility != type)
+                        if(condition != "")
+                        {
+                            if(Globals.currentScene.cases[nx, ny].state == condition)
+                            {
+                                Globals.currentScene.cases[nx, ny].possibility = type;
+                                Globals.cameraManager.ChangeObject("grid", nx + ";" + ny, "redraw");
+                            }
+                        }
+                        else if (Globals.currentScene.cases[nx, ny].possibility != type)
                         {
                             Globals.currentScene.cases[nx, ny].possibility = type;
                             Globals.cameraManager.ChangeObject("grid", nx + ";" + ny, "redraw");

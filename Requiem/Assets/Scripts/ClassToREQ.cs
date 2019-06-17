@@ -54,7 +54,7 @@ namespace Requiem
             };
             List<Power> charPowers = new List<Power>
             {
-                new Power("Summon Weapon", 3, 0, 1, 90, 1, charEffects, false, charOptions)
+                new Power("Summon Weapon", 3, 0, 1, 90, 1, charEffects, "", false, charOptions)
             };
             charEffects = new Dictionary<string, int>
             {
@@ -67,7 +67,14 @@ namespace Requiem
                 {"stateCase;fire", 0 },
                 {"statePath;fire", 0 }
             };
-            charPowers.Add(new Power("Pyrokinesy", 5, 5, 1, 15, 20, charEffects, false, charOptions));
+            charPowers.Add(new Power("Pyrokinesy", 5, 5, 1, 15, 20, charEffects, "", false, charOptions));
+            charEffects = new Dictionary<string, int>
+            {
+                {"stateCase;fire", 0 },
+                {"damagePath;fire", 1 },
+                {"stateCast;fire", 0 }
+            };
+            charPowers.Add(new Power("FireTransport", 1, 10, 0, 10, 15, charEffects, "fire", true));
             int[] charDices = { 35, 70, 85, 60, 47, 25, 55 };
             Dictionary<Item, int> charBag = new Dictionary<Item, int>
             {

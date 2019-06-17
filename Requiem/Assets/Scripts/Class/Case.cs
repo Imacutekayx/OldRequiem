@@ -18,7 +18,7 @@ namespace Requiem.Class
         public int lpower;
         public string state;
         public int timeState;
-        public byte possibility = 0; //0=None/1=Movement/2=Attack/3=Power/4=Item
+        public byte possibility = 0; //0=None/1=Movement/2=Attack/3=Power/4=Item/5=EffectArea
         public bool visible = false;
         //TODO State time and triggered when entered
         //Objects
@@ -46,7 +46,11 @@ namespace Requiem.Class
         public void ChangeState(string _state)
         {
             state = _state;
-            if(state == "fire" && !lightsource)
+            if(state == "" && lightsource)
+            {
+                lightsource = false;
+            }
+            else if(state == "fire" && !lightsource)
             {
                 lightsource = true;
                 lpower = 1;

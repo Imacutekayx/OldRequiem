@@ -105,6 +105,7 @@ namespace Requiem.Objects
                         {
                             if (pow.name == Globals.power)
                             {
+                                if(!pow.needBasic || (pow.needBasic && Globals.basic != null))
                                 Globals.visibilityManager.Compute(3, new Location(Globals.currentCharacter.x, Globals.currentCharacter.y), pow.scope, true);
                                 break;
                             }
@@ -206,11 +207,40 @@ namespace Requiem.Objects
                                 {
                                     if (pow.mana <= Globals.currentCharacter.mp)
                                     {
-                                        double multiple = UnityEngine.Random.Range(1, 100) <= Globals.currentCharacter.dices[2] ? 1 : 1.5f;
-                                        //TODO Power.basic
-                                        Globals.timeManager.AddAction(new Act("script", Convert.ToInt32(pow.cast * multiple), "castPower", Globals.currentCharacter, pow.name + ";" + c.x + ":" + c.y));
-                                        Globals.power = "";
-                                        Globals.cameraManager.CleanCases();
+                                        if (pow.needBasic)
+                                        {
+                                            if(Globals.basic != null)
+                                            {
+                                                if(Globals.basic.x == c.x && Globals.basic.y == c.y)
+                                                {
+                                                    Globals.basic = null;
+                                                    Globals.cameraManager.CleanCases();
+                                                    Globals.visibilityManager.Compute(3, new Location(Globals.currentCharacter.x, Globals.currentCharacter.y), pow.scope, true, pow.elementalControl);
+                                                }
+                                                else
+                                                {
+                                                    double multiple = UnityEngine.Random.Range(1, 100) <= Globals.currentCharacter.dices[2] ? 1 : 1.5f;
+                                                    Globals.timeManager.AddAction(new Act("script", Convert.ToInt32(pow.cast * multiple), "castPower", Globals.currentCharacter, pow.name + ";" + c.x + ":" + c.y + ";" + Globals.basic.x + ":" + Globals.basic.y));
+                                                    Globals.power = "";
+                                                    Globals.basic = null;
+                                                    Globals.cameraManager.CleanCases();
+                                                }
+                                            }
+                                            else
+                                            {
+                                                Globals.basic = new Location(c.x, c.y);
+                                                Globals.cameraManager.CleanCases();
+                                                Globals.visibilityManager.Compute(3, new Location(Globals.currentCharacter.x, Globals.currentCharacter.y), pow.scope);
+                                                //TODO Show basic on case
+                                            }
+                                        }
+                                        else
+                                        {
+                                            double multiple = UnityEngine.Random.Range(1, 100) <= Globals.currentCharacter.dices[2] ? 1 : 1.5f;
+                                            Globals.timeManager.AddAction(new Act("script", Convert.ToInt32(pow.cast * multiple), "castPower", Globals.currentCharacter, pow.name + ";" + c.x + ":" + c.y));
+                                            Globals.power = "";
+                                            Globals.cameraManager.CleanCases();
+                                        }
                                     }
                                     break;
                                 }

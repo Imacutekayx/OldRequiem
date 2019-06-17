@@ -152,10 +152,31 @@ namespace Requiem
                     {
                         if(p.name == nameC[act.type == "castPower" ? 0 : 1])
                         {
-                            //TODO Find path from possible basic
-                            path = Globals.movementManager.CalculateMove(new Location(act.launcher.x, act.launcher.y), new Location(Convert.ToInt32(coordC[0]), Convert.ToInt32(coordC[1])));
+                            if(psC.Length > 2)
+                            {
+                                string[] coordBasic = psC[2].Split(':');
+                                path = Globals.movementManager.CalculateMove(new Location(Convert.ToInt32(coordBasic[0]), Convert.ToInt32(coordBasic[1])), new Location(Convert.ToInt32(coordC[0]), Convert.ToInt32(coordC[1])));
+                            }
+                            else
+                            {
+                                path = Globals.movementManager.CalculateMove(new Location(act.launcher.x, act.launcher.y), new Location(Convert.ToInt32(coordC[0]), Convert.ToInt32(coordC[1])));
+                            }
                             nextCase = path.Count - 1;
                             current = path[nextCase];
+                            foreach(KeyValuePair<string, int> effect in p.effects)
+                            {
+                                if (effect.Key.Contains("Cast"))
+                                {
+                                    string[] effectType = effect.Key.Split(';');
+                                    switch (effectType[0])
+                                    {
+                                        case "stateCast":
+                                            Globals.currentScene.cases[current.x, current.y].ChangeState("");
+                                            Globals.cameraManager.ChangeObject("grid", current.x + ";" + current.y, "redraw");
+                                            break;
+                                    }
+                                }
+                            }
                             int temp = ((Fighter)act.launcher).mp;
                             if (act.type == "castPower") { ((Fighter)act.launcher).ChangeMP(p.mana); }
                             Globals.timeManager.AddAction(new Act("script", p.speed, act.type == "castPower" ? "executePower" : "executeAttack", act.launcher, act.parameters));
@@ -199,7 +220,13 @@ namespace Requiem
                             }
                             if (nextCase == 0)
                             {
-                                ExecutePower(p, (Fighter)act.launcher, new Location(Convert.ToInt32(coordE[0]), Convert.ToInt32(coordE[1])));
+                                Location basic = null;
+                                if(psE.Length > 2)
+                                {
+                                    string[] coordBasic = psE[2].Split(':');
+                                    basic = new Location(Convert.ToInt32(coordBasic[0]), Convert.ToInt32(coordBasic[1]));
+                                }
+                                ExecutePower(p, (Fighter)act.launcher, new Location(Convert.ToInt32(coordE[0]), Convert.ToInt32(coordE[1])), basic);
                                 Globals.timeManager.AddAction(new Act("time", act.type == "executePower" ? 20 : 15, "", act.launcher, ""));
                             }
                             else
@@ -214,6 +241,14 @@ namespace Requiem
                                             case "statePath":
                                                 Globals.currentScene.cases[current.x, current.y].ChangeState(effectType[1]);
                                                 Globals.cameraManager.ChangeObject("grid", current.x + ";" + current.y, "redraw");
+                                                break;
+
+                                            case "damagePath":
+                                                if(Globals.currentScene.cases[current.x, current.y].entity != null)
+                                                {
+                                                    int dmg = effect.Value + (((Fighter)act.launcher).boosts.ContainsKey(effectType[1] + "Damage") ? ((Fighter)act.launcher).boosts[effectType[1] + "Damage"] : 0);
+                                                    Globals.currentScene.cases[current.x, current.y].entity.ChangeHP(dmg, effectType[1]);
+                                                }
                                                 break;
                                         }
                                     }
@@ -252,9 +287,9 @@ namespace Requiem
             {
                 Globals.visibilityManager.Compute(5, target, power.area);
             }
-            else
+            else if(Globals.basic != null)
             {
-
+                //TODO Show basic area
             }
         }
 
@@ -264,56 +299,65 @@ namespace Requiem
         /// <param name="power">Power to execute</param>
         /// <param name="caster">Fighter that casted the power</param>
         /// <param name="target">Target location of the power</param>
-        private void ExecutePower(Power power, Fighter caster, Location target, Location basic = null)
+        /// <param name="basic">Basic location of the spell if existing</param>
+        private void ExecutePower(Power power, Fighter caster, Location target, Location basic)
         {
             //ConeX => increment area each X cases
             //TODO Add effects (entity/transport/lineDamage/lineStateCase/coneDamage/coneStateCase)
             foreach(KeyValuePair<string, int> effect in power.effects)
             {
-                string[] effectType = effect.Key.Split(';');
-                switch (effectType[0])
+                if(!effect.Key.Contains("Path") && !effect.Key.Contains("Cast"))
                 {
-                    case "weapon":  //Summon weapon
-                        if(Globals.currentScene.cases[target.x, target.y].entity != null)
-                        {
-                            if (Globals.currentScene.cases[target.x, target.y].entity.type != "npc")
+                    string[] effectType = effect.Key.Split(';');
+                    switch (effectType[0])
+                    {
+                        case "weapon":  //Summon weapon
+                            if (Globals.currentScene.cases[target.x, target.y].entity != null)
                             {
-                                Fighter fighter = ((Fighter)Globals.currentScene.cases[target.x, target.y].entity);
-                                string[] options = power.options[0].Split(';');
-                                for(int i = 0; i < options.Length; ++i)
+                                if (Globals.currentScene.cases[target.x, target.y].entity.type != "npc")
                                 {
-                                    foreach (Weapon weapon in Globals.weapons)
+                                    Fighter fighter = ((Fighter)Globals.currentScene.cases[target.x, target.y].entity);
+                                    string[] options = power.options[0].Split(';');
+                                    for (int i = 0; i < options.Length; ++i)
                                     {
-                                        if (weapon.name == options[i])
+                                        foreach (Weapon weapon in Globals.weapons)
                                         {
-                                            fighter.AddWeapon(weapon);
-                                            Debug.Log(fighter.name + ":" + weapon.name);
-                                            break;
+                                            if (weapon.name == options[i])
+                                            {
+                                                fighter.AddWeapon(weapon);
+                                                Debug.Log(fighter.name + ":" + weapon.name);
+                                                break;
+                                            }
                                         }
                                     }
                                 }
                             }
-                        }
-                        break;
+                            break;
 
-                    case "areaDamage":
-                    case "damage":
-                    case "stateCase":
-                        List<Case> cases = Globals.visibilityManager.Compute(6, target, power.area);
-                        foreach(Case c in cases)
-                        {
-                            if(effectType[0] == "stateCase")
+                        case "areaDamage":
+                        case "damage":
+                        case "stateCase":
+                            List<Case> cases = Globals.visibilityManager.Compute(6, target, power.area);
+                            foreach (Case c in cases)
                             {
-                                c.ChangeState(effectType[1]);
-                                Globals.cameraManager.ChangeObject("grid", c.x + ";" + c.y, "redraw");
+                                if (effectType[0] == "stateCase")
+                                {
+                                    c.ChangeState(effectType[1]);
+                                    Globals.cameraManager.ChangeObject("grid", c.x + ";" + c.y, "redraw");
+                                }
+                                else if (c.entity != null)
+                                {
+                                    int dmg = effect.Value + (caster.boosts.ContainsKey(effectType[1] + "Damage") ? caster.boosts[effectType[1] + "Damage"] : 0);
+                                    c.entity.ChangeHP(effectType[0] == "damage" ? dmg : dmg - (power.area - Math.Abs(c.x - target.x) + Math.Abs(c.y - target.y)), effectType[1]);
+                                }
                             }
-                            else if(c.entity != null)
-                            {
-                                int dmg = effect.Value + (caster.boosts.ContainsKey(effectType[1] + "Damage") ? caster.boosts[effectType[1] + "Damage"] : 0);
-                                c.entity.ChangeHP(effectType[0] == "damage" ? dmg : dmg - (power.area - Math.Abs(c.x - target.x) + Math.Abs(c.y - target.y)), effectType[1]);
-                            }
-                        }
-                        break;
+                            break;
+
+                        case "transport":
+                            Globals.currentScene.cases[target.x, target.y].ChangeState(effectType[1]);
+                            Globals.cameraManager.ChangeObject("grid", target.x + ";" + target.y, "redraw");
+                            break;
+                    }
                 }
             }
         }

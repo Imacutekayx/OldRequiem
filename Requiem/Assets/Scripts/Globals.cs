@@ -42,5 +42,6 @@ namespace Requiem
         //Objects
         public static List<Fighter> players = new List<Fighter>();
         public static List<Fighter> ais = new List<Fighter>();
+        public static Location basic;
     }
 }
