@@ -53,9 +53,9 @@ namespace Requiem.Class
             }
             foreach(LayerImage add1 in adds1)
             {
-                for(int i = add1.x; i < add1.x + add1.weight; ++i)
+                for(int i = add1.x; i < add1.x; ++i)
                 {
-                    for (int j = add1.y; j < add1.y + add1.height; ++j)
+                    for (int j = add1.y; j < add1.y; ++j)
                     {
                         cases[i, j].type = "add1";
                         cases[i, j].high = add1.high;
@@ -77,9 +77,9 @@ namespace Requiem.Class
             entities = _entities;
             foreach(Entity entity in entities)
             {
-                for(int i = entity.x; i < entity.x + entity.weight; ++i)
+                for(int i = entity.x; i < entity.x; ++i)
                 {
-                    for(int j = entity.y; j < entity.y + entity.height; ++j)
+                    for(int j = entity.y; j < entity.y; ++j)
                     {
                         cases[i, j].type = entity.type;
                     }

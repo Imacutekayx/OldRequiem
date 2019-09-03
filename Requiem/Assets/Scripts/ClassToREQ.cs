@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
+using UnityEngine;
 
 namespace Requiem
 {
@@ -20,7 +21,7 @@ namespace Requiem
             Item coin = new Item("gold", 1, 1, "A simple coin of gold");
             Globals.useables.Add(coin);
             Useables();
-
+            
             //ARMORS
             Armor charHelmet = new Armor("blackScarf", 10, 5, "A scarf used to cover Lennj's face", "helmet", "mage", null);
             Armor charDress = new Armor("blackDress", 20, 10, "A basic mage dress tainted in black", "armor", "mage", null);
@@ -35,14 +36,14 @@ namespace Requiem
             Globals.armors.Add(charNecklace);
             Globals.armors.Add(ennTunic);
             Armors();
-
+            
             //WEAPONS
             Weapon psychWeapon = new Weapon("psychalSpear", 0, 0, "A psychologic representation of a spear that Lennj can mentally control", "magic2", 3, 2, "pierce");
             Weapon sword = new Weapon("sword", 15, 15, "A simple iron sword", "one-handed", 2, 1, "sharp");
             Globals.weapons.Add(psychWeapon);
             Globals.weapons.Add(sword);
             Weapons();
-
+            
             //CHARACTERS
             Dictionary<string, int> charEffects = new Dictionary<string, int>
             {
@@ -92,9 +93,9 @@ namespace Requiem
             charArmorChange[5] = true;
             Weapon[] charWeapon = new Weapon[2];
             Globals.characters.Add(new Character("Lennj", true, 300, "Lennj lost his family at his birthday when Angels arrived to kill his race", "Psychomancien", "513", 
-                "calm;sadistic;logical", "Soft-Cliff", 1, 1, 10, charDices, 0, new List<string>() { "common" }, new List<string>(), new List<string>(), new List<string>(), new List<string>(), charArmor, charArmorChange, "mage;magic", charWeapon, "magic1;magic2;dagger", charPowers, charBag));
+                "calm;sadistic;logical", "Soft-Cliff", 10, charDices, 0, new List<string>() { "common" }, new List<string>(), new List<string>(), new List<string>(), new List<string>(), charArmor, charArmorChange, "mage;magic", charWeapon, "magic1;magic2;dagger", charPowers, charBag));
             Characters();
-
+            
             //ENNEMIES
             Dictionary<string, int> ennEffects = new Dictionary<string, int>
             {
@@ -117,21 +118,21 @@ namespace Requiem
             bool[] ennArmorChange = new bool[6];
             Weapon[] ennWeapon = new Weapon[2];
             Globals.ennemies.Add(new Ennemy("CavernGoblin", "Small and twisted, this evil creature haunts many dark places",
-                1, 1, ennDices, 0, ennPowers, "", ennBag, new List<string>() { "common" }, new List<string>(), new List<string>(), 
+                ennDices, 0, ennPowers, "", ennBag, new List<string>() { "common" }, new List<string>(), new List<string>(), 
                 new List<string>(), new List<string>() { "fire" }, ennArmor, ennArmorChange, "", ennWeapon, ennScripts));
             Ennemies();
-
+            
             //NPCS
             Dictionary<Item, int> npcBag = new Dictionary<Item, int>
             {
                 {Globals.useables[0], 30}
             };
-            Npc npc = new Npc("Butcher", true, 41, "butcher", "hotblood", 1, 1, true, new List<string>() { "common" }, npcBag);
+            Npc npc = new Npc("Butcher", true, 41, "butcher", "hotblood", true, new List<string>() { "common" }, npcBag);
             Globals.npcs.Add(npc);
             Npcs();
-
+            
             //SCENES
-            LayerImage sceBackground = new LayerImage("grass", 20, 20, 0, 0);
+            LayerImage sceBackground = new LayerImage("grass", 20, 20);
             List<string> sceParameters = new List<string>
             {
                 "weapon;sword",
@@ -139,16 +140,16 @@ namespace Requiem
             };
             List<LayerImage> sceAdds1 = new List<LayerImage>
             {
-                new LayerImage("bigChest", 1, 2, 1, 7, 1, 50, new List<LayerScript>{ new LayerScript("openChest", true, sceParameters)}),
-                new LayerImage("bigRock", 1, 2, 3, 7, 1, 45)
+                new LayerImage("bigChest", 1, 7, 1, 50, 1, 1, new List<LayerScript>{ new LayerScript("openChest", true, sceParameters)}),
+                new LayerImage("bigRock", 3, 7, 1, 45)
             };
             List<LayerImage> sceWalls = new List<LayerImage>
             {
-                new LayerImage("ennemyWestWall", 1, 2, 1, 2, 1),
-                new LayerImage("ennemyEastWall", 1, 3, 3, 1, 3),
-                new LayerImage("ennemySouthWall", 3, 1, 1, 4, 0),
-                new LayerImage("npcNorthWall", 3, 1, 7, 0, 2),
-                new LayerImage("npcEastWall", 1, 2, 9, 1, 3)
+                new LayerImage("ennemyWestWall", 1, 2, 1, 100, 1, 2),
+                new LayerImage("ennemyEastWall", 3, 1, 3, 100, 1, 3),
+                new LayerImage("ennemySouthWall", 1, 4, 0, 100, 3, 1),
+                new LayerImage("npcNorthWall", 7, 0, 2, 100, 3, 1),
+                new LayerImage("npcEastWall", 9, 1, 3, 100, 1, 2)
             };
             List<Case> sceCases = new List<Case>
             {

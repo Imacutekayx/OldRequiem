@@ -128,9 +128,9 @@ namespace Requiem.Objects
                         bool close = false;
 
                         //Check if the player is close
-                        for (int i = c.layerImage.x; i < c.layerImage.x + c.layerImage.weight; ++i)
+                        for (int i = c.layerImage.x; i < c.layerImage.x; ++i)
                         {
-                            for (int j = c.layerImage.y; j < c.layerImage.y + c.layerImage.height; ++j)
+                            for (int j = c.layerImage.y; j < c.layerImage.y; ++j)
                             {
                                 if (Math.Abs(i - Globals.currentCharacter.x) + Math.Abs(j - Globals.currentCharacter.y) <= 1) { close = true; }
                             }
@@ -231,7 +231,6 @@ namespace Requiem.Objects
                                                 Globals.basic = new Location(c.x, c.y);
                                                 Globals.cameraManager.CleanCases();
                                                 Globals.visibilityManager.Compute(3, new Location(Globals.currentCharacter.x, Globals.currentCharacter.y), pow.scope);
-                                                //TODO Show basic on case
                                             }
                                         }
                                         else

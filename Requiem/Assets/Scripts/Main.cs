@@ -9,8 +9,8 @@ namespace Requiem
     /// </summary>
     public class Main : MonoBehaviour
     {
-        private readonly int boundary  = 50; // distance from edge scrolling starts
-        private readonly int speed = 5;
+        private const int BOUNDARY = 50; // distance from edge scrolling starts
+        private const int SPEED = 20;
         private int theScreenWidth;
         private int theScreenHeight;
 
@@ -52,21 +52,21 @@ namespace Requiem
             }
 
             //Move camera
-            if (Input.mousePosition.x > theScreenWidth - boundary)
+            if (Input.mousePosition.x > theScreenWidth - BOUNDARY)
             {
-                Globals.cameraManager.MoveCamera(0, speed);
+                Globals.cameraManager.MoveCamera(0, SPEED);
             }
-            if (Input.mousePosition.x < 0 + boundary)
+            if (Input.mousePosition.x < 0 + BOUNDARY)
             {
-                Globals.cameraManager.MoveCamera(2, speed);
+                Globals.cameraManager.MoveCamera(2, SPEED);
             }
-            if (Input.mousePosition.y > theScreenHeight - boundary)
+            if (Input.mousePosition.y > theScreenHeight - BOUNDARY)
             {
-                Globals.cameraManager.MoveCamera(1, speed);
+                Globals.cameraManager.MoveCamera(1, SPEED);
             }
-            if (Input.mousePosition.y < 0 + boundary)
+            if (Input.mousePosition.y < 0 + BOUNDARY)
             {
-                Globals.cameraManager.MoveCamera(3, speed);
+                Globals.cameraManager.MoveCamera(3, SPEED);
             }
 
             //Action to do

@@ -20,7 +20,7 @@ namespace Requiem.Class
         public int fov;
 
         //Constructor
-        public Character(string _name, bool _sex, int _age, string _story, string _cl, string _race, string _personality, string _origin, int _weight, int _height, int _fov,
+        public Character(string _name, bool _sex, int _age, string _story, string _cl, string _race, string _personality, string _origin, int _fov,
             int[] _dices, int _armor, List<string> _languages, List<string> _competences, List<string> _immunities, List<string> _resistances, List<string> _vulnerabilities, 
             Armor[] _armors, bool[] _armorChange, string _armortype, Weapon[] _weapon, string _weapontype, List<Power> _powers, Dictionary<Item, int> _bag)
         {
@@ -32,8 +32,6 @@ namespace Requiem.Class
             race = _race;
             personality = _personality;
             origin = _origin;
-            weight = _weight;
-            height = _height;
             fov = _fov;
             type = "character";
             dices = _dices;

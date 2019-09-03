@@ -18,8 +18,6 @@ namespace Requiem.Class
         public byte face = 0; //0=S/1=W/2=N/3=E
         public int x;
         public int y;
-        public int weight;
-        public int height;
         public bool dead;
         public bool busy = false;
         public List<string> languages = new List<string>();

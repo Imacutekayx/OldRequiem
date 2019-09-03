@@ -15,6 +15,9 @@ namespace Requiem
         private byte face;  //0=S/1=W/2=N/3=E
         private bool top = false;
 
+        //Const
+        private const int CASESIZE = 4;
+
         //Objects
         public GameObject[,] grid;
         private GameObject gridObjects;
@@ -39,7 +42,6 @@ namespace Requiem
         {
             camera = _camera;
             camera.transform.eulerAngles = new Vector3(30, 0, 0);
-            //TODO Create layout
         }
 
         /// <summary>
@@ -87,14 +89,14 @@ namespace Requiem
                     obj.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("images/grid/free0");
                     obj.GetComponent<SpriteRenderer>().sortingOrder = 1;
                     obj.AddComponent<BoxCollider>();
-                    obj.GetComponent<BoxCollider>().size = new Vector3(1, 1, 0.1f);
+                    obj.GetComponent<BoxCollider>().size = new Vector3(CASESIZE, CASESIZE, 0.1f);
                     obj.transform.eulerAngles = new Vector3(90, 0, 0);
-                    obj.transform.position = CalculatePosition(i, j, 1, 1, 0);
+                    obj.transform.position = CalculatePosition(i, j, 0);
                     grid[i, j] = obj;
                     obj.transform.parent = gridObjects.transform;
                 }
             }
-            
+
             //Background
             GameObject back = new GameObject
             {
@@ -130,15 +132,9 @@ namespace Requiem
                     };
                     image.AddComponent<ImageObject>();
                     image.GetComponent<ImageObject>().layerImage = add;
-                    for (int k = add.x; k < add.x + add.weight; ++k)
-                    {
-                        for(int l = add.y; l < add.y + add.height; ++l)
-                        {
-                            grid[k, l].GetComponent<CaseObject>().c.layerImage = add;
-                        }
-                    }
+                    grid[add.x, add.y].GetComponent<CaseObject>().c.layerImage = add;
                     image.transform.eulerAngles = new Vector3(90, 90 * add.face, 0);
-                    image.transform.position = CalculatePosition(add.x, add.y, add.weight, add.height, high[i]);
+                    image.transform.position = CalculatePosition(add.x, add.y, high[i]);
                     SpriteRenderer renderer = image.AddComponent<SpriteRenderer>();
                     renderer.sortingOrder = i+2;
                     if (i == 0)
@@ -148,14 +144,8 @@ namespace Requiem
                     }
                     else if (i == 1)
                     {
-                        for (int k = add.x; k < add.x + add.weight; ++k)
-                        {
-                            for(int l = add.y; l < add.y + add.height; ++l)
-                            {
-                                grid[k, l].GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("images/grid/add10");
-                                image.transform.parent = add1Objects.transform;
-                            }
-                        }
+                        grid[add.x, add.y].GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("images/grid/add10");
+                        image.transform.parent = add1Objects.transform;
                     }
                     else
                     {
@@ -176,7 +166,7 @@ namespace Requiem
                 {
                     name = "wall:" + wall.name + ":" + wall.x + ";" + wall.y
                 };
-                obj.transform.position = CalculatePosition(wall.x, wall.y, wall.weight, wall.height, 1.5f);
+                obj.transform.position = CalculatePosition(wall.x, wall.y, 1.5f, wall.weight, wall.height);
                 obj.tag = "Walls";
                 obj.AddComponent<WallObject>();
                 obj.GetComponent<WallObject>().wall = wall;
@@ -204,23 +194,23 @@ namespace Requiem
                     switch (faces[i])
                     {
                         case "0":
-                            position = new Vector3(0, 0, -_height / 2);
+                            position = new Vector3(0, CASESIZE, -_height / 2 * CASESIZE);
                             break;
 
                         case "1":
-                            position = new Vector3(-_weight / 2, 0, 0);
+                            position = new Vector3(-_weight / 2 * CASESIZE, CASESIZE, 0);
                             break;
 
                         case "2":
-                            position = new Vector3(0, 0, _height / 2);
+                            position = new Vector3(0, CASESIZE, _height / 2 * CASESIZE);
                             break;
 
                         case "3":
-                            position = new Vector3(_weight / 2, 0, 0);
+                            position = new Vector3(_weight / 2 * CASESIZE, CASESIZE, 0);
                             break;
 
                         case "top":
-                            position = new Vector3(0, 1.5f, 0);
+                            position = new Vector3(0, 2.5f * CASESIZE, 0);
                             break;
                     }
                     img.transform.localPosition = position;
@@ -252,20 +242,14 @@ namespace Requiem
                 {
                     name = entity.type + ":" + entity.name + ":" + (entity.type == "character" ? "" : entity.x + ";" + entity.y)
                 };
-                image.transform.position = CalculatePosition(entity.x, entity.y, entity.weight, entity.height, 1);
+                image.transform.position = CalculatePosition(entity.x, entity.y, 1);
                 SpriteRenderer renderer = image.AddComponent<SpriteRenderer>();
                 renderer.sortingOrder = 3;
                 image.tag = "Entities";
                 image.AddComponent<EntityObject>();
                 image.GetComponent<EntityObject>().entity = entity;
-                for (int k = entity.x; k < entity.x + entity.weight; ++k)
-                {
-                    for (int l = entity.y; l < entity.y + entity.height; ++l)
-                    {
-                        grid[k, l].GetComponent<CaseObject>().c.entity = entity;
-                        grid[k, l].GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("images/grid/" + entity.type + 0);
-                    }
-                }
+                grid[entity.x, entity.y].GetComponent<CaseObject>().c.entity = entity;
+                grid[entity.x, entity.y].GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("images/grid/" + entity.type + 0);
                 switch (entity.type)
                 {
                     case "character":
@@ -301,7 +285,7 @@ namespace Requiem
                     {
                         top = true;
                         camera.transform.Rotate(60, 0, 0);
-                        camera.transform.position = new Vector3(0, 10, 0);
+                        camera.transform.position = new Vector3(0, 10 * CASESIZE, 0);
                         ChangeSkins();
                     }
                     break;
@@ -340,33 +324,33 @@ namespace Requiem
             {
                 direction = Convert.ToByte((direction + 2) % 4);
             }
-
+            
             //Translate the camera's position
             switch (direction)
             {
                 case 0:
-                    if(camera.transform.position.x < Globals.currentScene.weight / 2 + 3)
+                    if(camera.transform.position.x < Globals.currentScene.weight / 2 * CASESIZE + (face == 3 ? 3 * CASESIZE : (face == 1 ? -3 * CASESIZE : 0)))
                     {
                         camera.transform.Translate(new Vector3(speed * Time.deltaTime, 0), Space.World); // move on +X axis
                     }
                     break;
 
                 case 2:
-                    if(camera.transform.position.x > -Globals.currentScene.weight / 2 - 3)
+                    if(camera.transform.position.x > -Globals.currentScene.weight / 2 * CASESIZE - (face == 1 ? 3 * CASESIZE : (face == 3 ? -3 * CASESIZE : 0)))
                     {
                         camera.transform.Translate(new Vector3(-(speed * Time.deltaTime), 0), Space.World); // move on -X axis
                     }
                     break;
 
                 case 1:
-                    if(camera.transform.position.z < Globals.currentScene.height / 2 + 3)
+                    if(camera.transform.position.z < Globals.currentScene.height / 2 * CASESIZE + (face == 2 ? 3 * CASESIZE : (face == 0 ? -3 * CASESIZE : 0)))
                     {
                         camera.transform.Translate(new Vector3(0, 0, speed * Time.deltaTime), Space.World); // move on +Z axis
                     }
                     break;
 
                 case 3:
-                    if(camera.transform.position.z > -Globals.currentScene.height / 2 - 3)
+                    if(camera.transform.position.z > -Globals.currentScene.height / 2 * CASESIZE - (face == 0 ? 3 * CASESIZE : (face == 2 ? -3 * CASESIZE : 0)))
                     {
                         camera.transform.Translate(new Vector3(0, 0, -(speed * Time.deltaTime)), Space.World); // move on -Z axis
                     }
@@ -459,12 +443,12 @@ namespace Requiem
                     if(tag == "Entities")
                     {
                         Entity entity = objectToChange.GetComponent<EntityObject>().entity;
-                        objectToChange.transform.position = CalculatePosition(entity.x, entity.y, entity.weight, entity.height, 1);
+                        objectToChange.transform.position = CalculatePosition(entity.x, entity.y, 1);
                     }
                     else
                     {
                         LayerImage image = objectToChange.GetComponent<ImageObject>().layerImage;
-                        objectToChange.transform.position = CalculatePosition(image.x, image.y, image.weight, image.height, type == "add0" ? -0.01f : type == "add1" ? 1 : 3.5f);
+                        objectToChange.transform.position = CalculatePosition(image.x, image.y, type == "add0" ? -0.01f : type == "add1" ? 1 : 3.5f);
                     }
                     ChangeObject(type, name, "redraw", true, objectToChange);
                     break;
@@ -520,9 +504,9 @@ namespace Requiem
         /// <param name="height">Height of the object</param>
         /// <param name="high">High of the object (YAxis)</param>
         /// <returns></returns>
-        private Vector3 CalculatePosition(int x, int y, float weight, float height, float high)
+        private Vector3 CalculatePosition(int x, int y, float high, float weight = 1, float height = 1)
         {
-            return new Vector3(x - Globals.currentScene.weight / 2 + weight / 2, high, (y - Globals.currentScene.height / 2 + height / 2) * -1);
+            return new Vector3((x - Globals.currentScene.weight / 2 + weight / 2) * CASESIZE, high, ((y - Globals.currentScene.height / 2 + height / 2) * CASESIZE) * -1);
         }
 
         /// <summary>
@@ -534,19 +518,19 @@ namespace Requiem
             switch (face)
             {
                 case 0:
-                    camera.transform.position = new Vector3(0, 5, -Globals.currentScene.height / 2 - 3);
+                    camera.transform.position = new Vector3(0, 5 * CASESIZE, (-Globals.currentScene.height / 2 - 3) * CASESIZE);
                     break;
 
                 case 1:
-                    camera.transform.position = new Vector3(-Globals.currentScene.weight / 2 - 3, 5, 0);
+                    camera.transform.position = new Vector3((-Globals.currentScene.weight / 2 - 3) * CASESIZE, 5 * CASESIZE, 0);
                     break;
 
                 case 2:
-                    camera.transform.position = new Vector3(0, 5, Globals.currentScene.height / 2 + 3);
+                    camera.transform.position = new Vector3(0, 5 * CASESIZE, (Globals.currentScene.height / 2 + 3) * CASESIZE);
                     break;
 
                 case 3:
-                    camera.transform.position = new Vector3(Globals.currentScene.weight / 2 + 3, 5, 0);
+                    camera.transform.position = new Vector3((Globals.currentScene.weight / 2 + 3) * CASESIZE, 5 * CASESIZE, 0);
                     break;
             }
 
@@ -593,20 +577,7 @@ namespace Requiem
                     case "ennemy":
                     case "npc":
                         Entity entity = gameObject.GetComponent<EntityObject>().entity;
-                        bool visible = false;
-                        for(int i = entity.x; i < entity.x + entity.weight; ++i)
-                        {
-                            for(int j = entity.y; j < entity.y + entity.height; ++j)
-                            {
-                                if(Globals.currentScene.cases[i, j].visible)
-                                {
-                                    visible = true;
-                                    break;
-                                }
-                            }
-                            if (visible) { break; }
-                        }
-                        if (visible)
+                        if (Globals.currentScene.cases[entity.x, entity.y].visible)
                         {
                             if (top)
                             {
@@ -629,20 +600,7 @@ namespace Requiem
 
                     case "add0":
                         LayerImage image0 = gameObject.GetComponent<ImageObject>().layerImage;
-                        visible = false;
-                        for (int i = image0.x; i < image0.x + image0.weight; ++i)
-                        {
-                            for (int j = image0.y; j < image0.y + image0.height; ++j)
-                            {
-                                if (Globals.currentScene.cases[i, j].visible)
-                                {
-                                    visible = true;
-                                    break;
-                                }
-                            }
-                            if (visible) { break; }
-                        }
-                        if (visible)
+                        if (Globals.currentScene.cases[image0.x, image0.y].visible)
                         {
                             gameObject.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("images/adds0/" + image0.name);
                         }
@@ -654,20 +612,7 @@ namespace Requiem
 
                     case "add1":
                         LayerImage image1 = gameObject.GetComponent<ImageObject>().layerImage;
-                        visible = false;
-                        for (int i = image1.x; i < image1.x + image1.weight; ++i)
-                        {
-                            for (int j = image1.y; j < image1.y + image1.height; ++j)
-                            {
-                                if (Globals.currentScene.cases[i, j].visible)
-                                {
-                                    visible = true;
-                                    break;
-                                }
-                            }
-                            if (visible) { break; }
-                        }
-                        if (visible)
+                        if (Globals.currentScene.cases[image1.x, image1.y].visible)
                         {
                             if (top)
                             {
@@ -690,20 +635,7 @@ namespace Requiem
 
                     case "add2":
                         LayerImage image2 = gameObject.GetComponent<ImageObject>().layerImage;
-                        visible = false;
-                        for (int i = image2.x; i < image2.x + image2.weight; ++i)
-                        {
-                            for (int j = image2.y; j < image2.y + image2.height; ++j)
-                            {
-                                if (Globals.currentScene.cases[i, j].visible)
-                                {
-                                    visible = true;
-                                    break;
-                                }
-                            }
-                            if (visible) { break; }
-                        }
-                        if (visible)
+                        if (Globals.currentScene.cases[image2.x, image2.y].visible)
                         {
                             if (top)
                             {
@@ -724,7 +656,7 @@ namespace Requiem
 
                     case "wall":
                         LayerImage wall = gameObject.GetComponent<WallObject>().wall;
-                        visible = false;
+                        bool visible = false;
                         for (int i = wall.x; i < wall.x + wall.weight; ++i)
                         {
                             for (int j = wall.y; j < wall.y + wall.height; ++j)
