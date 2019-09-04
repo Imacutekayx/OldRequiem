@@ -17,6 +17,9 @@ namespace Requiem
 
         //Const
         private const int CASESIZE = 4;
+        private const int ZOOMSPEED = 5;
+        private const int MAXFOV = 60;
+        private const int MINFOV = 15;
 
         //Objects
         public GameObject[,] grid;
@@ -144,7 +147,7 @@ namespace Requiem
                     }
                     else if (i == 1)
                     {
-                        grid[add.x, add.y].GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("images/grid/add10");
+                        grid[add.x, add.y].GetComponent<SpriteRenderer>().sprite = add.high < 100 ? Resources.Load<Sprite>("images/grid/add10") : Resources.Load<Sprite>("images/grid/wall");
                         image.transform.parent = add1Objects.transform;
                     }
                     else
@@ -356,6 +359,16 @@ namespace Requiem
                     }
                     break;
             }
+        }
+
+        /// <summary>
+        /// Method which change the camera's fov
+        /// </summary>
+        /// <param name="minus">ScrollWheel's value under 0</param>
+        public void Zoom(bool minus)
+        {
+            camera.fieldOfView += (minus ? ZOOMSPEED : -ZOOMSPEED);
+            camera.fieldOfView = Mathf.Clamp(camera.fieldOfView, MINFOV, MAXFOV);
         }
 
         /// <summary>

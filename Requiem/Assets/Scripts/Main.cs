@@ -69,6 +69,12 @@ namespace Requiem
                 Globals.cameraManager.MoveCamera(3, SPEED);
             }
 
+            //Zoom
+            if(Input.GetAxis("Mouse ScrollWheel") != 0)
+            {
+                Globals.cameraManager.Zoom(Input.GetAxis("Mouse ScrollWheel") < 0);
+            }
+
             //Action to do
             if (Input.GetKeyDown(KeyCode.M))
             {

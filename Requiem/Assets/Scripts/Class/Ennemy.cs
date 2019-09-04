@@ -16,13 +16,14 @@ namespace Requiem.Class
         public Dictionary<string, int> scripts;
 
         //Constructor
-        public Ennemy(string _name, string _description, int[] _dices, int _armor, List<Power> _powers, string _weapontype, 
+        public Ennemy(string _name, string _description, int _fov, int[] _dices, int _armor, List<Power> _powers, string _weapontype, 
             Dictionary<Item, int> _bag, List<string> _languages, List<string> _competences, List<string> _immunities, List<string> _resistances, 
             List<string> _vulnerabilities, Armor[] _armors, bool[] _armorChange, string _armortype, Weapon[] _weapon, Dictionary<string, int> _scripts = null)
         {
             name = _name;
             description = _description;
             type = "ennemy";
+            fov = _fov;
             dices = _dices;
             hp = dices[0] / 3;
             mp = dices[1] / 2;

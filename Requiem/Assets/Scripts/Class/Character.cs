@@ -17,7 +17,6 @@ namespace Requiem.Class
         public string personality;
         public string origin;
         public int strength = 0;
-        public int fov;
 
         //Constructor
         public Character(string _name, bool _sex, int _age, string _story, string _cl, string _race, string _personality, string _origin, int _fov,

@@ -18,16 +18,16 @@ namespace Requiem
         {
             //USEABLES
             Useables();
-
+            
             //ARMORS
             Armors();
-
+            
             //WEAPONS
             Weapons();
-
+            
             //CHARACTERS
             Characters();
-
+            
             //ENNEMIES
             Ennemies();
 

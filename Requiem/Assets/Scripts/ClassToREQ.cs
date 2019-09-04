@@ -18,178 +18,117 @@ namespace Requiem
         public static void Save()
         {
             //USEABLES
-            Item coin = new Item("gold", 1, 1, "A simple coin of gold");
+            Item coin = new Item("coin", 1, 1, "A simple coin of gold");
+            Dictionary<string, int> hpPotion_effects = new Dictionary<string, int>();
+            hpPotion_effects.Add("hp", 10);
             Globals.useables.Add(coin);
+
+            Item hpPotion = new Item("hp potion", 5, 2, "A potion which give 10hp", 1, hpPotion_effects);
+            Globals.useables.Add(hpPotion);
             Useables();
+
+            Item wolfSkin = new Item("uto skin", 3, 1, "The skin of a wild uto.");
+            Globals.useables.Add(wolfSkin);
+
+            Item gateKey = new Item("gate key", 0, 0, "The key needed for the forest's gate.");
             
             //ARMORS
-            Armor charHelmet = new Armor("blackScarf", 10, 5, "A scarf used to cover Lennj's face", "helmet", "mage", null);
-            Armor charDress = new Armor("blackDress", 20, 10, "A basic mage dress tainted in black", "armor", "mage", null);
-            Dictionary<string, int> neckEffects = new Dictionary<string, int>
-            {
-                {"mp", 3 }
-            };
-            Armor charNecklace = new Armor("psychalCrystal", 0, 2, "A crystal which gives Lennj his powers", "necklace", "magic", neckEffects);
-            Armor ennTunic = new Armor("goblinTunic", 20, 4, "A disgusting, small tunic", "armor", "light", null);
-            Globals.armors.Add(charHelmet);
-            Globals.armors.Add(charDress);
-            Globals.armors.Add(charNecklace);
-            Globals.armors.Add(ennTunic);
+            Dictionary<string, int> chainArmor_effects = new Dictionary<string, int>();
+            chainArmor_effects.Add("armor", 2);
+            Armor chainArmor = new Armor("chain armor", 30, 30, "A simple chain armor giving 2 points", "armor", "light", chainArmor_effects);
+            Globals.armors.Add(chainArmor);
             Armors();
             
             //WEAPONS
-            Weapon psychWeapon = new Weapon("psychalSpear", 0, 0, "A psychologic representation of a spear that Lennj can mentally control", "magic2", 3, 2, "pierce");
-            Weapon sword = new Weapon("sword", 15, 15, "A simple iron sword", "one-handed", 2, 1, "sharp");
-            Globals.weapons.Add(psychWeapon);
-            Globals.weapons.Add(sword);
+            List<Power> flamberge_powers = new List<Power>();
+            Dictionary<string, int> circularStrike_effects = new Dictionary<string, int>();
+            circularStrike_effects.Add("areaDamage", 5);
+            Power circularStrike = new Power("circular strike", 2, 0, 2, 20, 30, circularStrike_effects);
+            flamberge_powers.Add(circularStrike);
+            Dictionary<string, int> fireSlash_effects = new Dictionary<string, int>();
+            fireSlash_effects.Add("damage;fire", 10);
+            Power fireSlash = new Power("fire slash", 5, 1, 1, 50, 10, fireSlash_effects);
+            flamberge_powers.Add(fireSlash);
+            Dictionary<string, int> flamberge_effects = new Dictionary<string, int>();
+            flamberge_effects.Add("fireDamage", 2);
+            Weapon flamberge = new Weapon("flamberge", 50, 20, "A ondulated blade gives fireDamage to this two-handed sword", "two-handed", 5, 1, "sharp", flamberge_powers, flamberge_effects);
+            Globals.weapons.Add(flamberge);
+
+            List<Power> knife_powers = new List<Power>();
+            Dictionary<string, int> fury_effects = new Dictionary<string, int>();
+            fury_effects.Add("damage", 9);
+            Power fury = new Power("fury", 6, 1, 1, 30, 0, fury_effects);
+            knife_powers.Add(fury);
+            Weapon knife = new Weapon("knife", 3, 5, "A simple knife.", "dagger", 3, 1, "sharp", knife_powers);
+            Globals.weapons.Add(knife);
+
+            Weapon fangs = new Weapon("fangs", 2, 1, "Wild uto's fangs.", "beast", 2, 1, "pierce");
+            Globals.weapons.Add(fangs);
             Weapons();
             
             //CHARACTERS
-            Dictionary<string, int> charEffects = new Dictionary<string, int>
-            {
-                { "weapon", 0 }
-            };
-            List<string> charOptions = new List<string>
-            {
-                "psychalSpear"
-            };
-            List<Power> charPowers = new List<Power>
-            {
-                new Power("Summon Weapon", 3, 0, 1, 90, 1, charEffects, "", false, charOptions)
-            };
-            charEffects = new Dictionary<string, int>
-            {
-                {"areaDamage;psychic", 4 }
-            };
-            charPowers.Add(new Power("Psychic Explosion", 5, 3, 3, 60, 10, charEffects));
-            charEffects = new Dictionary<string, int>
-            {
-                {"damage;fire", 3},
-                {"stateCase;fire", 0 },
-                {"statePath;fire", 0 }
-            };
-            charPowers.Add(new Power("Pyrokinesy", 5, 5, 1, 15, 20, charEffects, "", false, charOptions));
-            charEffects = new Dictionary<string, int>
-            {
-                {"stateCase;fire", 0 },
-                {"damagePath;fire", 1 },
-                {"stateCast;fire", 0 }
-            };
-            charPowers.Add(new Power("FireTransport", 1, 10, 0, 10, 15, charEffects, "fire", true));
-            int[] charDices = { 35, 70, 85, 60, 47, 25, 55 };
-            Dictionary<Item, int> charBag = new Dictionary<Item, int>
-            {
-                { Globals.useables[0], 100 }
-            };
-            Armor[] charArmor = new Armor[6];
-            charArmor[0] = charHelmet;
-            charArmor[1] = charDress;
-            charArmor[3] = charNecklace;
-            bool[] charArmorChange = new bool[6];
-            charArmorChange[0] = true;
-            charArmorChange[1] = true;
-            charArmorChange[2] = true;
-            charArmorChange[4] = true;
-            charArmorChange[5] = true;
-            Weapon[] charWeapon = new Weapon[2];
-            Globals.characters.Add(new Character("Lennj", true, 300, "Lennj lost his family at his birthday when Angels arrived to kill his race", "Psychomancien", "513", 
-                "calm;sadistic;logical", "Soft-Cliff", 10, charDices, 0, new List<string>() { "common" }, new List<string>(), new List<string>(), new List<string>(), new List<string>(), charArmor, charArmorChange, "mage;magic", charWeapon, "magic1;magic2;dagger", charPowers, charBag));
+            int[] kanis_dices = { 60, 50, 40, 70, 50, 10, 70 };
+            List<string> kanis_languages = new List<string>();
+            kanis_languages.Add("Common");
+            kanis_languages.Add("Mercenary");
+            List<string> kanis_resistances = new List<string>();
+            kanis_resistances.Add("fire");
+            Armor[] kanis_armor = new Armor[6];
+            kanis_armor[1] = chainArmor;
+            bool[] kanis_armorChange = new bool[6];
+            kanis_armorChange[0] = true;
+            kanis_armorChange[1] = true;
+            kanis_armorChange[2] = true;
+            kanis_armorChange[3] = true;
+            kanis_armorChange[4] = true;
+            kanis_armorChange[5] = true;
+            Weapon[] kanis_weapon = new Weapon[2];
+            kanis_weapon[0] = flamberge;
+            List<Power> kanis_powers = new List<Power>();
+            Dictionary<string, int> flameTeleport_effects = new Dictionary<string, int>();
+            flameTeleport_effects.Add("stateCast;", 0);
+            flameTeleport_effects.Add("stateCase;fire", 0);
+            Power flameTeleport = new Power("flame teleport", 3, 5, 1, 30, 0, flameTeleport_effects, "fire", true);
+            kanis_powers.Add(flameTeleport);
+            Character kanis = new Character("Kanis", true, 29, "Kanis' home was burn by a man named Jhin. Killing him is the only goal of the mercenary.", "Mercenary", "human", "serious", "Sioris", 3,
+                kanis_dices, 0, kanis_languages, new List<string>(), new List<string>(), kanis_resistances, new List<string>(),
+                kanis_armor, kanis_armorChange, "light;heavy", kanis_weapon, "on-handed;dagger;crossbow1;two-handed;crossbow2", kanis_powers, new Dictionary<Item, int>());
+            Globals.characters.Add(kanis);
             Characters();
             
             //ENNEMIES
-            Dictionary<string, int> ennEffects = new Dictionary<string, int>
-            {
-                { "damage;sharp", 1 }
-            };
-            List<Power> ennPowers = new List<Power>
-            {
-                new Power("Scratch", 0, 1, 1, 0, 2, ennEffects)
-            };
-            Dictionary<string, int> ennScripts = new Dictionary<string, int>
-            {
-                { "callFriends", 100 }
-            };
-            int[] ennDices = { 30, 20, 25, 15, 40, 30, 40 };
-            Dictionary<Item, int> ennBag = new Dictionary<Item, int>
-            {
-                { Globals.useables[0], 3}
-            };
-            Armor[] ennArmor = new Armor[6];
-            bool[] ennArmorChange = new bool[6];
-            Weapon[] ennWeapon = new Weapon[2];
-            Globals.ennemies.Add(new Ennemy("CavernGoblin", "Small and twisted, this evil creature haunts many dark places",
-                ennDices, 0, ennPowers, "", ennBag, new List<string>() { "common" }, new List<string>(), new List<string>(), 
-                new List<string>(), new List<string>() { "fire" }, ennArmor, ennArmorChange, "", ennWeapon, ennScripts));
-            Ennemies();
+            int[] wildUto_dices = { 50, 10, 30, 60, 70, 15, 55 };
+            Dictionary<Item, int> wildUto_bag = new Dictionary<Item, int>();
+            wildUto_bag.Add(wolfSkin, 1);
+            List<string> wildUto_vulnerabilities = new List<string>();
+            wildUto_vulnerabilities.Add("fire");
+            Weapon[] wildUto_weapon = new Weapon[2];
+            wildUto_weapon[0] = fangs;
+            Ennemy wildUto = new Ennemy("wild uto", "A wild uto which seek meat.", 5, wildUto_dices, 0, new List<Power>(), "beast", wildUto_bag, new List<string>(), new List<string>(), new List<string>(), new List<string>(), wildUto_vulnerabilities, new Armor[6], new bool[6], "", wildUto_weapon);
+            Globals.ennemies.Add(wildUto);
             
+            int[] trap_dices = { 80, 50, 70, 50, 30, 65, 40 };
+            Weapon[] trap_weapon = new Weapon[2];
+            trap_weapon[0] = knife;
+            Ennemy trap = new Ennemy("trap", "The trap is a filty creature taking the form of a coon or a uto to attract wanderers at night and stab them multiply in the chest before eating them. Its normal form is a tall and dark tainted humanoid without a face hiding under a long dress.", 10, 
+                trap_dices, 0, new List<Power>(), "dagger", new Dictionary<Item, int>(), new List<string>(), new List<string>(), new List<string>(), new List<string>(), new List<string>(), new Armor[6], new bool[6], "", trap_weapon);
+            Globals.ennemies.Add(trap);
+            Ennemies();
+
             //NPCS
-            Dictionary<Item, int> npcBag = new Dictionary<Item, int>
-            {
-                {Globals.useables[0], 30}
-            };
-            Npc npc = new Npc("Butcher", true, 41, "butcher", "hotblood", true, new List<string>() { "common" }, npcBag);
-            Globals.npcs.Add(npc);
+            List<string> lumberjack_languages = new List<string>();
+            lumberjack_languages.Add("Common");
+            Dictionary<Item, int> lumberJack_bag = new Dictionary<Item, int>();
+            lumberJack_bag.Add(gateKey, 1);
+            Npc lumberjack = new Npc("Jack The Lumberjack", true, 46, "lumberjack", "hotblood", true, lumberjack_languages, lumberJack_bag);
             Npcs();
             
             //SCENES
-            LayerImage sceBackground = new LayerImage("grass", 20, 20);
-            List<string> sceParameters = new List<string>
-            {
-                "weapon;sword",
-                "useable;gold;5"
-            };
-            List<LayerImage> sceAdds1 = new List<LayerImage>
-            {
-                new LayerImage("bigChest", 1, 7, 1, 50, 1, 1, new List<LayerScript>{ new LayerScript("openChest", true, sceParameters)}),
-                new LayerImage("bigRock", 3, 7, 1, 45)
-            };
-            List<LayerImage> sceWalls = new List<LayerImage>
-            {
-                new LayerImage("ennemyWestWall", 1, 2, 1, 100, 1, 2),
-                new LayerImage("ennemyEastWall", 3, 1, 3, 100, 1, 3),
-                new LayerImage("ennemySouthWall", 1, 4, 0, 100, 3, 1),
-                new LayerImage("npcNorthWall", 7, 0, 2, 100, 3, 1),
-                new LayerImage("npcEastWall", 9, 1, 3, 100, 1, 2)
-            };
-            List<Case> sceCases = new List<Case>
-            {
-                new Case(4, 2, "free", 0, true, 2)
-            };
-            List<LayerScript> sceScripts = new List<LayerScript>
-            {
-                new LayerScript("caseState", true, "circle", 3, 0, 7, 3, 3, new List<string>{"circle;fire"})
-            };
-            Globals.characters[0].x = 7;
-            Globals.characters[0].y = 8;
-            Globals.characters[0].face = 0;
-            Globals.ennemies[0].x = 2;
-            Globals.ennemies[0].y = 3;
-            Globals.ennemies[0].face = 0;
-            Globals.npcs[0].x = 8;
-            Globals.npcs[0].y = 1;
-            Globals.npcs[0].face = 3;
-            List<Entity> entities = new List<Entity>
-            {
-                Globals.characters[0], Globals.ennemies[0], Globals.npcs[0]
-            };
-            Globals.scenes.Add(new Scene("forestStart", 10, 10, "exploration", 4, new List<LayerImage>(),
-                sceAdds1, new List<LayerImage>(), sceWalls, sceCases, sceScripts, entities));
+            
             Scenes();
             
             //DIALOGUES
-            Dictionary<string, string> diaAnswers = new Dictionary<string, string>
-            {
-                { "Kill", "I will kill you!" }
-            };
-            Dictionary<string, Dictionary<string, string>> diaChars = new Dictionary<string, Dictionary<string, string>>
-            {
-                { "Lennj", diaAnswers }
-            };
-            Dictionary<string, Dictionary<string, Dictionary<string, string>>> diaParts = new Dictionary<string, Dictionary<string, Dictionary<string, string>>>
-            {
-                { "Butcher;Hello adventurers!", diaChars }
-            };
-            Globals.dialogues.Add(diaParts);
+            
             Dialogues();
         }
 

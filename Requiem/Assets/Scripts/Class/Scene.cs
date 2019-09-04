@@ -57,7 +57,7 @@ namespace Requiem.Class
                 {
                     for (int j = add1.y; j < add1.y; ++j)
                     {
-                        cases[i, j].type = "add1";
+                        cases[i, j].type = add1.high < 100 ? "add1" : "wall";
                         cases[i, j].high = add1.high;
                     }
                 }

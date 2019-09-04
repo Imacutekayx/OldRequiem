@@ -12,6 +12,7 @@ namespace Requiem.Class
         //Combat
         public int hp;
         public int mp;
+        public int fov;
         public int[] dices;             //Constitution/Knowledge/Focus/Charisma/Agility/Arcane/Temper
         public Weapon[] weapons;
         public string weapontype;
