@@ -26,7 +26,7 @@ namespace Requiem
             Globals.scriptManager = new ScriptManager();
             Globals.movementManager = new MovementManager();
             Globals.visibilityManager = new VisibilityManager();
-            Globals.currentCharacter = (Character)Globals.scenes[0].entities.Find(i => i.name == "Lennj");
+            Globals.currentCharacter = (Character)Globals.scenes[0].entities.Find(i => i.name == "Kanis");
             Globals.cameraManager.LoadNewScene(Globals.scenes[0]);
         }
 
@@ -199,7 +199,7 @@ namespace Requiem
             {
                 if (Input.GetKeyDown(KeyCode.Q))
                 {
-                    Globals.power = Globals.power == "0:" + Globals.currentCharacter.weapons[0].powers[0].name ? "" : "0:" + Globals.currentCharacter.weapons[0].powers[0].name;
+                    Globals.power = Globals.power == Globals.currentCharacter.weapons[0].powers[0].name ? "" : Globals.currentCharacter.weapons[0].powers[0].name;
                     Globals.basic = null;
                     Debug.Log(Globals.power);
                     Globals.cameraManager.CleanCases();
@@ -207,27 +207,27 @@ namespace Requiem
                 }
                 else if (Input.GetKeyDown(KeyCode.W))
                 {
-                    Globals.power = Globals.power == "1:" + Globals.currentCharacter.weapons[1].powers[0].name ? "" : "1:" + Globals.currentCharacter.weapons[1].powers[0].name;
-                    Globals.basic = null;
-                    Debug.Log(Globals.power);
-                    Globals.cameraManager.CleanCases();
-                    if (Globals.power != "") { Globals.visibilityManager.Compute(2, new Location(Globals.currentCharacter.x, Globals.currentCharacter.y), Globals.currentCharacter.weapons[1].powers[0].scope); }
-                }
-                else if (Input.GetKeyDown(KeyCode.E))
-                {
-                    Globals.power = Globals.power == "0:" + Globals.currentCharacter.weapons[0].powers[1].name ? "" : "0:" + Globals.currentCharacter.weapons[0].powers[1].name;
+                    Globals.power = Globals.power == Globals.currentCharacter.weapons[0].powers[1].name ? "" : Globals.currentCharacter.weapons[0].powers[1].name;
                     Globals.basic = null;
                     Debug.Log(Globals.power);
                     Globals.cameraManager.CleanCases();
                     if (Globals.power != "") { Globals.visibilityManager.Compute(2, new Location(Globals.currentCharacter.x, Globals.currentCharacter.y), Globals.currentCharacter.weapons[0].powers[1].scope); }
                 }
-                else if (Input.GetKeyDown(KeyCode.R))
+                else if (Input.GetKeyDown(KeyCode.E))
                 {
-                    Globals.power = Globals.power == "1:" + Globals.currentCharacter.weapons[1].powers[1].name ? "" : "1:" + Globals.currentCharacter.weapons[1].powers[1].name;
+                    Globals.power = Globals.power == Globals.currentCharacter.weapons[0].powers[2].name ? "" : Globals.currentCharacter.weapons[0].powers[2].name;
                     Globals.basic = null;
                     Debug.Log(Globals.power);
                     Globals.cameraManager.CleanCases();
-                    if (Globals.power != "") { Globals.visibilityManager.Compute(2, new Location(Globals.currentCharacter.x, Globals.currentCharacter.y), Globals.currentCharacter.weapons[1].powers[1].scope); }
+                    if (Globals.power != "") { Globals.visibilityManager.Compute(2, new Location(Globals.currentCharacter.x, Globals.currentCharacter.y), Globals.currentCharacter.weapons[0].powers[2].scope); }
+                }
+                else if (Input.GetKeyDown(KeyCode.R))
+                {
+                    Globals.power = Globals.power == Globals.currentCharacter.weapons[0].powers[3].name ? "" : Globals.currentCharacter.weapons[0].powers[3].name;
+                    Globals.basic = null;
+                    Debug.Log(Globals.power);
+                    Globals.cameraManager.CleanCases();
+                    if (Globals.power != "") { Globals.visibilityManager.Compute(2, new Location(Globals.currentCharacter.x, Globals.currentCharacter.y), Globals.currentCharacter.weapons[0].powers[3].scope); }
                 }
             }
             else if(Globals.mode == "item"){

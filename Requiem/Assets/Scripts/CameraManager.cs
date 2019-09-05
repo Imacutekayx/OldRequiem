@@ -16,7 +16,7 @@ namespace Requiem
         private bool top = false;
 
         //Const
-        private const int CASESIZE = 4;
+        private const int CASESIZE = 3;
         private const int ZOOMSPEED = 5;
         private const int MAXFOV = 60;
         private const int MINFOV = 15;
@@ -147,7 +147,8 @@ namespace Requiem
                     }
                     else if (i == 1)
                     {
-                        grid[add.x, add.y].GetComponent<SpriteRenderer>().sprite = add.high < 100 ? Resources.Load<Sprite>("images/grid/add10") : Resources.Load<Sprite>("images/grid/wall");
+                        //grid[add.x, add.y].GetComponent<SpriteRenderer>().sprite = add.high < 100 ? Resources.Load<Sprite>("images/grid/add10") : Resources.Load<Sprite>("images/grid/wall");
+                        grid[add.x, add.y].GetComponent<CaseObject>().c.type = add.high < 100 ? "add1" : "wall";
                         image.transform.parent = add1Objects.transform;
                     }
                     else
@@ -179,7 +180,7 @@ namespace Requiem
                 {
                     for (int l = wall.y; l < wall.y + wall.height; ++l)
                     {
-                        grid[k, l].GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("images/grid/wall");
+                        grid[k, l].GetComponent<CaseObject>().c.type = "wall";
                     }
                 }
 
@@ -252,7 +253,7 @@ namespace Requiem
                 image.AddComponent<EntityObject>();
                 image.GetComponent<EntityObject>().entity = entity;
                 grid[entity.x, entity.y].GetComponent<CaseObject>().c.entity = entity;
-                grid[entity.x, entity.y].GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("images/grid/" + entity.type + 0);
+                grid[entity.x, entity.y].GetComponent<CaseObject>().c.type = entity.type;
                 switch (entity.type)
                 {
                     case "character":
@@ -546,7 +547,7 @@ namespace Requiem
                     camera.transform.position = new Vector3((Globals.currentScene.weight / 2 + 3) * CASESIZE, 5 * CASESIZE, 0);
                     break;
             }
-
+            
             ChangeSkins();
         }
 

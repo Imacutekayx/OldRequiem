@@ -68,11 +68,8 @@ namespace Requiem
             
             //CHARACTERS
             int[] kanis_dices = { 60, 50, 40, 70, 50, 10, 70 };
-            List<string> kanis_languages = new List<string>();
-            kanis_languages.Add("Common");
-            kanis_languages.Add("Mercenary");
-            List<string> kanis_resistances = new List<string>();
-            kanis_resistances.Add("fire");
+            List<string> kanis_languages = new List<string> { "Common", "Mercenary" };
+            List<string> kanis_resistances = new List<string> { "fire" };
             Armor[] kanis_armor = new Armor[6];
             kanis_armor[1] = chainArmor;
             bool[] kanis_armorChange = new bool[6];
@@ -100,8 +97,7 @@ namespace Requiem
             int[] wildUto_dices = { 50, 10, 30, 60, 70, 15, 55 };
             Dictionary<Item, int> wildUto_bag = new Dictionary<Item, int>();
             wildUto_bag.Add(wolfSkin, 1);
-            List<string> wildUto_vulnerabilities = new List<string>();
-            wildUto_vulnerabilities.Add("fire");
+            List<string> wildUto_vulnerabilities = new List<string> { "fire" };
             Weapon[] wildUto_weapon = new Weapon[2];
             wildUto_weapon[0] = fangs;
             Ennemy wildUto = new Ennemy("wild uto", "A wild uto which seek meat.", 5, wildUto_dices, 0, new List<Power>(), "beast", wildUto_bag, new List<string>(), new List<string>(), new List<string>(), new List<string>(), wildUto_vulnerabilities, new Armor[6], new bool[6], "", wildUto_weapon);
@@ -116,15 +112,53 @@ namespace Requiem
             Ennemies();
 
             //NPCS
-            List<string> lumberjack_languages = new List<string>();
-            lumberjack_languages.Add("Common");
+            List<string> lumberjack_languages = new List<string> { "Common" };
             Dictionary<Item, int> lumberJack_bag = new Dictionary<Item, int>();
             lumberJack_bag.Add(gateKey, 1);
             Npc lumberjack = new Npc("Jack The Lumberjack", true, 46, "lumberjack", "hotblood", true, lumberjack_languages, lumberJack_bag);
+            Globals.npcs.Add(lumberjack);
             Npcs();
-            
+
             //SCENES
-            
+            List<LayerImage> forestStart_adds1 = new List<LayerImage>();
+            int[] forestStart_tree_x = { 5, 8, 9, 4, 5, 6, 7, 8, 9, 6, 7, 8, 9, 6, 8 };
+            int[] forestStart_tree_y = { 2, 2, 2, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 5, 5 };
+            for(int i = 0; i < forestStart_tree_x.Length; ++i)
+            {
+                LayerImage tree = new LayerImage("tree", forestStart_tree_x[i], forestStart_tree_y[i], 0, 120);
+                forestStart_adds1.Add(tree);
+            }
+            int[] forestStart_barrier_x = { 0, 1, 3, 4, 5 };
+            for (int i = 0; i < forestStart_barrier_x.Length; ++i)
+            {
+                LayerImage barrier = new LayerImage("barrier", forestStart_barrier_x[i], 5, 0, 105);
+                forestStart_adds1.Add(barrier);
+            }
+            List<string> smallChest_parameters = new List<string> { "useable;hp potion;1" };
+            forestStart_adds1.Add(new LayerImage("smallChest", 9, 1, 3, 30, 1, 1, new List<LayerScript> { new LayerScript("openChest", true, smallChest_parameters) }));
+            //TODO new script useObject OR haveObject
+            List<LayerImage> forestStart_walls = new List<LayerImage>
+            {
+                new LayerImage("entranceWestWall", 4, 0, 0, 100),
+                new LayerImage("entranceEastWall", 6, 0, 0, 100, 2, 1)
+            };
+            Globals.characters[0].x = 1;
+            Globals.characters[0].y = 9;
+            Globals.characters[0].face = 0;
+            Globals.ennemies[0].x = 1;
+            Globals.ennemies[0].y = 1;
+            Globals.ennemies[0].face = 2;
+            Globals.npcs[0].x = 8;
+            Globals.npcs[0].y = 7;
+            Globals.npcs[0].face = 3;
+            List<Entity> forestStart_entities = new List<Entity>
+            {
+                Globals.characters[0], Globals.ennemies[0], Globals.npcs[0]
+            };
+            Globals.scenes.Add(new Scene("forestStart", 10, 10, "exploration", -1, new List<LayerImage>(), forestStart_adds1,
+                new List<LayerImage>(), forestStart_walls, new List<Case>(), new List<LayerScript>(), forestStart_entities));
+
+            //TODO 2nd scene
             Scenes();
             
             //DIALOGUES
