@@ -3,8 +3,9 @@
     "",
     "\\Assets",
     "\\Assets\\Scripts",
-    "\\Assets\\Scripts\\Class"
+    "\\Assets\\Scripts\\Class",
+    "\\Assets\\Scripts\\Objects"
   ],
-  "SelectedNode": "\\Assets\\Scripts\\VisibilityManager.cs",
+  "SelectedNode": "\\Assets\\Scripts\\Main.cs",
   "PreviewInSolutionExplorer": false
 }
